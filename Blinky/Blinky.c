@@ -86,6 +86,6 @@ int main (void) {
   while (1) {
     while (Buttons_GetState() & 1U);        /* Wait while holding USER button */
     osSignalSet(tid_Thread_LED, 1U);        /* Signal LED thread              */
-    osDelay(500);                           /* Wait 500ms                     */
+    osDelay(100);                           /* Wait 500ms                     */
   }
 }

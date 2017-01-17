@@ -1,0 +1,9 @@
+This is a modification of the Blinky.c program to copy the switch position onto the adjacent LED
+
+Example functionality:                                                   
+ - Clock Settings:
+   - SYSCLK  =           168.00 MHz
+   - HCLK    = SYSCLK  = 168.00 MHz
+
+ - red LED turns on when a switch is pressed
+

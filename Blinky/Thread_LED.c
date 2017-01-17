@@ -22,7 +22,7 @@ void Thread_LED (void const *argument) {
   uint32_t led_cnt = LED_GetCount();
   uint32_t led_num = 0;
 
-  while (1) {
+  while (0) {
     osSignalWait(1U, osWaitForever);    // Wait for signal
     LED_On(led_num);                    // Turn specified LED on
     osSignalWait(1U, osWaitForever);    // Wait for signal
