@@ -20,27 +20,10 @@
 #include "LED.h"
 #include "SWT.h"
 #include "LCD.h"
-#include "ADC_LEDS.c"
+#include "ADC.h"
 
+#include "utility.h"
 
-
-volatile uint32_t msTicks;                      /* counts 1ms timeTicks       */
-/*----------------------------------------------------------------------------
-  SysTick_Handler
- *----------------------------------------------------------------------------*/
-void SysTick_Handler(void) {
-  msTicks++;
-}
-
-/*----------------------------------------------------------------------------
-  delays number of tick Systicks (happens every 1 ms)
- *----------------------------------------------------------------------------*/
-void Delay (uint32_t dlyTicks) {                                              
-  uint32_t curTicks;
-
-  curTicks = msTicks;
-  while ((msTicks - curTicks) < dlyTicks);
-}
 
 
 /*----------------------------------------------------------------------------
@@ -90,7 +73,9 @@ int main (void) {
 	
 	Delay(10);
 	Board_init();
-
+  
+	read_ADC1();
+	
 	LCD_DriverOn();
 	LCD_On(1);
 	Delay(20);

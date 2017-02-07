@@ -1,6 +1,6 @@
 /*----------------------------------------------------------------------------
- * Name:    ADC.h
- * Purpose: low level ADC definitions
+ * Name:    utility.h
+ * Purpose: providing common and general functions for other classes
  * Note(s):
  *----------------------------------------------------------------------------
  * This file is part of the uVision/ARM development tools.
@@ -13,11 +13,11 @@
  * Copyright (c) 2011 Keil - An ARM Company. All rights reserved.
  *----------------------------------------------------------------------------*/
 
-#ifndef __ADC_H
-#define __ADC_H
+#ifndef __UTILITY_H
+#define __UTILITY_H
 
 
-extern void ADC1_Init(void);
-unsigned int read_ADC1(void);
+void SysTick_Handler(void);
+void Delay (uint32_t dlyTicks);
 
 #endif

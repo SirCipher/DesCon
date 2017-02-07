@@ -8,6 +8,7 @@ reads ADC channel and displays upper 8 bits (of 12) on LEDs*/
 #include "STM32F4xx.h"
 #include "LED.h"
 #include "ADC.h"
+#include "utility.h"
 
 
 /* Function to intiialise ADC1    */
@@ -39,29 +40,5 @@ unsigned int read_ADC1 (void) {
 	Delay(100);
 	return (ADC1->DR);
 }
-/*----------------------------------------------------------------------------
-  MAIN function
- *----------------------------------------------------------------------------*/
-int main (void) {
- 
- uint32_t value = 0;
 
-  SystemCoreClockUpdate();                      /* Get Core Clock Frequency   */
-  if (SysTick_Config(SystemCoreClock / 1000)) { /* SysTick 1 msec interrupts  */
-    while (1);                                  /* Capture error              */
-  }
-
-  LED_Init();
-	ADC1_init();
- 
-  while(1) {                                    /* Loop forever               */
- 
-		value = read_ADC1();
-		value = (value *16);
-		GPIOD->ODR = value;
-		Delay(100);
-
-  }
-  
-}
 
