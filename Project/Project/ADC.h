@@ -17,7 +17,7 @@
 #define __ADC_H
 
 
-extern void ADC1_Init(void);
+extern void ADC1_init(void);
 unsigned int read_ADC1(void);
 
 #endif

@@ -394,11 +394,6 @@
               <FilePath>.\LCD.c</FilePath>
             </File>
             <File>
-              <FileName>display.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\display.c</FilePath>
-            </File>
-            <File>
               <FileName>ADC.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ADC.c</FilePath>
@@ -407,6 +402,11 @@
               <FileName>Utility.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Utility.c</FilePath>
+            </File>
+            <File>
+              <FileName>project.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\project.c</FilePath>
             </File>
           </Files>
         </Group>

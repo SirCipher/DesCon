@@ -6,7 +6,6 @@ reads ADC channel and displays upper 8 bits (of 12) on LEDs*/
 
 #include <stdio.h>
 #include "STM32F4xx.h"
-#include "LED.h"
 #include "ADC.h"
 #include "utility.h"
 
@@ -33,7 +32,7 @@ void ADC1_init(void) {
 	
 }
 	
-/* function to read ADC and retun value */
+/* function to read ADC and return value */
 unsigned int read_ADC1 (void) {
 	
 	ADC1->CR2 |= (1UL << 30)	;		/* set SWSTART to 1 to start conversion */

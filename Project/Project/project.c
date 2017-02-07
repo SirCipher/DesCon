@@ -16,11 +16,13 @@
  /* MODIFIED BY D. CHESMORE JANUARY 2013   */
  
 #include <stdio.h>
+#include <stdlib.h>
 #include "STM32F4xx.h"
 #include "LED.h"
 #include "SWT.h"
 #include "LCD.h"
 #include "ADC.h"
+#include "math.h"
 
 #include "utility.h"
 
@@ -55,6 +57,7 @@ void Board_init(){
   LCD_Initpins();	
 	LCD_DriverOn();
 	LCD_Init();	
+	ADC1_init();
 }
 
 /*----------------------------------------------------------------------------
@@ -69,28 +72,46 @@ int main (void) {
     while (1);                                  /* Capture error              */
   }
 
- 
+	char* message = (char*)malloc(16*sizeof(char));
 	
 	Delay(10);
 	Board_init();
   
-	read_ADC1();
 	
 	LCD_DriverOn();
 	LCD_On(1);
 	Delay(20);
 	LCD_Clear();
 	LCD_GotoXY(0,0);
-	LCD_PutS("Dig Multimeter");
-	Delay(1000);
+	LCD_PutS("Dank Multimeter");
+	LCD_GotoXY(0,1);
+	LCD_PutS("Press Truth Btn");
+	while(!BTN_Get())
+	{
+		
+	}	
 	LCD_Clear();
-	LCD_GotoXY(4,1);
-	LCD_PutS("Menu:");
-	Delay(1000);
-	LCD_Clear();
-	LCD_GotoXY(0,0);
-	LCD_PutS("R:S2 V:S3 I:S4");
+	LCD_GotoXY(2,1);
+	LCD_PutS("Bush did 911");
+	Delay(150);
 	
+	
+	
+	LCD_Clear();
+	
+
+	while(1){
+		LCD_GotoXY(0,0);
+		sprintf(message,"%d can't melt",read_ADC1());
+		
+		LCD_GotoXY(0,0);
+		LCD_PutS("                ");
+		LCD_GotoXY(0,0);
+		LCD_PutS(message);
+		LCD_GotoXY(2,1);
+		LCD_PutS("steel Memes");
+		
+	}
 		
 }
 
