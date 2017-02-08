@@ -20,4 +20,8 @@
 extern void ADC1_init(void);
 unsigned int read_ADC1(void);
 
+
+extern void ADC2_init(void);
+unsigned int read_ADC2(void);
+
 #endif

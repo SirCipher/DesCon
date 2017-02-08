@@ -17,7 +17,9 @@
 #define __UTILITY_H
 
 
-void SysTick_Handler(void);
-void Delay (uint32_t dlyTicks);
+extern void SysTick_Handler(void);
+extern void Delay (uint32_t dlyTicks);
+extern unsigned int String_Len(const char* str);
+
 
 #endif

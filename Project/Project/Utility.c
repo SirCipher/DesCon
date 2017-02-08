@@ -20,3 +20,12 @@ void Delay (uint32_t dlyTicks) {
   curTicks = msTicks;
   while ((msTicks - curTicks) < dlyTicks);
 }
+
+
+unsigned int String_Len(const char* str){
+	int output = 0;
+	while((*str++)){
+		output++;
+	}
+	return output;
+}
