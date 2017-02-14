@@ -408,6 +408,21 @@
               <FileType>1</FileType>
               <FilePath>.\project.c</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\serial.c</FilePath>
+            </File>
+            <File>
+              <FileName>retarget.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\retarget.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f4xx_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\stm32f4xx_usart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

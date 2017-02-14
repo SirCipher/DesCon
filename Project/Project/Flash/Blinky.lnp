@@ -5,6 +5,8 @@
 ".\flash\adc.o"
 ".\flash\utility.o"
 ".\flash\project.o"
+".\flash\serial.o"
+".\flash\retarget.o"
 ".\flash\startup_stm32f407xx.o"
 ".\flash\system_stm32f4xx.o"
 --strict --scatter ".\Flash\Blinky.sct"

@@ -23,9 +23,16 @@
 #include "LCD.h"
 #include "ADC.h"
 #include "math.h"
+#include "serial.h"
 
 #include "utility.h"
 
+#define VOLTAGE read_ADC1()
+#define CURRENT read_ADC2()
+
+
+// Including string.h causes LCD to misbehave.
+#include <string.h>
 
 
 /*----------------------------------------------------------------------------
@@ -58,14 +65,22 @@ void Board_init(){
 	LCD_DriverOn();
 	LCD_Init();	
 	ADC1_init();
+	ADC2_init();
+	serial_init();
 }
+
+unsigned int GetWordLength(const char* str, int start){
+	return 0;
+}
+
+
+
 
 /*----------------------------------------------------------------------------
   MAIN function
  *----------------------------------------------------------------------------*/
 int main (void) {
 
-	
   /*uint32_t btns = 0;*/
   SystemCoreClockUpdate();                      /* Get Core Clock Frequency   */
   if (SysTick_Config(SystemCoreClock / 1000)) { /* SysTick 1 msec interrupts  */
@@ -73,7 +88,8 @@ int main (void) {
   }
 
 	char* message = (char*)malloc(16*sizeof(char));
-	
+	unsigned int state = 1;
+	unsigned int count = 0;
 	Delay(10);
 	Board_init();
   
@@ -82,36 +98,68 @@ int main (void) {
 	LCD_On(1);
 	Delay(20);
 	LCD_Clear();
-	LCD_GotoXY(0,0);
-	LCD_PutS("Dank Multimeter");
+	LCD_PutSCenter("You're a",0);
 	LCD_GotoXY(0,1);
-	LCD_PutS("Press Truth Btn");
-	while(!BTN_Get())
-	{
-		
-	}	
+	LCD_PutS("Multimeter Harry");
+	while(!BTN_Get()){};
+	while(BTN_Get()){};
+	LCD_Clear();
 	LCD_Clear();
 	LCD_GotoXY(2,1);
-	LCD_PutS("Bush did 911");
 	Delay(150);
 	
-	
-	
+		
 	LCD_Clear();
 	
 
 	while(1){
 		LCD_GotoXY(0,0);
-		sprintf(message,"%d can't melt",read_ADC1());
+		if(SWT_Check(0)){
+			state =1;
+			LCD_ClearRow1();
+		}
+		else if(SWT_Check(1)){
+			state = 2;
+			LCD_ClearRow1();
+		}
+		else if(SWT_Check(2)){
+			state = 3;
+			LCD_ClearRow1();
+		}		
+		if(state == 1){
+			sprintf(message,"%d \"V\"",read_ADC1());
+			LCD_PutSCenter("          ",1);
+			LCD_PutSCenter(message,1);
+			LCD_PutSCenter("\"Voltage\"",0);
 		
-		LCD_GotoXY(0,0);
-		LCD_PutS("                ");
-		LCD_GotoXY(0,0);
-		LCD_PutS(message);
-		LCD_GotoXY(2,1);
-		LCD_PutS("steel Memes");
+		}
+		else if (state == 2)
+		{
+			sprintf(message,"%d \"A\"",read_ADC2());
+			LCD_PutSCenter("\"Current\"",0);
+			LCD_PutSCenter("          ",1);
+			LCD_PutSCenter(message,1);
+		}
+	  else
+		{
+		  sprintf(message,"%.4f \"Ohms\"", (float)((float)VOLTAGE/(float)CURRENT));
+			LCD_PutSCenter("\"Resistance\"",0);
+			LCD_ClearRow2();
+			LCD_PutSCenter(message,1);
+		}		
 		
 	}
 		
+}
+
+
+void USART2_IRQHandler(void) {
+    //Check if interrupt was because data is received
+    if (USART_GetITStatus(USART2, USART_IT_RXNE)) {
+        //Do your stuff here
+	LCD_PutS("Tom is bae");        
+        //Clear interrupt flag
+        USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+    }
 }
 

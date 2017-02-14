@@ -15,4 +15,6 @@
 .\flash\project.o: LCD.h
 .\flash\project.o: ADC.h
 .\flash\project.o: C:\KEIL_V5\ARM\ARMCC\Bin\..\include\math.h
+.\flash\project.o: serial.h
 .\flash\project.o: utility.h
+.\flash\project.o: C:\KEIL_V5\ARM\ARMCC\Bin\..\include\string.h

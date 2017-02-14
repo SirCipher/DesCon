@@ -15,6 +15,7 @@
 
 #include "STM32F4xx.h"
 #include "LCD.h"
+#include "utility.h"
 
 const unsigned long lcd_mask[] = {1UL << 0, 1UL << 1, 1UL << 2, 1UL << 3, 1UL << 4, 1UL << 5, 1UL << 6, 1UL << 7};
 const unsigned long lcd_RS    = 1UL << 0;
@@ -351,4 +352,42 @@ void LCD_GotoXY (unsigned int x, unsigned int y) {
 			LCD_Write( 0xC0 | (x & 0x3F));
 
 	Delay(1);
+}
+
+/*----------------------------------------------------------------------------
+  Helper function to clear the first row
+ *----------------------------------------------------------------------------*/
+
+
+void LCD_ClearRow1(){
+	// Perhaps find a better way to do this?
+	LCD_GotoXY(0,0);
+	LCD_PutS("                ");
+}
+
+
+/*----------------------------------------------------------------------------
+  Helper function to clear the first row
+ *----------------------------------------------------------------------------*/
+
+
+void LCD_ClearRow2(){
+	// Perhaps find a better way to do this?
+	LCD_GotoXY(0,1);
+	LCD_PutS("                ");
+}
+
+
+
+void LCD_PutSCenter(const char * str, unsigned int y){
+		unsigned int str_len = String_Len(str);
+		// LCD is 16 characters across                                                                                                                                                       
+	  if(str_len > 16){
+			LCD_GotoXY(0,y);
+			LCD_PutS(str);
+		}
+		else {
+			LCD_GotoXY((16-str_len)/2,y);
+			LCD_PutS(str);
+		}
 }
