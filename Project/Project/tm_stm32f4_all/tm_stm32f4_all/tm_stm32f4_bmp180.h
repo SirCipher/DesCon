@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_BMP180_H
-#define TM_BMP180_H 100
+#ifndef BMP180_H
+#define BMP180_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_BMP180
+ * @defgroup BMP180
  * @brief    BMP180 pressure sensor library for STM32F4xx - http://stm32f4-discovery.com/2014/09/library-37-bmp180-pressure-sensor-stm32f4
  * @{
  *
@@ -73,7 +73,7 @@ SDA       PC9       I2C3 Serial data
 @verbatim
 //Select custom I2C
 #define BMP180_I2C             I2C3
-#define BMP180_I2C_PINSPACK    TM_I2C_PinsPack_1
+#define BMP180_I2C_PINSPACK    I2C_PinsPack_1
 @endverbatim
  *
  * \par Changelog
@@ -97,11 +97,11 @@ SDA       PC9       I2C3 Serial data
 #include "stm32f4xx.h"
 #include "stm32f4xx_rcc.h"
 #include "defines.h"
-#include "tm_stm32f4_i2c.h"
+#include "stm32f4_i2c.h"
 #include "math.h"
 
 /**
- * @defgroup TM_BMP180_Macros
+ * @defgroup BMP180_Macros
  * @brief    Library defines
  * @{
  */
@@ -109,7 +109,7 @@ SDA       PC9       I2C3 Serial data
 /* Default I2C pin */
 #ifndef BMP180_I2C
 #define BMP180_I2C					I2C3
-#define BMP180_I2C_PINSPACK			TM_I2C_PinsPack_1
+#define BMP180_I2C_PINSPACK			I2C_PinsPack_1
 #endif
 
 /* Default I2C speed */
@@ -146,7 +146,7 @@ SDA       PC9       I2C3 Serial data
  */
  
 /**
- * @defgroup TM_BMP180_Typedefs
+ * @defgroup BMP180_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -155,10 +155,10 @@ SDA       PC9       I2C3 Serial data
  * @brief  BMP180 result enumerations	
  */
 typedef enum {
-	TM_BMP180_Result_Ok = 0x00,            /*!< Everything OK */
-	TM_BMP180_Result_DeviceNotConnected,   /*!< Device is not connected to I2C */
-	TM_BMP180_Result_LibraryNotInitialized /*!< Library is not initialized */
-} TM_BMP180_Result_t;
+	BMP180_Result_Ok = 0x00,            /*!< Everything OK */
+	BMP180_Result_DeviceNotConnected,   /*!< Device is not connected to I2C */
+	BMP180_Result_LibraryNotInitialized /*!< Library is not initialized */
+} BMP180_Result_t;
 
 /**
  * @brief  Options for oversampling settings
@@ -166,11 +166,11 @@ typedef enum {
  *         and sample time for one result
  */
 typedef enum {
-	TM_BMP180_Oversampling_UltraLowPower = 0x00,      /*!< 1 sample for result */
-	TM_BMP180_Oversampling_Standard = 0x01,           /*!< 2 samples for result */
-	TM_BMP180_Oversampling_HighResolution = 0x02,     /*!< 3 samples for result */
-	TM_BMP180_Oversampling_UltraHighResolution = 0x03 /*!< 4 samples for result */
-} TM_BMP180_Oversampling_t;
+	BMP180_Oversampling_UltraLowPower = 0x00,      /*!< 1 sample for result */
+	BMP180_Oversampling_Standard = 0x01,           /*!< 2 samples for result */
+	BMP180_Oversampling_HighResolution = 0x02,     /*!< 3 samples for result */
+	BMP180_Oversampling_UltraHighResolution = 0x03 /*!< 4 samples for result */
+} BMP180_Oversampling_t;
 
 /**
  * @brief  BMP180 main structure		
@@ -180,57 +180,57 @@ typedef struct {
 	uint32_t Pressure;                     /*!< Pressure in pascals */
 	float Temperature;                     /*!< Temperature in degrees */
 	uint16_t Delay;                        /*!< Number of microseconds, that sensor needs to calculate data that you request to */
-	TM_BMP180_Oversampling_t Oversampling; /*!< Oversampling for pressure calculation */
-} TM_BMP180_t;
+	BMP180_Oversampling_t Oversampling; /*!< Oversampling for pressure calculation */
+} BMP180_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_BMP180_Functions
+ * @defgroup BMP180_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Initializes BMP180 pressure sensor
- * @param  *BMP180_Data: Pointer to @ref TM_BMP180_t structure
- * @retval Member of @ref TM_BMP180_Result_t
+ * @param  *BMP180_Data: Pointer to @ref BMP180_t structure
+ * @retval Member of @ref BMP180_Result_t
  */
-TM_BMP180_Result_t TM_BMP180_Init(TM_BMP180_t* BMP180_Data);
+BMP180_Result_t BMP180_Init(BMP180_t* BMP180_Data);
 
 /**
  * @brief  Starts temperature sensor on BMP180
- * @param  *BMP180_Data: Pointer to @ref TM_BMP180_t structure
- * @retval Member of @ref TM_BMP180_Result_t
+ * @param  *BMP180_Data: Pointer to @ref BMP180_t structure
+ * @retval Member of @ref BMP180_Result_t
  */
-TM_BMP180_Result_t TM_BMP180_StartTemperature(TM_BMP180_t* BMP180_Data);
+BMP180_Result_t BMP180_StartTemperature(BMP180_t* BMP180_Data);
 
 /**
  * @brief  Reads temperature from BMP180 sensor
  * @note   Temperature has 0.1 degrees Celcius resolution
- * @param  *BMP180_Data: Pointer to @ref TM_BMP180_t structure
- * @retval Member of @ref TM_BMP180_Result_t
+ * @param  *BMP180_Data: Pointer to @ref BMP180_t structure
+ * @retval Member of @ref BMP180_Result_t
  */
-TM_BMP180_Result_t TM_BMP180_ReadTemperature(TM_BMP180_t* BMP180_Data);
+BMP180_Result_t BMP180_ReadTemperature(BMP180_t* BMP180_Data);
 
 /**
  * @brief  Starts pressure measurement on BMP180 sensor
- * @param  *BMP180_Data: Pointer to @ref TM_BMP180_t structure
+ * @param  *BMP180_Data: Pointer to @ref BMP180_t structure
  * @param  Oversampling: Oversampling option for pressure calculation.
- *            This parameter can be a value of @ref TM_BMP180_Oversampling_t enumeration
+ *            This parameter can be a value of @ref BMP180_Oversampling_t enumeration
  * @note   Calculation time depends on selected oversampling
- * @retval Member of @ref TM_BMP180_Result_t
+ * @retval Member of @ref BMP180_Result_t
  */
-TM_BMP180_Result_t TM_BMP180_StartPressure(TM_BMP180_t* BMP180_Data, TM_BMP180_Oversampling_t Oversampling);
+BMP180_Result_t BMP180_StartPressure(BMP180_t* BMP180_Data, BMP180_Oversampling_t Oversampling);
 
 /**
  * @brief  Reads pressure from BMP180 sensor and calculate it
- * @param  *BMP180_Data: Pointer to @ref TM_BMP180_t structure
- * @retval Member of @ref TM_BMP180_Result_t
+ * @param  *BMP180_Data: Pointer to @ref BMP180_t structure
+ * @retval Member of @ref BMP180_Result_t
  */
-TM_BMP180_Result_t TM_BMP180_ReadPressure(TM_BMP180_t* BMP180_Data);
+BMP180_Result_t BMP180_ReadPressure(BMP180_t* BMP180_Data);
 
 /**
  * @brief  Calculates pressure above sea level in pascals
@@ -245,7 +245,7 @@ TM_BMP180_Result_t TM_BMP180_ReadPressure(TM_BMP180_t* BMP180_Data);
  * @param  altitude: Known altitude in units of meters
  * @retval Pressure above the sea in units of pascals
  */
-uint32_t TM_BMP180_GetPressureAtSeaLevel(uint32_t pressure, float altitude);
+uint32_t BMP180_GetPressureAtSeaLevel(uint32_t pressure, float altitude);
 
 /**
  * @}

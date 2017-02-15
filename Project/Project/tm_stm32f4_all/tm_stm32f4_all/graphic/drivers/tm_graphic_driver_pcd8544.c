@@ -16,7 +16,7 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
- #include "tm_graphic_driver_pcd8544.h"
+ #include "graphic_driver_pcd8544.h"
 
 unsigned char PCD8544_Buffer[PCD8544_BUFFER_SIZE];
 unsigned char PCD8544_x;
@@ -225,60 +225,60 @@ const uint8_t PCD8544_Font3x5[106][3] = {
 };
 
 
-TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Init(TM_GRAPHIC_Options_t* LCD_Options) {
+GRAPHIC_Result GRAPHICLCDDriver_Init(GRAPHIC_Options_t* LCD_Options) {
 	/* In init, used for DMA settings */
 	PCD8544_InInit = 1;
 	
 	/* Initialize IO's */
-	TM_PCD8544_InitIO();
+	PCD8544_InitIO();
 	
 	/* Reset */
 	PCD8544_RST_LOW;
-	TM_PCD8544_Delay(10000);
+	PCD8544_Delay(10000);
 	PCD8544_RST_HIGH;
 
 	/* Go in extended mode */
-	TM_PCD8544_WriteCommand(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
+	PCD8544_WriteCommand(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
 
 	/* LCD bias select */
-	TM_PCD8544_WriteCommand(PCD8544_SETBIAS | 0x4);
+	PCD8544_WriteCommand(PCD8544_SETBIAS | 0x4);
 
 	/* Set VOP */
-	TM_PCD8544_WriteCommand(PCD8544_SETVOP | (PCD8544_CONTRAST < 0x7F ? PCD8544_CONTRAST : 0x7F));
+	PCD8544_WriteCommand(PCD8544_SETVOP | (PCD8544_CONTRAST < 0x7F ? PCD8544_CONTRAST : 0x7F));
 
 	/* Normal mode */
-	TM_PCD8544_WriteCommand(PCD8544_FUNCTIONSET);
+	PCD8544_WriteCommand(PCD8544_FUNCTIONSET);
 
 	/* Set display to Normal */
-	TM_PCD8544_WriteCommand(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
+	PCD8544_WriteCommand(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
 
 	/* Set cursor to home position */
-	TM_PCD8544_Home();
+	PCD8544_Home();
 
 	/* Normal display */
-	TM_PCD8544_WriteCommand(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
+	PCD8544_WriteCommand(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
 	
 	/* Not In init anymore, used for DMA settings */
 	PCD8544_InInit = 0;
 	
 	/* Init DMA, Start transfering */
-	TM_PCD8544_InitDMA();
+	PCD8544_InitDMA();
 	
 	/* Set settings for GRAPHIC */
 	LCD_Options->DefaultWidth = 48;
 	LCD_Options->DefaultHeight = 84;
 	
 	/* Return OK */
-	return TM_GRAPHIC_OK;
+	return GRAPHIC_OK;
 }
 
-TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Rotate(TM_GRAPHIC_Options_t* LCD_Options, TM_GRAPHIC_Orientation_t orientation) {
+GRAPHIC_Result GRAPHICLCDDriver_Rotate(GRAPHIC_Options_t* LCD_Options, GRAPHIC_Orientation_t orientation) {
 
 	/* Return OK */
-	return TM_GRAPHIC_OK;
+	return GRAPHIC_OK;
 }
 
-TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Fill(TM_GRAPHIC_Options_t* LCD_Options, uint32_t color) {
+GRAPHIC_Result GRAPHICLCDDriver_Fill(GRAPHIC_Options_t* LCD_Options, uint32_t color) {
 	uint16_t i;
 	uint8_t c;
 	/* If color == 0x00, we want black color, so fill data */
@@ -287,23 +287,23 @@ TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Fill(TM_GRAPHIC_Options_t* LCD_Options, ui
 		PCD8544_Buffer[i] = c;
 	} 
 	/* Return OK */
-	return TM_GRAPHIC_OK;
+	return GRAPHIC_OK;
 }
 
-TM_GRAPHIC_Result TM_GRAPHICLCDDriver_DrawPixel(TM_GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color) {
+GRAPHIC_Result GRAPHICLCDDriver_DrawPixel(GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color) {
 	uint8_t tmp;
 	
-	if (LCD_Options->Orientation == TM_GRAPHIC_Orientation_Portrait_1) {
+	if (LCD_Options->Orientation == GRAPHIC_Orientation_Portrait_1) {
 		/* Portrait 1 = 0 Degrees */
 		tmp = y;
 		y = x;
 		x = PCD8544_WIDTH - tmp - 1;
-	} else if (LCD_Options->Orientation == TM_GRAPHIC_Orientation_Portrait_2) {
+	} else if (LCD_Options->Orientation == GRAPHIC_Orientation_Portrait_2) {
 		/* Portrait 2 = 180 Degrees */
 		tmp = x;
 		x = y;
 		y = PCD8544_HEIGHT - tmp - 1;
-	} else if (LCD_Options->Orientation == TM_GRAPHIC_Orientation_Landscape_1) {
+	} else if (LCD_Options->Orientation == GRAPHIC_Orientation_Landscape_1) {
 		/* Landscape 1 = 90 Degrees */
 	} else {
 		/* Landscape 2 = 270 Degrees */
@@ -320,10 +320,10 @@ TM_GRAPHIC_Result TM_GRAPHICLCDDriver_DrawPixel(TM_GRAPHIC_Options_t* LCD_Option
 	}
 	
 	/* Return OK */
-	return TM_GRAPHIC_OK;
+	return GRAPHIC_OK;
 }
 
-void TM_PCD8544_InitIO(void) {
+void PCD8544_InitIO(void) {
 	GPIO_InitTypeDef GPIO_InitStruct;
 	
 	/* Enable clock for all pins */
@@ -354,56 +354,56 @@ void TM_PCD8544_InitIO(void) {
 	PCD8544_CE_HIGH;
 
 	/* Initialize SPI */
-	TM_SPI_Init(PCD8544_SPI, PCD8544_SPI_PINSPACK);
+	SPI_Init(PCD8544_SPI, PCD8544_SPI_PINSPACK);
 }
 
-void TM_PCD8544_Delay(unsigned long micros) {
+void PCD8544_Delay(unsigned long micros) {
 	volatile unsigned long i;
 	for (i = 0; i < micros; i++) {
 
 	}
 }
 
-void TM_PCD8544_WriteData(uint8_t data) {
+void PCD8544_WriteData(uint8_t data) {
 	/* Send data */
 	PCD8544_DC_HIGH;
 	//Send data
-	TM_PCD8544_Send(data);
+	PCD8544_Send(data);
 }
 
-void TM_PCD8544_WriteCommand(uint8_t command) {
+void PCD8544_WriteCommand(uint8_t command) {
 	/* Send data */
 	PCD8544_DC_LOW;
 	//Send data
-	TM_PCD8544_Send(command);
+	PCD8544_Send(command);
 }
 
-void TM_PCD8544_Send(uint8_t data) {
+void PCD8544_Send(uint8_t data) {
 	/* CE low */
 	PCD8544_CE_LOW;
 	/* Send data */
-	TM_SPI_Send(PCD8544_SPI, data);
+	SPI_Send(PCD8544_SPI, data);
 	/* CE high */
 	PCD8544_CE_HIGH;
 }
 
-void TM_PCD8544_Invert(PCD8544_Invert_t invert) {
+void PCD8544_Invert(PCD8544_Invert_t invert) {
 	/* Stop transfer data */
-	TM_PCD8544_DeInitDMA();
+	PCD8544_DeInitDMA();
 	
 	if (invert != PCD8544_Invert_No) {
-		TM_PCD8544_WriteCommand(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYINVERTED);
+		PCD8544_WriteCommand(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYINVERTED);
 	} else {
-		TM_PCD8544_WriteCommand(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
+		PCD8544_WriteCommand(PCD8544_DISPLAYCONTROL | PCD8544_DISPLAYNORMAL);
 	}
 }
 
-void TM_PCD8544_Home(void) {
-	TM_PCD8544_WriteCommand(PCD8544_SETXADDR | 0);
-	TM_PCD8544_WriteCommand(PCD8544_SETYADDR | 0);
+void PCD8544_Home(void) {
+	PCD8544_WriteCommand(PCD8544_SETXADDR | 0);
+	PCD8544_WriteCommand(PCD8544_SETYADDR | 0);
 }
 
-void TM_PCD8544_InitDMA(void) {
+void PCD8544_InitDMA(void) {
 	DMA_InitTypeDef DMA_InitStruct;
 	
 	if (PCD8544_InInit) {
@@ -411,12 +411,12 @@ void TM_PCD8544_InitDMA(void) {
 	}
 	
 	/* STOP DMA first */
-	TM_PCD8544_DeInitDMA();
+	PCD8544_DeInitDMA();
 	/* Little delay */
-	TM_PCD8544_Delay(1000);
+	PCD8544_Delay(1000);
 	/* Go to 0, 0 location on the LCD */
-	TM_PCD8544_WriteCommand(PCD8544_SETXADDR | 0);
-	TM_PCD8544_WriteCommand(PCD8544_SETYADDR | 0);
+	PCD8544_WriteCommand(PCD8544_SETXADDR | 0);
+	PCD8544_WriteCommand(PCD8544_SETYADDR | 0);
 	/* Start send data */
 	PCD8544_DC_HIGH;
 	
@@ -450,7 +450,7 @@ void TM_PCD8544_InitDMA(void) {
 	PCD8544_CE_LOW;
 }
 
-void TM_PCD8544_DeInitDMA(void) {
+void PCD8544_DeInitDMA(void) {
 	/* Disable DMA */
 	DMA_Cmd(PCD8544_DMA_STREAM, DISABLE);
 	/* Disable SPI transmit DMA */

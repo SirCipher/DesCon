@@ -27,16 +27,16 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_RE_H
-#define TM_RE_H 200
+#ifndef RE_H
+#define RE_H 200
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_ROTARY_ENCODER
+ * @defgroup ROTARY_ENCODER
  * @brief    Rotary encoder library for STM32F4xx devices - http://stm32f4-discovery.com/2014/08/library-26-rotary-encoder-stm32f4
  * @{
  *
@@ -52,7 +52,7 @@
  *
  * By default, if you turn encoder CW, you will increase counter, if CCW, you will decrease counter. Basically, this depends on your wiring for rotary.
  *
- * Library allows you to turn this mode "on the fly" anytime you want. Look for @ref TM_RE_SetMode() function for that.
+ * Library allows you to turn this mode "on the fly" anytime you want. Look for @ref RE_SetMode() function for that.
  *
  * \par Changelog
  *
@@ -87,11 +87,11 @@
 #include "stm32f4xx_syscfg.h"
 #include "misc.h"
 #include "defines.h"
-#include "tm_stm32f4_gpio.h"
-#include "tm_stm32f4_exti.h"
+#include "stm32f4_gpio.h"
+#include "stm32f4_exti.h"
  
 /**
- * @defgroup TM_ROTARY_ENCODER_Typedefs
+ * @defgroup ROTARY_ENCODER_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -100,18 +100,18 @@
  * @brief  Rotary encoder rotation status
  */
 typedef enum {
-	TM_RE_Rotate_Increment, /*!< Encoder was incremented */
-	TM_RE_Rotate_Decrement, /*!< Encoder was decremented */
-	TM_RE_Rotate_Nothing    /*!< Encoder stop at it was before */
-} TM_RE_Rotate_t;
+	RE_Rotate_Increment, /*!< Encoder was incremented */
+	RE_Rotate_Decrement, /*!< Encoder was decremented */
+	RE_Rotate_Nothing    /*!< Encoder stop at it was before */
+} RE_Rotate_t;
 
 /**
  * @brief  Rotary encoder mode selection for rotation
  */
 typedef enum {
-	TM_RE_Mode_Zero, /*!< Rotary encoder mode zero. It is used for direction when it will be increment od decrement, default used */
-	TM_RE_Mode_One   /*!< Rotary encoder mode one. It is used for direction when it will be increment od decrement */
-} TM_RE_Mode_t;
+	RE_Mode_Zero, /*!< Rotary encoder mode zero. It is used for direction when it will be increment od decrement, default used */
+	RE_Mode_One   /*!< Rotary encoder mode one. It is used for direction when it will be increment od decrement */
+} RE_Mode_t;
 
 /**
  * @brief  Rotary main working structure 
@@ -119,55 +119,55 @@ typedef enum {
 typedef struct {
 	int32_t Absolute;        /*!< Absolute rotation from beginning, for public use */
 	int32_t Diff;            /*!< Rotary difference from last check, for public use */
-	TM_RE_Rotate_t Rotation; /*!< Increment, Decrement or nothing, for public use */
-	TM_RE_Mode_t Mode;       /*!< Rotary encoder mode selected */
+	RE_Rotate_t Rotation; /*!< Increment, Decrement or nothing, for public use */
+	RE_Mode_t Mode;       /*!< Rotary encoder mode selected */
 	uint8_t LastA;           /*!< Last status of A pin when checking. Meant for private use */
 	int32_t RE_Count;        /*!< Temporary variable to store data between rotation and user check */
 	GPIO_TypeDef* GPIO_A;    /*!< Pointer to GPIOx for Rotary encode A pin. Meant for private use */
 	GPIO_TypeDef* GPIO_B;    /*!< Pointer to GPIOx for Rotary encode B pin. Meant for private use */
 	uint16_t GPIO_PIN_A;     /*!< GPIO pin for rotary encoder A pin. This pin is also set for interrupt */
 	uint16_t GPIO_PIN_B;     /*!< GPIO pin for rotary encoder B pin. */
-} TM_RE_t;
+} RE_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_ROTARY_ENCODER_Functions
+ * @defgroup ROTARY_ENCODER_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Prepare Rotary Encoder to work
- * @param  *data: Pointer to @ref TM_RE_t structure
+ * @param  *data: Pointer to @ref RE_t structure
  * @retval None
  */
-void TM_RE_Init(TM_RE_t* data, GPIO_TypeDef* GPIO_A_Port, uint16_t GPIO_A_Pin, GPIO_TypeDef* GPIO_B_Port, uint16_t GPIO_B_Pin);
+void RE_Init(RE_t* data, GPIO_TypeDef* GPIO_A_Port, uint16_t GPIO_A_Pin, GPIO_TypeDef* GPIO_B_Port, uint16_t GPIO_B_Pin);
 
 /**
  * @brief  Set rotary encoder custom mode
- * @param  *data: Pointer to @ref TM_RE_t structure for specific rotary encoder input
- * @param  mode: Rotary mode you will use. This parameter can be a value of @ref TM_RE_Mode_t enumeration
+ * @param  *data: Pointer to @ref RE_t structure for specific rotary encoder input
+ * @param  mode: Rotary mode you will use. This parameter can be a value of @ref RE_Mode_t enumeration
  * @retval None
  */
-void TM_RE_SetMode(TM_RE_t* data, TM_RE_Mode_t mode);
+void RE_SetMode(RE_t* data, RE_Mode_t mode);
 
 /**
  * @brief  Checks and gets new values of rotary encoder
- * @param  *data: Pointer to @ref TM_RE_t structure
- * @retval Member of @ref TM_RE_Rotate_t
+ * @param  *data: Pointer to @ref RE_t structure
+ * @retval Member of @ref RE_Rotate_t
  */
-TM_RE_Rotate_t TM_RE_Get(TM_RE_t* data);
+RE_Rotate_t RE_Get(RE_t* data);
 
 /**
  * @brief  Process function.
  * @note   This function have to be called inside your interrupt handler.
- * @param  *data: Pointer to rotary encoder @ret TM_RE_t data where interrupt occured
+ * @param  *data: Pointer to rotary encoder @ret RE_t data where interrupt occured
  * @retval None
  */
-void TM_RE_Process(TM_RE_t* data);
+void RE_Process(RE_t* data);
 
 /**
  * @}

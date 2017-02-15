@@ -44,7 +44,7 @@
  * 
  *	//Set default SPI
  * 	#define PCD8544_SPI				SPI2
- * 	#define PCD8544_SPI_PINSPACK 	TM_SPI_PinsPack_1
+ * 	#define PCD8544_SPI_PINSPACK 	SPI_PinsPack_1
  * 	
  * Also, other pins can be changed as well, in your defines.h file
  * 
@@ -71,7 +71,7 @@
  * - STM32F4xx
  * - STM32F4xx RCC
  * - STM32F4xx GPIO
- * - TM_SPI
+ * - SPI
  */
 /**
  * Includes
@@ -80,12 +80,12 @@
 #include "stm32f4xx.h"
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_rcc.h"
-#include "tm_stm32f4_spi.h"
+#include "stm32f4_spi.h"
 
 //SPI used
 #ifndef PCD8544_SPI
 #define PCD8544_SPI				SPI2
-#define PCD8544_SPI_PINSPACK 	TM_SPI_PinsPack_1
+#define PCD8544_SPI_PINSPACK 	SPI_PinsPack_1
 #endif
 
 //Default pins used

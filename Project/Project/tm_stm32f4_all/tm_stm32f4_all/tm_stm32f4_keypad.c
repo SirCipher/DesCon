@@ -16,23 +16,23 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_keypad.h"
+#include "stm32f4_keypad.h"
 
 /* Pins configuration, columns are outputs */
-#define KEYPAD_COLUMN_1_HIGH		TM_GPIO_SetPinHigh(KEYPAD_COLUMN_1_PORT, KEYPAD_COLUMN_1_PIN)
-#define KEYPAD_COLUMN_1_LOW			TM_GPIO_SetPinLow(KEYPAD_COLUMN_1_PORT, KEYPAD_COLUMN_1_PIN)
-#define KEYPAD_COLUMN_2_HIGH		TM_GPIO_SetPinHigh(KEYPAD_COLUMN_2_PORT, KEYPAD_COLUMN_2_PIN)
-#define KEYPAD_COLUMN_2_LOW			TM_GPIO_SetPinLow(KEYPAD_COLUMN_2_PORT, KEYPAD_COLUMN_2_PIN)
-#define KEYPAD_COLUMN_3_HIGH		TM_GPIO_SetPinHigh(KEYPAD_COLUMN_3_PORT, KEYPAD_COLUMN_3_PIN)
-#define KEYPAD_COLUMN_3_LOW			TM_GPIO_SetPinLow(KEYPAD_COLUMN_3_PORT, KEYPAD_COLUMN_3_PIN)
-#define KEYPAD_COLUMN_4_HIGH		TM_GPIO_SetPinHigh(KEYPAD_COLUMN_4_PORT, KEYPAD_COLUMN_4_PIN)
-#define KEYPAD_COLUMN_4_LOW			TM_GPIO_SetPinLow(KEYPAD_COLUMN_4_PORT, KEYPAD_COLUMN_4_PIN)
+#define KEYPAD_COLUMN_1_HIGH		GPIO_SetPinHigh(KEYPAD_COLUMN_1_PORT, KEYPAD_COLUMN_1_PIN)
+#define KEYPAD_COLUMN_1_LOW			GPIO_SetPinLow(KEYPAD_COLUMN_1_PORT, KEYPAD_COLUMN_1_PIN)
+#define KEYPAD_COLUMN_2_HIGH		GPIO_SetPinHigh(KEYPAD_COLUMN_2_PORT, KEYPAD_COLUMN_2_PIN)
+#define KEYPAD_COLUMN_2_LOW			GPIO_SetPinLow(KEYPAD_COLUMN_2_PORT, KEYPAD_COLUMN_2_PIN)
+#define KEYPAD_COLUMN_3_HIGH		GPIO_SetPinHigh(KEYPAD_COLUMN_3_PORT, KEYPAD_COLUMN_3_PIN)
+#define KEYPAD_COLUMN_3_LOW			GPIO_SetPinLow(KEYPAD_COLUMN_3_PORT, KEYPAD_COLUMN_3_PIN)
+#define KEYPAD_COLUMN_4_HIGH		GPIO_SetPinHigh(KEYPAD_COLUMN_4_PORT, KEYPAD_COLUMN_4_PIN)
+#define KEYPAD_COLUMN_4_LOW			GPIO_SetPinLow(KEYPAD_COLUMN_4_PORT, KEYPAD_COLUMN_4_PIN)
 
 /* Read input pins */
-#define KEYPAD_ROW_1_CHECK			(!TM_GPIO_GetInputPinValue(KEYPAD_ROW_1_PORT, KEYPAD_ROW_1_PIN))
-#define KEYPAD_ROW_2_CHECK			(!TM_GPIO_GetInputPinValue(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN))
-#define KEYPAD_ROW_3_CHECK			(!TM_GPIO_GetInputPinValue(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN))
-#define KEYPAD_ROW_4_CHECK			(!TM_GPIO_GetInputPinValue(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN))
+#define KEYPAD_ROW_1_CHECK			(!GPIO_GetInputPinValue(KEYPAD_ROW_1_PORT, KEYPAD_ROW_1_PIN))
+#define KEYPAD_ROW_2_CHECK			(!GPIO_GetInputPinValue(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN))
+#define KEYPAD_ROW_3_CHECK			(!GPIO_GetInputPinValue(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN))
+#define KEYPAD_ROW_4_CHECK			(!GPIO_GetInputPinValue(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN))
 
 uint8_t KEYPAD_INT_Buttons[4][4] = {
 	{0x01, 0x02, 0x03, 0x0C},
@@ -42,63 +42,63 @@ uint8_t KEYPAD_INT_Buttons[4][4] = {
 };
 
 /* Private functions */
-void TM_KEYPAD_INT_SetColumn(uint8_t column);
-uint8_t TM_KEYPAD_INT_CheckRow(uint8_t column);
-uint8_t TM_KEYPAD_INT_Read(void);
+void KEYPAD_INT_SetColumn(uint8_t column);
+uint8_t KEYPAD_INT_CheckRow(uint8_t column);
+uint8_t KEYPAD_INT_Read(void);
 
 /* Private variables */
-TM_KEYPAD_Type_t TM_KEYPAD_INT_KeypadType;
-static TM_KEYPAD_Button_t KeypadStatus = TM_KEYPAD_Button_NOPRESSED;
+KEYPAD_Type_t KEYPAD_INT_KeypadType;
+static KEYPAD_Button_t KeypadStatus = KEYPAD_Button_NOPRESSED;
 
-void TM_KEYPAD_Init(TM_KEYPAD_Type_t type) {
+void KEYPAD_Init(KEYPAD_Type_t type) {
 	/* Set keyboard type */
-	TM_KEYPAD_INT_KeypadType = type;
+	KEYPAD_INT_KeypadType = type;
 	
 	/* Columns are output */
 	/* Column 1 */
-	TM_GPIO_Init(KEYPAD_COLUMN_1_PORT, KEYPAD_COLUMN_1_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	GPIO_Init(KEYPAD_COLUMN_1_PORT, KEYPAD_COLUMN_1_PIN, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Medium);
 	/* Column 2 */
-	TM_GPIO_Init(KEYPAD_COLUMN_2_PORT, KEYPAD_COLUMN_2_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	GPIO_Init(KEYPAD_COLUMN_2_PORT, KEYPAD_COLUMN_2_PIN, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Medium);
 	/* Column 3 */
-	TM_GPIO_Init(KEYPAD_COLUMN_3_PORT, KEYPAD_COLUMN_3_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	GPIO_Init(KEYPAD_COLUMN_3_PORT, KEYPAD_COLUMN_3_PIN, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Medium);
 	/* Column 3 */
-	if (TM_KEYPAD_INT_KeypadType == TM_KEYPAD_Type_Large) {
-		TM_GPIO_Init(KEYPAD_COLUMN_4_PORT, KEYPAD_COLUMN_4_PIN, TM_GPIO_Mode_OUT, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	if (KEYPAD_INT_KeypadType == KEYPAD_Type_Large) {
+		GPIO_Init(KEYPAD_COLUMN_4_PORT, KEYPAD_COLUMN_4_PIN, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Medium);
 	}
 	
 	/* Rows are inputs */
 	/* Row 1 */
-	TM_GPIO_Init(KEYPAD_ROW_1_PORT, KEYPAD_ROW_1_PIN, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	GPIO_Init(KEYPAD_ROW_1_PORT, KEYPAD_ROW_1_PIN, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Medium);
 	/* Row 2 */
-	TM_GPIO_Init(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	GPIO_Init(KEYPAD_ROW_2_PORT, KEYPAD_ROW_2_PIN, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Medium);
 	/* Row 3 */
-	TM_GPIO_Init(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	GPIO_Init(KEYPAD_ROW_3_PORT, KEYPAD_ROW_3_PIN, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Medium);
 	/* Row 4 */
-	TM_GPIO_Init(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	GPIO_Init(KEYPAD_ROW_4_PORT, KEYPAD_ROW_4_PIN, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Medium);
 	
 	/* All columns high */
-	TM_KEYPAD_INT_SetColumn(0);
+	KEYPAD_INT_SetColumn(0);
 }
 
-TM_KEYPAD_Button_t TM_KEYPAD_Read(void) {
-	TM_KEYPAD_Button_t temp;
+KEYPAD_Button_t KEYPAD_Read(void) {
+	KEYPAD_Button_t temp;
 	
 	/* Get keypad status */
 	temp = KeypadStatus;
 	
 	/* Reset keypad status */
-	KeypadStatus = TM_KEYPAD_Button_NOPRESSED;
+	KeypadStatus = KEYPAD_Button_NOPRESSED;
 	
 	return temp;
 }
 
 /* Private */
-void TM_KEYPAD_INT_SetColumn(uint8_t column) {
+void KEYPAD_INT_SetColumn(uint8_t column) {
 	/* Set rows high */
 	KEYPAD_COLUMN_1_HIGH;
 	KEYPAD_COLUMN_2_HIGH;
 	KEYPAD_COLUMN_3_HIGH;
-	if (TM_KEYPAD_INT_KeypadType == TM_KEYPAD_Type_Large) {
+	if (KEYPAD_INT_KeypadType == KEYPAD_Type_Large) {
 		KEYPAD_COLUMN_4_HIGH;
 	}
 	
@@ -117,7 +117,7 @@ void TM_KEYPAD_INT_SetColumn(uint8_t column) {
 	}
 }
 
-uint8_t TM_KEYPAD_INT_CheckRow(uint8_t column) {
+uint8_t KEYPAD_INT_CheckRow(uint8_t column) {
 	/* Read rows */
 	
 	/* Scan row 1 */
@@ -133,7 +133,7 @@ uint8_t TM_KEYPAD_INT_CheckRow(uint8_t column) {
 		return KEYPAD_INT_Buttons[2][column - 1];
 	}
 	/* Scan row 4 */
-	if (TM_KEYPAD_INT_KeypadType == TM_KEYPAD_Type_Large && KEYPAD_ROW_4_CHECK) {
+	if (KEYPAD_INT_KeypadType == KEYPAD_Type_Large && KEYPAD_ROW_4_CHECK) {
 		return KEYPAD_INT_Buttons[3][column - 1];
 	}
 	
@@ -141,37 +141,37 @@ uint8_t TM_KEYPAD_INT_CheckRow(uint8_t column) {
 	return KEYPAD_NO_PRESSED;
 }
 
-uint8_t TM_KEYPAD_INT_Read(void) {
+uint8_t KEYPAD_INT_Read(void) {
 	uint8_t check;
 	/* Set row 1 to LOW */
-	TM_KEYPAD_INT_SetColumn(1);
+	KEYPAD_INT_SetColumn(1);
 	/* Check rows */
-	check = TM_KEYPAD_INT_CheckRow(1);
+	check = KEYPAD_INT_CheckRow(1);
 	if (check != KEYPAD_NO_PRESSED) {
 		return check;
 	}
 	
 	/* Set row 2 to LOW */
-	TM_KEYPAD_INT_SetColumn(2);
+	KEYPAD_INT_SetColumn(2);
 	/* Check columns */
-	check = TM_KEYPAD_INT_CheckRow(2);
+	check = KEYPAD_INT_CheckRow(2);
 	if (check != KEYPAD_NO_PRESSED) {
 		return check;
 	}
 	
 	/* Set row 3 to LOW */
-	TM_KEYPAD_INT_SetColumn(3);
+	KEYPAD_INT_SetColumn(3);
 	/* Check columns */
-	check = TM_KEYPAD_INT_CheckRow(3);
+	check = KEYPAD_INT_CheckRow(3);
 	if (check != KEYPAD_NO_PRESSED) {
 		return check;
 	}
 
-	if (TM_KEYPAD_INT_KeypadType == TM_KEYPAD_Type_Large) {
+	if (KEYPAD_INT_KeypadType == KEYPAD_Type_Large) {
 		/* Set column 4 to LOW */
-		TM_KEYPAD_INT_SetColumn(4);
+		KEYPAD_INT_SetColumn(4);
 		/* Check rows */
-		check = TM_KEYPAD_INT_CheckRow(4);
+		check = KEYPAD_INT_CheckRow(4);
 		if (check != KEYPAD_NO_PRESSED) {
 			return check;
 		}
@@ -181,16 +181,16 @@ uint8_t TM_KEYPAD_INT_Read(void) {
 	return KEYPAD_NO_PRESSED;
 }
 
-void TM_KEYPAD_Update(void) {
+void KEYPAD_Update(void) {
 	static uint16_t millis = 0;
 	
 	/* Every X ms read */
-	if (++millis >= KEYPAD_READ_INTERVAL && KeypadStatus == TM_KEYPAD_Button_NOPRESSED) {
+	if (++millis >= KEYPAD_READ_INTERVAL && KeypadStatus == KEYPAD_Button_NOPRESSED) {
 		/* Reset */
 		millis = 0;
 		
 		/* Read keyboard */
-		KeypadStatus = (TM_KEYPAD_Button_t) TM_KEYPAD_INT_Read();
+		KeypadStatus = (KEYPAD_Button_t) KEYPAD_INT_Read();
 	}
 }
 

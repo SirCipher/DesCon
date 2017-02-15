@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_DELAY_H
-#define TM_DELAY_H 240
+#ifndef DELAY_H
+#define DELAY_H 240
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_DELAY
+ * @defgroup DELAY
  * @brief    Pretty accurate delay functions with SysTick or any other timer - http://stm32f4-discovery.com/2014/04/library-03-stm32f429-discovery-system-clock-and-pretty-precise-delay-library/
  * @{
  *
@@ -70,9 +70,9 @@ Another way is to use ARM compiler.
 \code{.c}
 //Select custom timer for delay, here is TIM2 selected.
 //If you want custom TIMx, just replace number "2" for your TIM's number.
-#define TM_DELAY_TIM				TIM2
-#define TM_DELAY_TIM_IRQ			TIM2_IRQn
-#define TM_DELAY_TIM_IRQ_HANDLER	TIM2_IRQHandler
+#define DELAY_TIM				TIM2
+#define DELAY_TIM_IRQ			TIM2_IRQn
+#define DELAY_TIM_IRQ_HANDLER	TIM2_IRQHandler
 \endcode
  *
  *
@@ -115,7 +115,7 @@ Another way is to use ARM compiler.
  Version 2.2
   - January 12, 2015
   - Added support for custom function call each time 1ms interrupt happen
-  - Function is called TM_DELAY_1msHandler(void), with __weak parameter
+  - Function is called DELAY_1msHandler(void), with __weak parameter
   - attributes.h file needed
   
  Version 2.1
@@ -150,15 +150,15 @@ Another way is to use ARM compiler.
 #include "defines.h"
 #include "attributes.h"
 /* If user selectable timer is selected for delay */
-#if defined(TM_DELAY_TIM)
+#if defined(DELAY_TIM)
 #include "misc.h"
 #include "stm32f4xx_tim.h"
-#include "tm_stm32f4_timer_properties.h"
+#include "stm32f4_timer_properties.h"
 #endif
 #include "stdlib.h"
 
 /**
- * @defgroup TM_DELAY_Typedefs
+ * @defgroup DELAY_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -173,14 +173,14 @@ typedef struct {
 	uint8_t Enabled;          /*!< Set to 1 when timer is enabled */
 	void (*Callback)(void *); /*!< Callback which will be called when timer reaches zero */
 	void* UserParameters;     /*!< Pointer to user parameters used for callback function */
-} TM_DELAY_Timer_t;
+} DELAY_Timer_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_DELAY_Macros
+ * @defgroup DELAY_Macros
  * @brief    Library Macros
  * @{
  */
@@ -208,7 +208,7 @@ typedef struct {
  */
 
 /**
- * @defgroup TM_DELAY_Variables
+ * @defgroup DELAY_Variables
  * @brief    Library Variables
  * @{
  */
@@ -217,8 +217,8 @@ typedef struct {
  * This variable can be used in main
  * It is automatically increased every time systick make an interrupt
  */
-extern __IO uint32_t TM_Time;
-extern __IO uint32_t TM_Time2;
+extern __IO uint32_t Time;
+extern __IO uint32_t Time2;
 extern __IO uint32_t mult;
 
 /**
@@ -226,7 +226,7 @@ extern __IO uint32_t mult;
  */
 
 /**
- * @defgroup TM_DELAY_Functions
+ * @defgroup DELAY_Functions
  * @brief    Library Functions
  * @{
  */
@@ -238,15 +238,15 @@ extern __IO uint32_t mult;
  * @note   Declared as static inline
  */
 static __INLINE void Delay(uint32_t micros) {
-#if defined(TM_DELAY_TIM)
-	volatile uint32_t timer = TM_DELAY_TIM->CNT;
+#if defined(DELAY_TIM)
+	volatile uint32_t timer = DELAY_TIM->CNT;
 
 	do {
 		/* Count timer ticks */
-		while ((TM_DELAY_TIM->CNT - timer) == 0);
+		while ((DELAY_TIM->CNT - timer) == 0);
 
 		/* Increase timer */
-		timer = TM_DELAY_TIM->CNT;
+		timer = DELAY_TIM->CNT;
 
 		/* Decrease microseconds */
 	} while (--micros);
@@ -270,7 +270,7 @@ static __INLINE void Delay(uint32_t micros) {
 
 	/* While loop */
 	while (amicros--);
-#endif /* TM_DELAY_TIM */
+#endif /* DELAY_TIM */
 }
 
 /**
@@ -280,12 +280,12 @@ static __INLINE void Delay(uint32_t micros) {
  * @note   Declared as static inline
  */
 static __INLINE void Delayms(uint32_t millis) {
-	volatile uint32_t timer = TM_Time;
+	volatile uint32_t timer = Time;
 
 	/* Called from thread */
 	if (!__get_IPSR()) {
 		/* Wait for timer to count milliseconds */
-		while ((TM_Time - timer) < millis) {
+		while ((Time - timer) < millis) {
 #ifdef DELAY_SLEEP
 			/* Go sleep, wait systick interrupt */
 			__WFI();
@@ -307,29 +307,29 @@ static __INLINE void Delayms(uint32_t millis) {
  * @param  None
  * @retval None
  */
-void TM_DELAY_Init(void);
+void DELAY_Init(void);
 
 /**
- * @brief  Gets the TM_Time variable value
+ * @brief  Gets the Time variable value
  * @param  None
  * @retval Current time in milliseconds
  */
-#define TM_DELAY_Time()					(TM_Time)
+#define DELAY_Time()					(Time)
 
 /**
- * @brief  Sets value for TM_Time variable
+ * @brief  Sets value for Time variable
  * @param  time: Time in milliseconds
  * @retval None
  */
-#define TM_DELAY_SetTime(time)			(TM_Time = (time))
+#define DELAY_SetTime(time)			(Time = (time))
 
 /**
- * @brief  Re-enables delay timer It has to be configured before with TM_DELAY_Init()
+ * @brief  Re-enables delay timer It has to be configured before with DELAY_Init()
  * @note   This function enables delay timer. It can be systick or user selectable timer.
  * @param  None
  * @retval None
  */
-void TM_DELAY_EnableDelayTimer(void);
+void DELAY_EnableDelayTimer(void);
 
 /**
  * @brief  Disables delay timer
@@ -337,23 +337,23 @@ void TM_DELAY_EnableDelayTimer(void);
  * @param  None
  * @retval None
  */
-void TM_DELAY_DisableDelayTimer(void);
+void DELAY_DisableDelayTimer(void);
 
 /**
- * @brief  Gets the TM_Time2 variable value
+ * @brief  Gets the Time2 variable value
  * @param  None
  * @retval Current time in milliseconds
  * @note   This is not meant for public use
  */
-#define TM_DELAY_Time2()				(TM_Time2)
+#define DELAY_Time2()				(Time2)
 
 /**
- * @brief  Sets value for TM_Time variable
+ * @brief  Sets value for Time variable
  * @param  time: Time in milliseconds
  * @retval None
  * @note   This is not meant for public use
  */
-#define TM_DELAY_SetTime2(time)			(TM_Time2 = (time))
+#define DELAY_SetTime2(time)			(Time2 = (time))
 
 /**
  * @brief  Creates a new custom timer which has 1ms resolution
@@ -361,57 +361,57 @@ void TM_DELAY_DisableDelayTimer(void);
  * @param  ReloadValue: Number of milliseconds when timer reaches zero and callback function is called
  * @param  AutoReload: If set to 1, timer will start again when it reaches zero and callback is called
  * @param  StartTimer: If set to 1, timer will start immediately
- * @param  *TM_DELAY_CustomTimerCallback: Pointer to callback function which will be called when timer reaches zero
+ * @param  *DELAY_CustomTimerCallback: Pointer to callback function which will be called when timer reaches zero
  * @param  *UserParameters: Pointer to void pointer to user parameters used as first parameter in callback function
  * @retval Pointer to allocated timer structure
  */
-TM_DELAY_Timer_t* TM_DELAY_TimerCreate(uint32_t ReloadValue, uint8_t AutoReload, uint8_t StartTimer, void (*TM_DELAY_CustomTimerCallback)(void *), void* UserParameters);
+DELAY_Timer_t* DELAY_TimerCreate(uint32_t ReloadValue, uint8_t AutoReload, uint8_t StartTimer, void (*DELAY_CustomTimerCallback)(void *), void* UserParameters);
 
 /**
  * @brief  Deletes already allocated timer
- * @param  *Timer: Pointer to @ref TM_DELAY_Timer_t structure
+ * @param  *Timer: Pointer to @ref DELAY_Timer_t structure
  * @retval None
  */
-void TM_DELAY_TimerDelete(TM_DELAY_Timer_t* Timer);
+void DELAY_TimerDelete(DELAY_Timer_t* Timer);
 
 /**
  * @brief  Stops custom timer from counting
- * @param  *Timer: Pointer to @ref TM_DELAY_Timer_t structure
- * @retval Pointer to @ref TM_DELAY_Timer_t structure
+ * @param  *Timer: Pointer to @ref DELAY_Timer_t structure
+ * @retval Pointer to @ref DELAY_Timer_t structure
  */
-TM_DELAY_Timer_t* TM_DELAY_TimerStop(TM_DELAY_Timer_t* Timer);
+DELAY_Timer_t* DELAY_TimerStop(DELAY_Timer_t* Timer);
 
 /**
  * @brief  Starts custom timer counting
- * @param  *Timer: Pointer to @ref TM_DELAY_Timer_t structure
- * @retval Pointer to @ref TM_DELAY_Timer_t structure
+ * @param  *Timer: Pointer to @ref DELAY_Timer_t structure
+ * @retval Pointer to @ref DELAY_Timer_t structure
  */
-TM_DELAY_Timer_t* TM_DELAY_TimerStart(TM_DELAY_Timer_t* Timer);
+DELAY_Timer_t* DELAY_TimerStart(DELAY_Timer_t* Timer);
 
 /**
  * @brief  Resets custom timer counter value
- * @param  *Timer: Pointer to @ref TM_DELAY_Timer_t structure
- * @retval Pointer to @ref TM_DELAY_Timer_t structure
+ * @param  *Timer: Pointer to @ref DELAY_Timer_t structure
+ * @retval Pointer to @ref DELAY_Timer_t structure
  */
-TM_DELAY_Timer_t* TM_DELAY_TimerReset(TM_DELAY_Timer_t* Timer);
+DELAY_Timer_t* DELAY_TimerReset(DELAY_Timer_t* Timer);
 
 /**
  * @brief  Sets auto reload feature for timer
  * @note   Auto reload features is used for timer which starts again when zero is reached if auto reload active
- * @param  *Timer: Pointer to @ref TM_DELAY_Timer_t structure
+ * @param  *Timer: Pointer to @ref DELAY_Timer_t structure
  * uint8_t AutoReload: Set to 1 if you want to enable AutoReload or 0 to disable
- * @retval Pointer to @ref TM_DELAY_Timer_t structure
+ * @retval Pointer to @ref DELAY_Timer_t structure
  */
-TM_DELAY_Timer_t* TM_DELAY_TimerAutoReload(TM_DELAY_Timer_t* Timer, uint8_t AutoReload);
+DELAY_Timer_t* DELAY_TimerAutoReload(DELAY_Timer_t* Timer, uint8_t AutoReload);
 
 /**
  * @brief  Sets auto reload value for timer
- * @param  *Timer: Pointer to @ref TM_DELAY_Timer_t structure
+ * @param  *Timer: Pointer to @ref DELAY_Timer_t structure
  * @param  AutoReloadValue: Value for timer to be set when zero is reached and callback is called
  * @note   AutoReload feature must be enabled for timer in order to get this to work properly
- * @retval Pointer to @ref TM_DELAY_Timer_t structure
+ * @retval Pointer to @ref DELAY_Timer_t structure
  */
-TM_DELAY_Timer_t* TM_DELAY_TimerAutoReloadValue(TM_DELAY_Timer_t* Timer, uint32_t AutoReloadValue);
+DELAY_Timer_t* DELAY_TimerAutoReloadValue(DELAY_Timer_t* Timer, uint32_t AutoReloadValue);
 
 /**
  * @brief  User function, called each 1ms when interrupt from timer happen
@@ -420,7 +420,7 @@ TM_DELAY_Timer_t* TM_DELAY_TimerAutoReloadValue(TM_DELAY_Timer_t* Timer, uint32_
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-__weak void TM_DELAY_1msHandler(void);
+__weak void DELAY_1msHandler(void);
 
 
 /**

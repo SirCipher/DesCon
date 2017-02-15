@@ -29,7 +29,7 @@
 #include "usbh_usr.h"
 #include "usbh_hid_mouse.h"
 #include "usbh_hid_keybd.h"
-#include "tm_stm32f4_usb_hid_host.h"
+#include "stm32f4_usb_hid_host.h"
 
 
 /** @addtogroup USBH_USER
@@ -58,9 +58,9 @@ extern  int16_t  x_loc, y_loc;
 extern __IO int16_t  prev_x, prev_y;
 
 /* TM variable */
-TM_USB_HIDHOST_Result_t 	TM_USB_HIDHOST_INT_Result;
-TM_USB_HIDHOST_Keyboard_t 	TM_USB_HIDHOST_INT_Keyboard;
-TM_USB_HIDHOST_Mouse_t 		TM_USB_HIDHOST_INT_Mouse;
+USB_HIDHOST_Result_t 	USB_HIDHOST_INT_Result;
+USB_HIDHOST_Keyboard_t 	USB_HIDHOST_INT_Keyboard;
+USB_HIDHOST_Mouse_t 		USB_HIDHOST_INT_Mouse;
 
 /** @defgroup USBH_USR_Private_Variables
 * @{
@@ -96,7 +96,7 @@ USBH_Usr_cb_TypeDef USR_Callbacks = {
 * @retval None
 */
 void USBH_USR_Init(void) {
-	TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_Disconnected;
+	USB_HIDHOST_INT_Result = USB_HIDHOST_Result_Disconnected;
 }
 
 /**
@@ -106,7 +106,7 @@ void USBH_USR_Init(void) {
 * @retval None
 */
 void USBH_USR_DeviceAttached(void) {
-	TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_Disconnected;
+	USB_HIDHOST_INT_Result = USB_HIDHOST_Result_Disconnected;
 }
 
 /**
@@ -115,7 +115,7 @@ void USBH_USR_DeviceAttached(void) {
 * @retval None
 */
 void USBH_USR_UnrecoveredError(void) {
-	TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_Error;
+	USB_HIDHOST_INT_Result = USB_HIDHOST_Result_Error;
 }
 
 /**
@@ -125,7 +125,7 @@ void USBH_USR_UnrecoveredError(void) {
 * @retval None
 */
 void USBH_USR_DeviceDisconnected (void) {
-	TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_Disconnected;
+	USB_HIDHOST_INT_Result = USB_HIDHOST_Result_Disconnected;
 }
 
 /**
@@ -135,7 +135,7 @@ void USBH_USR_DeviceDisconnected (void) {
 * @retval None
 */
 void USBH_USR_ResetDevice(void) {
-	TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_Disconnected;
+	USB_HIDHOST_INT_Result = USB_HIDHOST_Result_Disconnected;
 }
 
 
@@ -150,7 +150,7 @@ void USBH_USR_DeviceSpeedDetected(uint8_t DeviceSpeed) {
 	} else if (DeviceSpeed == HPRT0_PRTSPD_FULL_SPEED) {
 	} else if (DeviceSpeed == HPRT0_PRTSPD_LOW_SPEED) {
 	} else {
-		TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_Error;
+		USB_HIDHOST_INT_Result = USB_HIDHOST_Result_Error;
 	}
 }
 
@@ -236,7 +236,7 @@ void USBH_USR_EnumerationDone(void) {
 * @retval None
 */
 void USBH_USR_DeviceNotSupported(void) {
-	TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_DeviceNotSupported;
+	USB_HIDHOST_INT_Result = USB_HIDHOST_Result_DeviceNotSupported;
 }
 
 
@@ -257,7 +257,7 @@ USBH_USR_Status USBH_USR_UserInput(void) {
 * @retval None
 */
 void USBH_USR_OverCurrentDetected(void) {
-	TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_Error;
+	USB_HIDHOST_INT_Result = USB_HIDHOST_Result_Error;
 }
 
 /**
@@ -269,19 +269,19 @@ void USBH_USR_OverCurrentDetected(void) {
 void USR_MOUSE_Init(void) {
 	static uint8_t firstInit = 1;
 	/* Mouse is connected and ready to use */
-	TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_MouseConnected;
+	USB_HIDHOST_INT_Result = USB_HIDHOST_Result_MouseConnected;
 	
 	if (firstInit) {
 		firstInit = 0;
 		
 		/* Reset values */
-		TM_USB_HIDHOST_INT_Mouse.AbsoluteX = 0;
-		TM_USB_HIDHOST_INT_Mouse.AbsoluteY = 0;
-		TM_USB_HIDHOST_INT_Mouse.DiffX = 0;
-		TM_USB_HIDHOST_INT_Mouse.DiffY = 0;
-		TM_USB_HIDHOST_INT_Mouse.LeftButton = TM_USB_HIDHOST_Button_Released;
-		TM_USB_HIDHOST_INT_Mouse.RightButton = TM_USB_HIDHOST_Button_Released;
-		TM_USB_HIDHOST_INT_Mouse.MiddleButton = TM_USB_HIDHOST_Button_Released;
+		USB_HIDHOST_INT_Mouse.AbsoluteX = 0;
+		USB_HIDHOST_INT_Mouse.AbsoluteY = 0;
+		USB_HIDHOST_INT_Mouse.DiffX = 0;
+		USB_HIDHOST_INT_Mouse.DiffY = 0;
+		USB_HIDHOST_INT_Mouse.LeftButton = USB_HIDHOST_Button_Released;
+		USB_HIDHOST_INT_Mouse.RightButton = USB_HIDHOST_Button_Released;
+		USB_HIDHOST_INT_Mouse.MiddleButton = USB_HIDHOST_Button_Released;
 	}
 }
 
@@ -295,13 +295,13 @@ void USR_MOUSE_ProcessData(HID_MOUSE_Data_TypeDef *data) {
 	static uint8_t mouseButtons[] = {0, 0, 0};
 	/* Check X movement */
 	if (data->x != 0) {
-		TM_USB_HIDHOST_INT_Mouse.DiffX = (int8_t)data->x;
-		TM_USB_HIDHOST_INT_Mouse.AbsoluteX += (int8_t)data->x;
+		USB_HIDHOST_INT_Mouse.DiffX = (int8_t)data->x;
+		USB_HIDHOST_INT_Mouse.AbsoluteX += (int8_t)data->x;
 	}
 	/* Check Y movement */
 	if (data->y != 0) {
-		TM_USB_HIDHOST_INT_Mouse.DiffY = (int8_t)data->y;
-		TM_USB_HIDHOST_INT_Mouse.AbsoluteY += (int8_t)data->y;
+		USB_HIDHOST_INT_Mouse.DiffY = (int8_t)data->y;
+		USB_HIDHOST_INT_Mouse.AbsoluteY += (int8_t)data->y;
 	}
 	
 	/* Process button 1 */
@@ -309,13 +309,13 @@ void USR_MOUSE_ProcessData(HID_MOUSE_Data_TypeDef *data) {
 		/* Button 1 pressed */
 		if (mouseButtons[0] == 0) {
 			mouseButtons[0] = 1;
-			TM_USB_HIDHOST_INT_Mouse.LeftButton = TM_USB_HIDHOST_Button_Pressed;
+			USB_HIDHOST_INT_Mouse.LeftButton = USB_HIDHOST_Button_Pressed;
 		}
 	} else {
 		/* Button 1 released */
 		if (mouseButtons[0] == 1) {
 			mouseButtons[0] = 0;
-			TM_USB_HIDHOST_INT_Mouse.LeftButton = TM_USB_HIDHOST_Button_Released;
+			USB_HIDHOST_INT_Mouse.LeftButton = USB_HIDHOST_Button_Released;
 		}
 	}
 	
@@ -324,13 +324,13 @@ void USR_MOUSE_ProcessData(HID_MOUSE_Data_TypeDef *data) {
 		/* Button 2 pressed */
 		if (mouseButtons[1] == 0) {
 			mouseButtons[1] = 1;
-			TM_USB_HIDHOST_INT_Mouse.RightButton = TM_USB_HIDHOST_Button_Pressed;
+			USB_HIDHOST_INT_Mouse.RightButton = USB_HIDHOST_Button_Pressed;
 		}
 	} else {
 		/* Button 2 released */
 		if (mouseButtons[1] == 1) {
 			mouseButtons[1] = 0;
-			TM_USB_HIDHOST_INT_Mouse.RightButton = TM_USB_HIDHOST_Button_Released;
+			USB_HIDHOST_INT_Mouse.RightButton = USB_HIDHOST_Button_Released;
 		}
 	}
 	
@@ -339,13 +339,13 @@ void USR_MOUSE_ProcessData(HID_MOUSE_Data_TypeDef *data) {
 		/* Button 3 pressed */
 		if (mouseButtons[2] == 0) {
 			mouseButtons[2] = 1;
-			TM_USB_HIDHOST_INT_Mouse.MiddleButton = TM_USB_HIDHOST_Button_Pressed;
+			USB_HIDHOST_INT_Mouse.MiddleButton = USB_HIDHOST_Button_Pressed;
 		}
 	} else {
 		/* Button 3 released */
 		if (mouseButtons[2] == 1) {
 			mouseButtons[2] = 0;
-			TM_USB_HIDHOST_INT_Mouse.MiddleButton = TM_USB_HIDHOST_Button_Released;
+			USB_HIDHOST_INT_Mouse.MiddleButton = USB_HIDHOST_Button_Released;
 		}
 	}
 }
@@ -358,10 +358,10 @@ void USR_MOUSE_ProcessData(HID_MOUSE_Data_TypeDef *data) {
 */
 void USR_KEYBRD_Init(void) {
 	/* Keyboard is connected */
-	TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_KeyboardConnected;
+	USB_HIDHOST_INT_Result = USB_HIDHOST_Result_KeyboardConnected;
 	
 	/* Reset */
-	TM_USB_HIDHOST_INT_Keyboard.ButtonStatus = TM_USB_HIDHOST_Button_Released;
+	USB_HIDHOST_INT_Keyboard.ButtonStatus = USB_HIDHOST_Button_Released;
 }
 
 
@@ -374,9 +374,9 @@ void USR_KEYBRD_Init(void) {
 void USR_KEYBRD_ProcessData(uint8_t data) {
 	/* Set keyboard button */
 	/* Button has been pressed */
-	TM_USB_HIDHOST_INT_Keyboard.ButtonStatus = TM_USB_HIDHOST_Button_Pressed;
+	USB_HIDHOST_INT_Keyboard.ButtonStatus = USB_HIDHOST_Button_Pressed;
 	/* Set button value */
-	TM_USB_HIDHOST_INT_Keyboard.Button = data;
+	USB_HIDHOST_INT_Keyboard.Button = data;
 }
 
 /**
@@ -386,7 +386,7 @@ void USR_KEYBRD_ProcessData(uint8_t data) {
 * @retval None
 */
 void USBH_USR_DeInit(void) {
-	//TM_USB_HIDHOST_INT_Result = TM_USB_HIDHOST_Result_Disconnected;
+	//USB_HIDHOST_INT_Result = USB_HIDHOST_Result_Disconnected;
 }
 
 /**

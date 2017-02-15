@@ -16,37 +16,37 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_lcd.h"
+#include "stm32f4_lcd.h"
 
 /* Private structures, variables and functions */
-static void TM_LCD_INT_InitLTDC(void);
-static void TM_LCD_INT_InitLayers(void);
-static void TM_LCD_INT_InitLCD(void);
-static void TM_LCD_INT_InitPins(void);
+static void LCD_INT_InitLTDC(void);
+static void LCD_INT_InitLayers(void);
+static void LCD_INT_InitLCD(void);
+static void LCD_INT_InitPins(void);
 
 /* Private structure */
-typedef struct _TM_LCD_INT_t {
+typedef struct _LCD_INT_t {
 	uint16_t Width;
 	uint16_t Height;
 	uint32_t CurrentFrameBuffer;
 	uint32_t FrameStart;
 	uint32_t FrameOffset;
 	uint8_t CurrentLayer;
-	TM_FontDef_t* CurrentFont;
+	FontDef_t* CurrentFont;
 	uint32_t ForegroundColor;
 	uint32_t BackgroundColor;
 	uint16_t CurrentX;
 	uint16_t CurrentY;
-} TM_LCD_INT_t;
-static TM_LCD_INT_t LCD;
+} LCD_INT_t;
+static LCD_INT_t LCD;
 
-TM_LCD_Result_t TM_LCD_Init(void) {
-	TM_DMA2DGRAPHIC_INT_Conf_t DMA2DConf;
+LCD_Result_t LCD_Init(void) {
+	DMA2DGRAPHIC_INT_Conf_t DMA2DConf;
 	
 	/* Init SDRAM */
-	if (!TM_SDRAM_Init()) {
+	if (!SDRAM_Init()) {
 		/* Return error */
-		return TM_LCD_Result_SDRAM_Error;
+		return LCD_Result_SDRAM_Error;
 	}
 	
 	/* Fill default structure */
@@ -55,7 +55,7 @@ TM_LCD_Result_t TM_LCD_Init(void) {
 	LCD.CurrentFrameBuffer = LCD_FRAME_BUFFER;
 	LCD.FrameStart = LCD_FRAME_BUFFER;
 	LCD.FrameOffset = LCD_BUFFER_OFFSET;
-	LCD.CurrentFont = &TM_Font_11x18;
+	LCD.CurrentFont = &Font_11x18;
 	LCD.ForegroundColor = 0x0000;
 	LCD.BackgroundColor = 0xFFFF;
 	
@@ -68,60 +68,60 @@ TM_LCD_Result_t TM_LCD_Init(void) {
 	DMA2DConf.Orientation = 1;
 	
 	/* Init LCD pins */
-	TM_LCD_INT_InitPins();
+	LCD_INT_InitPins();
 	
 	/* Init LTDC peripheral */
-	TM_LCD_INT_InitLTDC();
+	LCD_INT_InitLTDC();
 	
 	/* Init LTDC layers */
-	TM_LCD_INT_InitLayers();
+	LCD_INT_InitLayers();
 	
 	/* Init LCD dependant settings */
-	TM_LCD_INT_InitLCD();
+	LCD_INT_InitLCD();
 	
 	/* Init DMA2D graphics */
-	TM_DMA2DGRAPHIC_Init();
+	DMA2DGRAPHIC_Init();
 	
 	/* Set settings */
-	TM_INT_DMA2DGRAPHIC_SetConf(&DMA2DConf);
+	INT_DMA2DGRAPHIC_SetConf(&DMA2DConf);
 	
 	/* Enable LCD */
-	TM_LCD_DisplayOn();
+	LCD_DisplayOn();
 	
-	TM_LCD_SetLayer1();
+	LCD_SetLayer1();
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_Fill(uint32_t color) {
+LCD_Result_t LCD_Fill(uint32_t color) {
 	/* Erase memory */
-	TM_DMA2DGRAPHIC_Fill(color);
+	DMA2DGRAPHIC_Fill(color);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_DisplayOn(void) {
+LCD_Result_t LCD_DisplayOn(void) {
 	/* Enable LTDC */
 	LTDC->GCR |= LTDC_GCR_LTDCEN;
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_DisplayOff(void) {
+LCD_Result_t LCD_DisplayOff(void) {
 	/* Disable LTDC */
 	LTDC->GCR &= ~LTDC_GCR_LTDCEN;
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_SetXY(uint16_t X, uint16_t Y) {
+LCD_Result_t LCD_SetXY(uint16_t X, uint16_t Y) {
 	/* Check if we are inside LCD */
 	if (X >= LCD.Width || Y >= LCD.Height) {
-		return TM_LCD_Result_Error;
+		return LCD_Result_Error;
 	}
 	
 	/* Set new values */
@@ -129,27 +129,27 @@ TM_LCD_Result_t TM_LCD_SetXY(uint16_t X, uint16_t Y) {
 	LCD.CurrentY = Y;
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_SetFont(TM_FontDef_t* Font) {
+LCD_Result_t LCD_SetFont(FontDef_t* Font) {
 	/* Set new font used for drawing */
 	LCD.CurrentFont = Font;
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_SetColors(uint32_t Foreground, uint32_t Background) {
+LCD_Result_t LCD_SetColors(uint32_t Foreground, uint32_t Background) {
 	/* Set new colors */
 	LCD.ForegroundColor = Foreground;
 	LCD.BackgroundColor = Background;
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_Putc(char c) {
+LCD_Result_t LCD_Putc(char c) {
 	uint32_t i, b, j;
 	
 	/* Check current coordinates */
@@ -161,7 +161,7 @@ TM_LCD_Result_t TM_LCD_Putc(char c) {
 		/* Check for Y position */
 		if (LCD.CurrentY >= LCD.Height) {
 			/* Return error */
-			return TM_LCD_Result_Error;
+			return LCD_Result_Error;
 		}
 	}
 	
@@ -170,40 +170,40 @@ TM_LCD_Result_t TM_LCD_Putc(char c) {
 		b = LCD.CurrentFont->data[(c - 32) * LCD.CurrentFont->FontHeight + i];
 		for (j = 0; j < LCD.CurrentFont->FontWidth; j++) {
 			if ((b << j) & 0x8000) {
-				TM_LCD_DrawPixel(LCD.CurrentX + j, (LCD.CurrentY + i), LCD.ForegroundColor);
+				LCD_DrawPixel(LCD.CurrentX + j, (LCD.CurrentY + i), LCD.ForegroundColor);
 			} else {
-				TM_LCD_DrawPixel(LCD.CurrentX + j, (LCD.CurrentY + i), LCD.BackgroundColor);
+				LCD_DrawPixel(LCD.CurrentX + j, (LCD.CurrentY + i), LCD.BackgroundColor);
 			}
 		}
 	}
 	
 	/* Go to new X location */
-	TM_LCD_SetXY(LCD.CurrentX + LCD.CurrentFont->FontWidth, LCD.CurrentY);
+	LCD_SetXY(LCD.CurrentX + LCD.CurrentFont->FontWidth, LCD.CurrentY);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_DrawPixel(uint16_t X, uint16_t Y, uint32_t color) {
+LCD_Result_t LCD_DrawPixel(uint16_t X, uint16_t Y, uint32_t color) {
 	/* Draw pixel at desired location */
 	*(__IO uint16_t *) (LCD.CurrentFrameBuffer + 2 * ((Y * LCD.Width) + X)) = color;
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-uint32_t TM_LCD_GetPixel(uint16_t X, uint16_t Y) {
+uint32_t LCD_GetPixel(uint16_t X, uint16_t Y) {
 	/* Get pixel at desired location */
 	return *(__IO uint16_t *) (LCD.CurrentFrameBuffer + 2 * ((Y * LCD.Width) + X));
 }
 
-TM_LCD_Result_t TM_LCD_Puts(char* str) {
+LCD_Result_t LCD_Puts(char* str) {
 	/* Send till string ends or error returned */
 	while (*str) {
 		/* Check if string OK */
-		if (TM_LCD_Putc(*str) != TM_LCD_Result_Ok) {
+		if (LCD_Putc(*str) != LCD_Result_Ok) {
 			/* Return error */
-			return TM_LCD_Result_Error;
+			return LCD_Result_Error;
 		}
 		
 		/* Increase pointer */
@@ -211,35 +211,35 @@ TM_LCD_Result_t TM_LCD_Puts(char* str) {
 	}
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_SetLayer1(void) {
+LCD_Result_t LCD_SetLayer1(void) {
 	/* Fill settings */
 	LCD.CurrentFrameBuffer = LCD.FrameStart;
 	LCD.CurrentLayer = 0;
 	
 	/* Set layer for DMA2D also */
-	//TM_DMA2DGRAPHIC_SetLayer(LCD.CurrentLayer + 1);
+	//DMA2DGRAPHIC_SetLayer(LCD.CurrentLayer + 1);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 
 }
 
-TM_LCD_Result_t TM_LCD_SetLayer2(void) {
+LCD_Result_t LCD_SetLayer2(void) {
 	/* Fill settings */
 	LCD.CurrentFrameBuffer = LCD.FrameStart + LCD.FrameOffset;
 	LCD.CurrentLayer = 1;
 	
 	/* Set layer for DMA2D also */
-	//TM_DMA2DGRAPHIC_SetLayer(LCD.CurrentLayer + 1);
+	//DMA2DGRAPHIC_SetLayer(LCD.CurrentLayer + 1);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_SetLayer1Opacity(uint8_t opacity) {
+LCD_Result_t LCD_SetLayer1Opacity(uint8_t opacity) {
 	/* Set opacity */
 	LTDC_Layer1->CACR = opacity;
 	
@@ -247,10 +247,10 @@ TM_LCD_Result_t TM_LCD_SetLayer1Opacity(uint8_t opacity) {
 	LTDC->SRCR = LTDC_SRCR_IMR;
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_SetLayer2Opacity(uint8_t opacity) {
+LCD_Result_t LCD_SetLayer2Opacity(uint8_t opacity) {
 	/* Set opacity */
 	LTDC_Layer2->CACR = opacity;
 	
@@ -258,28 +258,28 @@ TM_LCD_Result_t TM_LCD_SetLayer2Opacity(uint8_t opacity) {
 	LTDC->SRCR = LTDC_SRCR_IMR;
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_ChangeLayers(void) {
+LCD_Result_t LCD_ChangeLayers(void) {
 	/* Change layers */
 	if (LCD.CurrentLayer == 0) {
-		TM_LCD_SetLayer2();
-		TM_LCD_SetLayer1Opacity(0);
-		TM_LCD_SetLayer2Opacity(255);
+		LCD_SetLayer2();
+		LCD_SetLayer1Opacity(0);
+		LCD_SetLayer2Opacity(255);
 	} else {
-		TM_LCD_SetLayer1();
-		TM_LCD_SetLayer1Opacity(255);
-		TM_LCD_SetLayer2Opacity(0);
+		LCD_SetLayer1();
+		LCD_SetLayer1Opacity(255);
+		LCD_SetLayer2Opacity(0);
 	}
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_Layer2To1(void) {
+LCD_Result_t LCD_Layer2To1(void) {
 	/* Copy buffer using DMA2D */
-	TM_DMA2DGRAPHIC_CopyBuffer(
+	DMA2DGRAPHIC_CopyBuffer(
 		(void *)(LCD.FrameStart),
 		(void *)(LCD.FrameStart + LCD.FrameOffset),
 		LCD.Height,
@@ -289,12 +289,12 @@ TM_LCD_Result_t TM_LCD_Layer2To1(void) {
 	);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_Layer1To2(void) {
+LCD_Result_t LCD_Layer1To2(void) {
 	/* Copy buffer using DMA2D */
-	TM_DMA2DGRAPHIC_CopyBuffer(
+	DMA2DGRAPHIC_CopyBuffer(
 		(void *)(LCD.FrameStart),
 		(void *)(LCD.FrameStart + LCD.FrameOffset),
 		LCD.Width,
@@ -304,87 +304,87 @@ TM_LCD_Result_t TM_LCD_Layer1To2(void) {
 	);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color) {
+LCD_Result_t LCD_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color) {
 	/* Draw line with DMA2D */
-	TM_DMA2DGRAPHIC_DrawLine(x0, y0, x1, y1, color);
+	DMA2DGRAPHIC_DrawLine(x0, y0, x1, y1, color);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
 
-TM_LCD_Result_t TM_LCD_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint32_t color) {
+LCD_Result_t LCD_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint32_t color) {
 	/* Use DMA2D for drawing */
-	TM_DMA2DGRAPHIC_DrawRectangle(x0, y0, Width, Height, color);
+	DMA2DGRAPHIC_DrawRectangle(x0, y0, Width, Height, color);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_DrawRoundedRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint16_t r, uint32_t color) {
+LCD_Result_t LCD_DrawRoundedRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint16_t r, uint32_t color) {
 	/* Check input parameters */
 	if ((x0 + Width) > LCD.Width || (y0 + Height) > LCD.Height) {
 		/* Return error */
-		return TM_LCD_Result_Error;
+		return LCD_Result_Error;
 	}
 	
 	/* Draw rectangle with DMA2D */
-	TM_DMA2DGRAPHIC_DrawRoundedRectangle(x0, y0, Width, Height, r, color);
+	DMA2DGRAPHIC_DrawRoundedRectangle(x0, y0, Width, Height, r, color);
 
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_DrawFilledRoundedRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint16_t r, uint32_t color) {
+LCD_Result_t LCD_DrawFilledRoundedRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint16_t r, uint32_t color) {
 	/* Check input parameters */
-	TM_DMA2DGRAPHIC_DrawFilledRoundedRectangle(x0, y0, Width, Height, r, color);
+	DMA2DGRAPHIC_DrawFilledRoundedRectangle(x0, y0, Width, Height, r, color);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint32_t color) {
+LCD_Result_t LCD_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint32_t color) {
 	/* Draw with DMA2D */
-	TM_DMA2DGRAPHIC_DrawFilledRectangle(x0, y0, Width, Height, color);
+	DMA2DGRAPHIC_DrawFilledRectangle(x0, y0, Width, Height, color);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color) {
+LCD_Result_t LCD_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color) {
 	/* Use DMA2D */
-	TM_DMA2DGRAPHIC_DrawCircle(x0, y0, r, color);
+	DMA2DGRAPHIC_DrawCircle(x0, y0, r, color);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
-TM_LCD_Result_t TM_LCD_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color) {
+LCD_Result_t LCD_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color) {
 	/* Use DMA2D */
-	TM_DMA2DGRAPHIC_DrawFilledCircle(x0, y0, r, color);
+	DMA2DGRAPHIC_DrawFilledCircle(x0, y0, r, color);
 	
 	/* Return OK */
-	return TM_LCD_Result_Ok;
+	return LCD_Result_Ok;
 }
 
 
-uint16_t TM_LCD_GetWidth(void) {
+uint16_t LCD_GetWidth(void) {
 	return LCD.Width;
 }
 
-uint16_t TM_LCD_GetHeight(void) {
+uint16_t LCD_GetHeight(void) {
 	return LCD.Height;
 }
 
-uint32_t TM_LCD_GetFrameBuffer(void) {
+uint32_t LCD_GetFrameBuffer(void) {
 	return LCD.FrameStart;
 }
 
 /* Private functions */
-static void TM_LCD_INT_InitLTDC(void) {
+static void LCD_INT_InitLTDC(void) {
 	LTDC_InitTypeDef LTDC_InitStruct;
 	
 	/* Enable LTDC and DMA2D clocks */
@@ -438,7 +438,7 @@ static void TM_LCD_INT_InitLTDC(void) {
     LTDC_Init(&LTDC_InitStruct);
 }
 
-static void TM_LCD_INT_InitLayers(void) {
+static void LCD_INT_InitLayers(void) {
 	LTDC_Layer_InitTypeDef LTDC_Layer_InitStruct;
 	
     /* Windowing configuration */
@@ -513,13 +513,13 @@ static void TM_LCD_INT_InitLayers(void) {
 	LTDC_ReloadConfig(LTDC_IMReload);
 }
 
-static void TM_LCD_INT_InitLCD(void) {
+static void LCD_INT_InitLCD(void) {
 
 }
 
-static void TM_LCD_INT_InitPins(void) {
+static void LCD_INT_InitPins(void) {
 	/* LCD pins */
-	TM_GPIO_InitAlternate(GPIOI, 0xF000, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Fast, 0x0E);
-	TM_GPIO_InitAlternate(GPIOJ, 0xFFFF, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Fast, 0x0E);
-	TM_GPIO_InitAlternate(GPIOK, 0x00FF, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Fast, 0x0E);
+	GPIO_InitAlternate(GPIOI, 0xF000, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_Fast, 0x0E);
+	GPIO_InitAlternate(GPIOJ, 0xFFFF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_Fast, 0x0E);
+	GPIO_InitAlternate(GPIOK, 0x00FF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_Fast, 0x0E);
 }

@@ -16,12 +16,12 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_low_power.h"
+#include "stm32f4_low_power.h"
 
-void TM_LOWPOWER_SleepUntilInterrupt(uint8_t delay_timer) {
+void LOWPOWER_SleepUntilInterrupt(uint8_t delay_timer) {
 	/* Disable systick */
 	if (delay_timer) {
-		TM_DELAY_DisableDelayTimer();
+		DELAY_DisableDelayTimer();
 	}
 	
 	/* Wait for interrupt command */
@@ -32,18 +32,18 @@ void TM_LOWPOWER_SleepUntilInterrupt(uint8_t delay_timer) {
 	
 	/* Enable delay timer back */
 	if (delay_timer) {
-		TM_DELAY_EnableDelayTimer();
+		DELAY_EnableDelayTimer();
 	}
 }
 
-void TM_LOWPOWER_SleepUntilEvent(void) {
+void LOWPOWER_SleepUntilEvent(void) {
 	/* We don't need delay timer disable, because delay timer does not make an event */
 	
 	/* Wait for event */
 	__WFE();
 }
 
-void TM_LOWPOWER_Standby(void) {
+void LOWPOWER_Standby(void) {
 	/* Clear Standby and wakeup flag */
     PWR_ClearFlag(PWR_FLAG_SB | PWR_FLAG_WU);
 	
@@ -51,7 +51,7 @@ void TM_LOWPOWER_Standby(void) {
 	PWR_EnterSTANDBYMode();
 }
 
-uint8_t TM_LOWPOWER_StandbyReset(void) {
+uint8_t LOWPOWER_StandbyReset(void) {
 	/* Check Standby Flag */
 	if (PWR_GetFlagStatus(PWR_FLAG_SB) != RESET) {
 		/* Clear Standby and wakeup flag */
@@ -65,7 +65,7 @@ uint8_t TM_LOWPOWER_StandbyReset(void) {
 	return 0;
 }
 
-void TM_LOWPOWER_StopUntilInterrupt(void) {
+void LOWPOWER_StopUntilInterrupt(void) {
 	/* Go to STOP mode */
 	PWR_EnterSTOPMode(PWR_Regulator_LowPower, PWR_STOPEntry_WFI);
 	
@@ -73,7 +73,7 @@ void TM_LOWPOWER_StopUntilInterrupt(void) {
 	SystemInit();
 }
 
-void TM_LOWPOWER_StopUntilEvent(void) {
+void LOWPOWER_StopUntilEvent(void) {
 	/* Go to STOP mode */
 	PWR_EnterSTOPMode(PWR_Regulator_LowPower, PWR_STOPEntry_WFE);
 	
@@ -81,7 +81,7 @@ void TM_LOWPOWER_StopUntilEvent(void) {
 	SystemInit();
 }
 
-void TM_LOWPOWER_EnableWakeUpPin(void) {
+void LOWPOWER_EnableWakeUpPin(void) {
 	/* Enable Wakeup pin, PA0 */
 #if defined(STM32F446xx)
 	PWR_WakeUpPinCmd(PWR_WakeUp_Pin1, ENABLE);
@@ -90,7 +90,7 @@ void TM_LOWPOWER_EnableWakeUpPin(void) {
 #endif
 }
 
-void TM_LOWPOWER_DisableWakeUpPin(void) {
+void LOWPOWER_DisableWakeUpPin(void) {
 	/* Disable Wakeup pin, PA0 */
 #if defined(STM32F446xx)
 	PWR_WakeUpPinCmd(PWR_WakeUp_Pin1, DISABLE);

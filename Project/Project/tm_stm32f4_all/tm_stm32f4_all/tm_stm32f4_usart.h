@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_USART_H
-#define TM_USART_H 250
+#ifndef USART_H
+#define USART_H 250
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_USART
+ * @defgroup USART
  * @brief    TM USART Library for STM32F4xx - http://stm32f4-discovery.com/2014/04/library-04-connect-stm32f429-discovery-to-computer-with-usart/
  * @{
  *
@@ -54,13 +54,13 @@ extern "C" {
 @verbatim
 //Use custom IRQ Receive handler
 //Change X with possible U(S)ARTs: USART1, USART2, USART3, UART4, UART5, USART6, UART7, UART8
-#define TM_X_USE_CUSTOM_IRQ
+#define X_USE_CUSTOM_IRQ
 @endverbatim
  * After you set define, you have to create a function, which will handle custom request
 @verbatim
 //Change X with possible U(S)ARTs: USART1, USART2, USART3, UART4, UART5, USART6, UART7, UART8
 //Parameter c is a received character
-void TM_X_ReceiveHandler(uint8_t c) {
+void X_ReceiveHandler(uint8_t c) {
    //Do your stuff here when byte is received
 }
 @endverbatim
@@ -82,24 +82,24 @@ void TM_X_ReceiveHandler(uint8_t c) {
  * <code>USART_BUFFER_SIZE</code> define. If you want let's say just for USART1 to be 1kB, but others default value,
  * you can add define below in defines.h file:
 @verbatim
-//Buffer length for USART1 is 1kB, for others is still TM_USART_BUFFER_SIZE
-#define TM_USART1_BUFFER_SIZE 1024
+//Buffer length for USART1 is 1kB, for others is still USART_BUFFER_SIZE
+#define USART1_BUFFER_SIZE 1024
 @endverbatim
  *
  * Other possible settings are (for other U(S)ARTs):
- *   - TM_USART1_BUFFER_SIZE
- *   - TM_USART2_BUFFER_SIZE
- *   - TM_USART3_BUFFER_SIZE
- *   - TM_UART4_BUFFER_SIZE
- *   - TM_UART5_BUFFER_SIZE
- *   - TM_USART6_BUFFER_SIZE
- *   - TM_UART7_BUFFER_SIZE
- *   - TM_UART8_BUFFER_SIZE
+ *   - USART1_BUFFER_SIZE
+ *   - USART2_BUFFER_SIZE
+ *   - USART3_BUFFER_SIZE
+ *   - UART4_BUFFER_SIZE
+ *   - UART5_BUFFER_SIZE
+ *   - USART6_BUFFER_SIZE
+ *   - UART7_BUFFER_SIZE
+ *   - UART8_BUFFER_SIZE
  *	
- * \par Custom string delimiter for @ref TM_USART_Gets() function
+ * \par Custom string delimiter for @ref USART_Gets() function
  * 
- * As of version 2.5, you can now set custom string delimiter for @ref TM_USART_Gets() function.
- * By default, LF (Line Feed) character was used, but now you can select custom character using @ref TM_USART_SetCustomStringEndCharacter() function.
+ * As of version 2.5, you can now set custom string delimiter for @ref USART_Gets() function.
+ * By default, LF (Line Feed) character was used, but now you can select custom character using @ref USART_SetCustomStringEndCharacter() function.
  *
  * \par Pinout
  *
@@ -118,7 +118,7 @@ UART8        |PE1    PE0     |-      -       |-      -
 @endverbatim
  *
  * In case these pins are not good for you, you can use
- * TM_USART_PinsPack_Custom in function and callback function will be called,
+ * USART_PinsPack_Custom in function and callback function will be called,
  * where you can initialize your custom pinout for your USART peripheral
  *
  * \par Change USART default operation modes
@@ -130,15 +130,15 @@ UART8        |PE1    PE0     |-      -       |-      -
 @verbatim
 //Change X with possible U(S)ARTs: USART1, USART2, USART3, UART4, UART5, USART6, UART7, UART8
 //Set flow control
-#define TM_X_HARDWARE_FLOW_CONTROL		TM_USART_HardwareFlowControl_None
+#define X_HARDWARE_FLOW_CONTROL		USART_HardwareFlowControl_None
 //Set mode
-#define TM_X_MODE						USART_Mode_Tx | USART_Mode_Rx
+#define X_MODE						USART_Mode_Tx | USART_Mode_Rx
 //Set parity
-#define TM_X_PARITY						USART_Parity_No
+#define X_PARITY						USART_Parity_No
 //Set stopbits
-#define TM_X_STOP_BITS					USART_StopBits_1
+#define X_STOP_BITS					USART_StopBits_1
 //Set USART datasize
-#define TM_X_WORD_LENGTH				USART_WordLength_8b
+#define X_WORD_LENGTH				USART_WordLength_8b
 @endverbatim
  *
  * \par Changelog
@@ -150,7 +150,7 @@ UART8        |PE1    PE0     |-      -       |-      -
    
  Version 2.4
    - April 09, 2015
-   - Added support for new function TM_USART_InitWithFlowControl()
+   - Added support for new function USART_InitWithFlowControl()
    
  Version 2.3.2
    - March 21, 2015
@@ -179,7 +179,7 @@ UART8        |PE1    PE0     |-      -       |-      -
    - New cyclic buffer system,
       each U(S)ART can have different buffer size (less RAM can be used for USART purpose)
    - Added function to check if buffer is full,
-   - TM_USART_Gets now returns 0 till '\n' is not available in buffer or buffer is full
+   - USART_Gets now returns 0 till '\n' is not available in buffer or buffer is full
       Useful for prevent infinite loop if '\n' never happen
 	  
  Version 1.0
@@ -205,7 +205,7 @@ UART8        |PE1    PE0     |-      -       |-      -
 #include "stm32f4xx_usart.h"
 #include "attributes.h"
 #include "defines.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_gpio.h"
 
 /* F405/407/415/417/F446 */
 #if defined (STM32F40_41xxx) || defined(STM32F446xx)
@@ -236,7 +236,7 @@ UART8        |PE1    PE0     |-      -       |-      -
 
 
 /**
- * @defgroup TM_USART_Typedefs
+ * @defgroup USART_Typedefs
  * @brief    USART Typedefs
  * @{
  */
@@ -245,29 +245,29 @@ UART8        |PE1    PE0     |-      -       |-      -
  * @brief  USART PinsPack enumeration to select pins combination for USART
  */
 typedef enum {
-	TM_USART_PinsPack_1,     /*!< Select PinsPack1 from Pinout table for specific USART */
-	TM_USART_PinsPack_2,     /*!< Select PinsPack2 from Pinout table for specific USART */
-	TM_USART_PinsPack_3,     /*!< Select PinsPack3 from Pinout table for specific USART */
-	TM_USART_PinsPack_Custom /*!< Select custom pins for specific USART, callback will be called, look @ref TM_USART_InitCustomPinsCallback */
-} TM_USART_PinsPack_t;
+	USART_PinsPack_1,     /*!< Select PinsPack1 from Pinout table for specific USART */
+	USART_PinsPack_2,     /*!< Select PinsPack2 from Pinout table for specific USART */
+	USART_PinsPack_3,     /*!< Select PinsPack3 from Pinout table for specific USART */
+	USART_PinsPack_Custom /*!< Select custom pins for specific USART, callback will be called, look @ref USART_InitCustomPinsCallback */
+} USART_PinsPack_t;
 
 /**
  * @brief  USART Hardware flow control selection
  * @note   Corresponsing pins must be initialized in case you don't use "None" options
  */
 typedef enum {
-	TM_USART_HardwareFlowControl_None = 0x0000,   /*!< No flow control */
-	TM_USART_HardwareFlowControl_RTS = 0x0100,    /*!< RTS flow control */
-	TM_USART_HardwareFlowControl_CTS = 0x0200,    /*!< CTS flow control */
-	TM_USART_HardwareFlowControl_RTS_CTS = 0x0300 /*!< RTS and CTS flow control */
-} TM_USART_HardwareFlowControl_t;
+	USART_HardwareFlowControl_None = 0x0000,   /*!< No flow control */
+	USART_HardwareFlowControl_RTS = 0x0100,    /*!< RTS flow control */
+	USART_HardwareFlowControl_CTS = 0x0200,    /*!< CTS flow control */
+	USART_HardwareFlowControl_RTS_CTS = 0x0300 /*!< RTS and CTS flow control */
+} USART_HardwareFlowControl_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_USART_Macros
+ * @defgroup USART_Macros
  * @brief    USART default values for defines
  * @{
  *
@@ -282,29 +282,29 @@ typedef enum {
 #endif
 
 /* Set default buffer size for specific USART if not set by user */
-#ifndef TM_USART1_BUFFER_SIZE
-#define TM_USART1_BUFFER_SIZE			USART_BUFFER_SIZE
+#ifndef USART1_BUFFER_SIZE
+#define USART1_BUFFER_SIZE			USART_BUFFER_SIZE
 #endif
-#ifndef TM_USART2_BUFFER_SIZE
-#define TM_USART2_BUFFER_SIZE			USART_BUFFER_SIZE
+#ifndef USART2_BUFFER_SIZE
+#define USART2_BUFFER_SIZE			USART_BUFFER_SIZE
 #endif
-#ifndef TM_USART3_BUFFER_SIZE
-#define TM_USART3_BUFFER_SIZE			USART_BUFFER_SIZE
+#ifndef USART3_BUFFER_SIZE
+#define USART3_BUFFER_SIZE			USART_BUFFER_SIZE
 #endif
-#ifndef TM_UART4_BUFFER_SIZE
-#define TM_UART4_BUFFER_SIZE			USART_BUFFER_SIZE
+#ifndef UART4_BUFFER_SIZE
+#define UART4_BUFFER_SIZE			USART_BUFFER_SIZE
 #endif
-#ifndef TM_UART5_BUFFER_SIZE
-#define TM_UART5_BUFFER_SIZE			USART_BUFFER_SIZE
+#ifndef UART5_BUFFER_SIZE
+#define UART5_BUFFER_SIZE			USART_BUFFER_SIZE
 #endif
-#ifndef TM_USART6_BUFFER_SIZE
-#define TM_USART6_BUFFER_SIZE			USART_BUFFER_SIZE
+#ifndef USART6_BUFFER_SIZE
+#define USART6_BUFFER_SIZE			USART_BUFFER_SIZE
 #endif
-#ifndef TM_UART7_BUFFER_SIZE
-#define TM_UART7_BUFFER_SIZE			USART_BUFFER_SIZE
+#ifndef UART7_BUFFER_SIZE
+#define UART7_BUFFER_SIZE			USART_BUFFER_SIZE
 #endif
-#ifndef TM_UART8_BUFFER_SIZE
-#define TM_UART8_BUFFER_SIZE			USART_BUFFER_SIZE
+#ifndef UART8_BUFFER_SIZE
+#define UART8_BUFFER_SIZE			USART_BUFFER_SIZE
 #endif
 
 /* NVIC Global Priority */
@@ -314,139 +314,139 @@ typedef enum {
 
 /* U(S)ART settings, can be changed in your defines.h project file */
 /* USART1 default settings */
-#ifndef TM_USART1_HARDWARE_FLOW_CONTROL
-#define TM_USART1_HARDWARE_FLOW_CONTROL		TM_USART_HardwareFlowControl_None
+#ifndef USART1_HARDWARE_FLOW_CONTROL
+#define USART1_HARDWARE_FLOW_CONTROL		USART_HardwareFlowControl_None
 #endif
-#ifndef TM_USART1_MODE
-#define TM_USART1_MODE						USART_Mode_Tx | USART_Mode_Rx
+#ifndef USART1_MODE
+#define USART1_MODE						USART_Mode_Tx | USART_Mode_Rx
 #endif
-#ifndef TM_USART1_PARITY
-#define TM_USART1_PARITY					USART_Parity_No
+#ifndef USART1_PARITY
+#define USART1_PARITY					USART_Parity_No
 #endif
-#ifndef TM_USART1_STOP_BITS
-#define TM_USART1_STOP_BITS					USART_StopBits_1
+#ifndef USART1_STOP_BITS
+#define USART1_STOP_BITS					USART_StopBits_1
 #endif
-#ifndef TM_USART1_WORD_LENGTH
-#define TM_USART1_WORD_LENGTH				USART_WordLength_8b
+#ifndef USART1_WORD_LENGTH
+#define USART1_WORD_LENGTH				USART_WordLength_8b
 #endif
 
 /* USART2 default settings */
-#ifndef TM_USART2_HARDWARE_FLOW_CONTROL
-#define TM_USART2_HARDWARE_FLOW_CONTROL		TM_USART_HardwareFlowControl_None
+#ifndef USART2_HARDWARE_FLOW_CONTROL
+#define USART2_HARDWARE_FLOW_CONTROL		USART_HardwareFlowControl_None
 #endif
-#ifndef TM_USART2_MODE
-#define TM_USART2_MODE						USART_Mode_Tx | USART_Mode_Rx
+#ifndef USART2_MODE
+#define USART2_MODE						USART_Mode_Tx | USART_Mode_Rx
 #endif
-#ifndef TM_USART2_PARITY
-#define TM_USART2_PARITY					USART_Parity_No
+#ifndef USART2_PARITY
+#define USART2_PARITY					USART_Parity_No
 #endif
-#ifndef TM_USART2_STOP_BITS
-#define TM_USART2_STOP_BITS					USART_StopBits_1
+#ifndef USART2_STOP_BITS
+#define USART2_STOP_BITS					USART_StopBits_1
 #endif
-#ifndef TM_USART2_WORD_LENGTH
-#define TM_USART2_WORD_LENGTH				USART_WordLength_8b
+#ifndef USART2_WORD_LENGTH
+#define USART2_WORD_LENGTH				USART_WordLength_8b
 #endif
 
 /* USART3 default settings */
-#ifndef TM_USART3_HARDWARE_FLOW_CONTROL
-#define TM_USART3_HARDWARE_FLOW_CONTROL		TM_USART_HardwareFlowControl_None
+#ifndef USART3_HARDWARE_FLOW_CONTROL
+#define USART3_HARDWARE_FLOW_CONTROL		USART_HardwareFlowControl_None
 #endif
-#ifndef TM_USART3_MODE
-#define TM_USART3_MODE						USART_Mode_Tx | USART_Mode_Rx
+#ifndef USART3_MODE
+#define USART3_MODE						USART_Mode_Tx | USART_Mode_Rx
 #endif
-#ifndef TM_USART3_PARITY
-#define TM_USART3_PARITY					USART_Parity_No
+#ifndef USART3_PARITY
+#define USART3_PARITY					USART_Parity_No
 #endif
-#ifndef TM_USART3_STOP_BITS
-#define TM_USART3_STOP_BITS					USART_StopBits_1
+#ifndef USART3_STOP_BITS
+#define USART3_STOP_BITS					USART_StopBits_1
 #endif
-#ifndef TM_USART3_WORD_LENGTH
-#define TM_USART3_WORD_LENGTH				USART_WordLength_8b
+#ifndef USART3_WORD_LENGTH
+#define USART3_WORD_LENGTH				USART_WordLength_8b
 #endif
 
 /* UART4 default settings */
-#ifndef TM_UART4_HARDWARE_FLOW_CONTROL
-#define TM_UART4_HARDWARE_FLOW_CONTROL		TM_USART_HardwareFlowControl_None
+#ifndef UART4_HARDWARE_FLOW_CONTROL
+#define UART4_HARDWARE_FLOW_CONTROL		USART_HardwareFlowControl_None
 #endif
-#ifndef TM_UART4_MODE
-#define TM_UART4_MODE						USART_Mode_Tx | USART_Mode_Rx
+#ifndef UART4_MODE
+#define UART4_MODE						USART_Mode_Tx | USART_Mode_Rx
 #endif
-#ifndef TM_UART4_PARITY
-#define TM_UART4_PARITY						USART_Parity_No
+#ifndef UART4_PARITY
+#define UART4_PARITY						USART_Parity_No
 #endif
-#ifndef TM_UART4_STOP_BITS
-#define TM_UART4_STOP_BITS					USART_StopBits_1
+#ifndef UART4_STOP_BITS
+#define UART4_STOP_BITS					USART_StopBits_1
 #endif
-#ifndef TM_UART4_WORD_LENGTH
-#define TM_UART4_WORD_LENGTH				USART_WordLength_8b
+#ifndef UART4_WORD_LENGTH
+#define UART4_WORD_LENGTH				USART_WordLength_8b
 #endif
 
 /* UART5 default settings */
-#ifndef TM_UART5_HARDWARE_FLOW_CONTROL
-#define TM_UART5_HARDWARE_FLOW_CONTROL		TM_USART_HardwareFlowControl_None
+#ifndef UART5_HARDWARE_FLOW_CONTROL
+#define UART5_HARDWARE_FLOW_CONTROL		USART_HardwareFlowControl_None
 #endif
-#ifndef TM_UART5_MODE
-#define TM_UART5_MODE						USART_Mode_Tx | USART_Mode_Rx
+#ifndef UART5_MODE
+#define UART5_MODE						USART_Mode_Tx | USART_Mode_Rx
 #endif
-#ifndef TM_UART5_PARITY
-#define TM_UART5_PARITY						USART_Parity_No
+#ifndef UART5_PARITY
+#define UART5_PARITY						USART_Parity_No
 #endif
-#ifndef TM_UART5_STOP_BITS
-#define TM_UART5_STOP_BITS					USART_StopBits_1
+#ifndef UART5_STOP_BITS
+#define UART5_STOP_BITS					USART_StopBits_1
 #endif
-#ifndef TM_UART5_WORD_LENGTH
-#define TM_UART5_WORD_LENGTH				USART_WordLength_8b
+#ifndef UART5_WORD_LENGTH
+#define UART5_WORD_LENGTH				USART_WordLength_8b
 #endif
 
 /* USART6 default settings */
-#ifndef TM_USART6_HARDWARE_FLOW_CONTROL
-#define TM_USART6_HARDWARE_FLOW_CONTROL		TM_USART_HardwareFlowControl_None
+#ifndef USART6_HARDWARE_FLOW_CONTROL
+#define USART6_HARDWARE_FLOW_CONTROL		USART_HardwareFlowControl_None
 #endif
-#ifndef TM_USART6_MODE
-#define TM_USART6_MODE						USART_Mode_Tx | USART_Mode_Rx
+#ifndef USART6_MODE
+#define USART6_MODE						USART_Mode_Tx | USART_Mode_Rx
 #endif
-#ifndef TM_USART6_PARITY
-#define TM_USART6_PARITY					USART_Parity_No
+#ifndef USART6_PARITY
+#define USART6_PARITY					USART_Parity_No
 #endif
-#ifndef TM_USART6_STOP_BITS
-#define TM_USART6_STOP_BITS					USART_StopBits_1
+#ifndef USART6_STOP_BITS
+#define USART6_STOP_BITS					USART_StopBits_1
 #endif
-#ifndef TM_USART6_WORD_LENGTH
-#define TM_USART6_WORD_LENGTH				USART_WordLength_8b
+#ifndef USART6_WORD_LENGTH
+#define USART6_WORD_LENGTH				USART_WordLength_8b
 #endif
 
 /* UART7 default settings */
-#ifndef TM_UART7_HARDWARE_FLOW_CONTROL
-#define TM_UART7_HARDWARE_FLOW_CONTROL		TM_USART_HardwareFlowControl_None
+#ifndef UART7_HARDWARE_FLOW_CONTROL
+#define UART7_HARDWARE_FLOW_CONTROL		USART_HardwareFlowControl_None
 #endif
-#ifndef TM_UART7_MODE
-#define TM_UART7_MODE						USART_Mode_Tx | USART_Mode_Rx
+#ifndef UART7_MODE
+#define UART7_MODE						USART_Mode_Tx | USART_Mode_Rx
 #endif
-#ifndef TM_UART7_PARITY
-#define TM_UART7_PARITY						USART_Parity_No
+#ifndef UART7_PARITY
+#define UART7_PARITY						USART_Parity_No
 #endif
-#ifndef TM_UART7_STOP_BITS
-#define TM_UART7_STOP_BITS					USART_StopBits_1
+#ifndef UART7_STOP_BITS
+#define UART7_STOP_BITS					USART_StopBits_1
 #endif
-#ifndef TM_UART7_WORD_LENGTH
-#define TM_UART7_WORD_LENGTH				USART_WordLength_8b
+#ifndef UART7_WORD_LENGTH
+#define UART7_WORD_LENGTH				USART_WordLength_8b
 #endif
 
 /* UART8 default settings */
-#ifndef TM_UART8_HARDWARE_FLOW_CONTROL
-#define TM_UART8_HARDWARE_FLOW_CONTROL		TM_USART_HardwareFlowControl_None
+#ifndef UART8_HARDWARE_FLOW_CONTROL
+#define UART8_HARDWARE_FLOW_CONTROL		USART_HardwareFlowControl_None
 #endif
-#ifndef TM_UART8_MODE
-#define TM_UART8_MODE						USART_Mode_Tx | USART_Mode_Rx
+#ifndef UART8_MODE
+#define UART8_MODE						USART_Mode_Tx | USART_Mode_Rx
 #endif
-#ifndef TM_UART8_PARITY
-#define TM_UART8_PARITY						USART_Parity_No
+#ifndef UART8_PARITY
+#define UART8_PARITY						USART_Parity_No
 #endif
-#ifndef TM_UART8_STOP_BITS
-#define TM_UART8_STOP_BITS					USART_StopBits_1
+#ifndef UART8_STOP_BITS
+#define UART8_STOP_BITS					USART_StopBits_1
 #endif
-#ifndef TM_UART8_WORD_LENGTH
-#define TM_UART8_WORD_LENGTH				USART_WordLength_8b
+#ifndef UART8_WORD_LENGTH
+#define UART8_WORD_LENGTH				USART_WordLength_8b
 #endif
 
 /**
@@ -465,7 +465,7 @@ typedef enum {
  */
 
 /**
- * @defgroup TM_USART_Functions
+ * @defgroup USART_Functions
  * @brief    USART Functions
  * @{
  */
@@ -473,24 +473,24 @@ typedef enum {
 /**
  * @brief  Initializes USARTx peripheral and corresponding pins
  * @param  *USARTx: Pointer to USARTx peripheral you will use
- * @param  pinspack: This parameter can be a value of @ref TM_USART_PinsPack_t enumeration
+ * @param  pinspack: This parameter can be a value of @ref USART_PinsPack_t enumeration
  * @param  baudrate: Baudrate number for USART communication
  * @retval None
  */
-void TM_USART_Init(USART_TypeDef* USARTx, TM_USART_PinsPack_t pinspack, uint32_t baudrate);
+void USART_Init(USART_TypeDef* USARTx, USART_PinsPack_t pinspack, uint32_t baudrate);
 
 /**
  * @brief  Initializes USARTx peripheral and corresponding pins with custom hardware flow control mode
- * @note   Hardware flow control pins are not initialized. Easy solution is to use @arg TM_USART_PinsPack_Custom pinspack option 
- *         when you call @ref TM_USART_Init() function and initialize all USART pins at a time inside @ref TM_USART_InitCustomPinsCallback() 
+ * @note   Hardware flow control pins are not initialized. Easy solution is to use @arg USART_PinsPack_Custom pinspack option 
+ *         when you call @ref USART_Init() function and initialize all USART pins at a time inside @ref USART_InitCustomPinsCallback() 
  *         callback function, which will be called from my library
  * @param  *USARTx: Pointer to USARTx peripheral you will use
- * @param  pinspack: This parameter can be a value of @ref TM_USART_PinsPack_t enumeration
+ * @param  pinspack: This parameter can be a value of @ref USART_PinsPack_t enumeration
  * @param  baudrate: Baudrate number for USART communication
- * @param  FlowControl: Flow control mode you will use. This parameter can be a value of @ref TM_USART_HardwareFlowControl_t enumeration
+ * @param  FlowControl: Flow control mode you will use. This parameter can be a value of @ref USART_HardwareFlowControl_t enumeration
  * @retval None
  */
-void TM_USART_InitWithFlowControl(USART_TypeDef* USARTx, TM_USART_PinsPack_t pinspack, uint32_t baudrate, TM_USART_HardwareFlowControl_t FlowControl);
+void USART_InitWithFlowControl(USART_TypeDef* USARTx, USART_PinsPack_t pinspack, uint32_t baudrate, USART_HardwareFlowControl_t FlowControl);
 
 /**
  * @brief  Puts character to USART port
@@ -498,7 +498,7 @@ void TM_USART_InitWithFlowControl(USART_TypeDef* USARTx, TM_USART_PinsPack_t pin
  * @param  c: character to be send over USART
  * @retval None
  */
-static __INLINE void TM_USART_Putc(USART_TypeDef* USARTx, volatile char c) {
+static __INLINE void USART_Putc(USART_TypeDef* USARTx, volatile char c) {
 	/* Check USART if enabled */
 	if ((USARTx->CR1 & USART_CR1_UE)) {	
 		/* Wait to be ready, buffer empty */
@@ -516,7 +516,7 @@ static __INLINE void TM_USART_Putc(USART_TypeDef* USARTx, volatile char c) {
  * @param  *str: Pointer to string to send over USART
  * @retval None
  */
-void TM_USART_Puts(USART_TypeDef* USARTx, char* str);
+void USART_Puts(USART_TypeDef* USARTx, char* str);
 
 /**
  * @brief  Sends data array to USART port
@@ -525,14 +525,14 @@ void TM_USART_Puts(USART_TypeDef* USARTx, char* str);
  * @param  count: Number of elements in data array to be send over USART
  * @retval None
  */
-void TM_USART_Send(USART_TypeDef* USARTx, uint8_t* DataArray, uint16_t count);
+void USART_Send(USART_TypeDef* USARTx, uint8_t* DataArray, uint16_t count);
 
 /**
  * @brief  Gets character from internal USART buffer
  * @param  *USARTx: Pointer to USARTx peripheral you will use
  * @retval Character from buffer, or 0 if nothing in buffer
  */
-uint8_t TM_USART_Getc(USART_TypeDef* USARTx);
+uint8_t USART_Getc(USART_TypeDef* USARTx);
 
 /**
  * @brief  Gets string from USART
@@ -547,7 +547,7 @@ uint8_t TM_USART_Getc(USART_TypeDef* USARTx);
  * @param  bufsize: maximal number of characters we can add to your buffer, including leading zero
  * @retval Number of characters in buffer
  */
-uint16_t TM_USART_Gets(USART_TypeDef* USARTx, char* buffer, uint16_t bufsize);
+uint16_t USART_Gets(USART_TypeDef* USARTx, char* buffer, uint16_t bufsize);
 
 /**
  * @brief  Checks if character c is available in internal buffer
@@ -557,7 +557,7 @@ uint16_t TM_USART_Gets(USART_TypeDef* USARTx, char* buffer, uint16_t bufsize);
  *            - 0: Character was not found
  *            - > 0: Character has been found in buffer
  */
-uint8_t TM_USART_FindCharacter(USART_TypeDef* USARTx, uint8_t c);
+uint8_t USART_FindCharacter(USART_TypeDef* USARTx, uint8_t c);
 
 /**
  * @brief  Checks if internal USARTx buffer is empty
@@ -566,7 +566,7 @@ uint8_t TM_USART_FindCharacter(USART_TypeDef* USARTx, uint8_t c);
  *            - 0: Buffer is not empty
  *            - > 0: Buffer is empty
  */
-uint8_t TM_USART_BufferEmpty(USART_TypeDef* USARTx);
+uint8_t USART_BufferEmpty(USART_TypeDef* USARTx);
 
 /**
  * @brief  Checks if internal USARTx buffer is full
@@ -575,35 +575,35 @@ uint8_t TM_USART_BufferEmpty(USART_TypeDef* USARTx);
  *            - 0: Buffer is not full
  *            - > 0: Buffer is full
  */
-uint8_t TM_USART_BufferFull(USART_TypeDef* USARTx);
+uint8_t USART_BufferFull(USART_TypeDef* USARTx);
 
 /**
  * @brief  Clears internal USART buffer
  * @param  *USARTx: Pointer to USARTx peripheral you will use
  * @retval None
  */
-void TM_USART_ClearBuffer(USART_TypeDef* USARTx);
+void USART_ClearBuffer(USART_TypeDef* USARTx);
 
 /**
- * @brief  Sets custom character for @ref TM_USART_Gets() function to detect when string ends
+ * @brief  Sets custom character for @ref USART_Gets() function to detect when string ends
  * @param  *USARTx: Pointer to USARTx peripheral you will use
  * @param  Character: Character value to be used as string end
- * @note   Character will also be added at the end for your buffer when calling @ref TM_USART_Gets() function
+ * @note   Character will also be added at the end for your buffer when calling @ref USART_Gets() function
  * @retval None
  */
-void TM_USART_SetCustomStringEndCharacter(USART_TypeDef* USARTx, uint8_t Character);
+void USART_SetCustomStringEndCharacter(USART_TypeDef* USARTx, uint8_t Character);
 
 /**
  * @brief  Callback for custom pins initialization for USARTx.
  *
- *         When you call @ef TM_USART_Init() function, and if you pass @arg TM_USART_PinsPack_Custom to function,
+ *         When you call @ef USART_Init() function, and if you pass @arg USART_PinsPack_Custom to function,
  *         then this function will be called where you can initialize custom pins for USART peripheral.
  * @param  *USARTx: Pointer to USARTx peripheral you will use for initialization
  * @param  AlternateFunction: Alternate function which should be used for GPIO initialization
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_USART_InitCustomPinsCallback(USART_TypeDef* USARTx, uint16_t AlternateFunction);
+void USART_InitCustomPinsCallback(USART_TypeDef* USARTx, uint16_t AlternateFunction);
 
 /**
  * @brief  Callback function for receive interrupt on USART1 in case you have enabled custom USART handler mode 
@@ -611,7 +611,7 @@ void TM_USART_InitCustomPinsCallback(USART_TypeDef* USARTx, uint16_t AlternateFu
  * @param  c: character received via USART
  * @retval None
  */
-__weak void TM_USART1_ReceiveHandler(uint8_t c);
+__weak void USART1_ReceiveHandler(uint8_t c);
 
 /**
  * @brief  Callback function for receive interrupt on USART2 in case you have enabled custom USART handler mode 
@@ -619,7 +619,7 @@ __weak void TM_USART1_ReceiveHandler(uint8_t c);
  * @param  c: character received via USART
  * @retval None
  */
-__weak void TM_USART2_ReceiveHandler(uint8_t c);
+__weak void USART2_ReceiveHandler(uint8_t c);
 
 /**
  * @brief  Callback function for receive interrupt on USART3 in case you have enabled custom USART handler mode 
@@ -627,7 +627,7 @@ __weak void TM_USART2_ReceiveHandler(uint8_t c);
  * @param  c: character received via USART
  * @retval None
  */
-__weak void TM_USART3_ReceiveHandler(uint8_t c);
+__weak void USART3_ReceiveHandler(uint8_t c);
 
 /**
  * @brief  Callback function for receive interrupt on UART4 in case you have enabled custom USART handler mode 
@@ -635,7 +635,7 @@ __weak void TM_USART3_ReceiveHandler(uint8_t c);
  * @param  c: character received via USART
  * @retval None
  */
-__weak void TM_UART4_ReceiveHandler(uint8_t c);
+__weak void UART4_ReceiveHandler(uint8_t c);
 
 /**
  * @brief  Callback function for receive interrupt on UART5 in case you have enabled custom USART handler mode 
@@ -643,7 +643,7 @@ __weak void TM_UART4_ReceiveHandler(uint8_t c);
  * @param  c: character received via USART
  * @retval None
  */
-__weak void TM_UART5_ReceiveHandler(uint8_t c);
+__weak void UART5_ReceiveHandler(uint8_t c);
 
 /**
  * @brief  Callback function for receive interrupt on USART6 in case you have enabled custom USART handler mode 
@@ -651,7 +651,7 @@ __weak void TM_UART5_ReceiveHandler(uint8_t c);
  * @param  c: character received via USART
  * @retval None
  */
-__weak void TM_USART6_ReceiveHandler(uint8_t c);
+__weak void USART6_ReceiveHandler(uint8_t c);
 
 /**
  * @brief  Callback function for receive interrupt on UART7 in case you have enabled custom USART handler mode 
@@ -659,7 +659,7 @@ __weak void TM_USART6_ReceiveHandler(uint8_t c);
  * @param  c: character received via USART
  * @retval None
  */
-__weak void TM_UART7_ReceiveHandler(uint8_t c);
+__weak void UART7_ReceiveHandler(uint8_t c);
 
 /**
  * @brief  Callback function for receive interrupt on UART8 in case you have enabled custom USART handler mode 
@@ -667,7 +667,7 @@ __weak void TM_UART7_ReceiveHandler(uint8_t c);
  * @param  c: character received via USART
  * @retval None
  */
-__weak void TM_UART8_ReceiveHandler(uint8_t c);
+__weak void UART8_ReceiveHandler(uint8_t c);
 
 /**
  * @}

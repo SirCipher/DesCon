@@ -16,9 +16,9 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_timer_properties.h"
+#include "stm32f4_timer_properties.h"
 
-TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_GetTimerProperties(TIM_TypeDef* TIMx, TM_TIMER_PROPERTIES_t* Timer_Data) {
+TIMER_PROPERTIES_Result_t TIMER_PROPERTIES_GetTimerProperties(TIM_TypeDef* TIMx, TIMER_PROPERTIES_t* Timer_Data) {
 	RCC_ClocksTypeDef RCC_ClocksStruct;
 
 	/* Get clocks */
@@ -39,7 +39,7 @@ TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_GetTimerProperties(TIM_TypeDef*
 		Timer_Data->MaxPeriod = 0xFFFFFFFF;								/* Max period */
 		
 		/* Timer valid */
-		return TM_TIMER_PROPERTIES_Result_Ok;
+		return TIMER_PROPERTIES_Result_Ok;
 	} else if (0	/* 16bit timers with HCLK clock frequency */
 #ifdef TIM1
 		|| TIMx == TIM1
@@ -61,7 +61,7 @@ TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_GetTimerProperties(TIM_TypeDef*
 		Timer_Data->MaxPeriod = 0xFFFF;									/* Max period */
 		
 		/* Timer valid */
-		return TM_TIMER_PROPERTIES_Result_Ok;
+		return TIMER_PROPERTIES_Result_Ok;
 	} else if (0	/* 16bit timers with PCLK2 clock frequency */
 #ifdef TIM3
 		|| TIMx == TIM3
@@ -89,14 +89,14 @@ TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_GetTimerProperties(TIM_TypeDef*
 		Timer_Data->MaxPeriod = 0xFFFF;									/* Max period */
 		
 		/* Timer valid */
-		return TM_TIMER_PROPERTIES_Result_Ok;
+		return TIMER_PROPERTIES_Result_Ok;
 	}
 	
 	/* Timer is not valid */
-	return TM_TIMER_PROPERTIES_Result_TimerNotValid;
+	return TIMER_PROPERTIES_Result_TimerNotValid;
 }
 
-TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_GenerateDataForWorkingFrequency(TM_TIMER_PROPERTIES_t* Timer_Data, double frequency) {
+TIMER_PROPERTIES_Result_t TIMER_PROPERTIES_GenerateDataForWorkingFrequency(TIMER_PROPERTIES_t* Timer_Data, double frequency) {
 	if (frequency > Timer_Data->TimerFrequency) {
 		/* Reset values */
 		Timer_Data->Prescaler = 0;
@@ -104,7 +104,7 @@ TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_GenerateDataForWorkingFrequency
 		Timer_Data->Frequency = 0;
 		
 		/* Frequency too high */
-		return TM_TIMER_PROPERTIES_Result_FrequencyTooHigh;
+		return TIMER_PROPERTIES_Result_FrequencyTooHigh;
 	} else if (frequency == 0) {
 		/* Reset values */
 		Timer_Data->Prescaler = 0;
@@ -112,7 +112,7 @@ TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_GenerateDataForWorkingFrequency
 		Timer_Data->Frequency = 0;
 		
 		/* Not valid frequency */
-		return TM_TIMER_PROPERTIES_Result_FrequencyTooLow;
+		return TIMER_PROPERTIES_Result_FrequencyTooLow;
 	}
 	
 	/* Fix for 16/32bit timers */
@@ -138,17 +138,17 @@ TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_GenerateDataForWorkingFrequency
 		Timer_Data->Frequency = 0;
 		
 		/* Prescaler too high, frequency is too low for use */
-		return TM_TIMER_PROPERTIES_Result_FrequencyTooLow;
+		return TIMER_PROPERTIES_Result_FrequencyTooLow;
 	}
 	
 	/* Set frequency */
 	Timer_Data->Frequency = frequency;
 	
 	/* Return OK */
-	return TM_TIMER_PROPERTIES_Result_Ok;
+	return TIMER_PROPERTIES_Result_Ok;
 }
 
-TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_EnableClock(TIM_TypeDef* TIMx) {
+TIMER_PROPERTIES_Result_t TIMER_PROPERTIES_EnableClock(TIM_TypeDef* TIMx) {
 #ifdef TIM1
 	if (TIMx == TIM1) {
 		RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
@@ -221,10 +221,10 @@ TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_EnableClock(TIM_TypeDef* TIMx) 
 #endif
 	
 	/* Return OK */
-	return TM_TIMER_PROPERTIES_Result_Ok;
+	return TIMER_PROPERTIES_Result_Ok;
 }
 
-TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_DisableClock(TIM_TypeDef* TIMx) {
+TIMER_PROPERTIES_Result_t TIMER_PROPERTIES_DisableClock(TIM_TypeDef* TIMx) {
 #ifdef TIM1
 	if (TIMx == TIM1) {
 		RCC->APB2ENR &= ~RCC_APB2ENR_TIM1EN;
@@ -297,5 +297,5 @@ TM_TIMER_PROPERTIES_Result_t TM_TIMER_PROPERTIES_DisableClock(TIM_TypeDef* TIMx)
 #endif
 	
 	/* Return OK */
-	return TM_TIMER_PROPERTIES_Result_Ok;
+	return TIMER_PROPERTIES_Result_Ok;
 }

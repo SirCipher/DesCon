@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_IDENTIFICATION_H
-#define TM_IDENTIFICATION_H 100
+#ifndef IDENTIFICATION_H
+#define IDENTIFICATION_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_ID
+ * @defgroup ID
  * @brief    Identification library and flash size for STM32F4xx - http://stm32f4-discovery.com/2014/12/library-44-stm32f4-unique-id-and-flash-size
  * @{
  *
@@ -85,7 +85,7 @@ extern "C" {
 #include "stm32f4xx.h"
 
 /**
- * @defgroup TM_ID_Macros
+ * @defgroup ID_Macros
  * @brief    Library defines
  *
  * Defines for register locations inside STM32F4xx devices
@@ -112,7 +112,7 @@ extern "C" {
  */
 
 /**
- * @defgroup TM_ID_Functions
+ * @defgroup ID_Functions
  * @brief    Library Functions
  * @{
  */
@@ -128,7 +128,7 @@ extern "C" {
  *           - 0x0433: STM32F401xD/E
  *           - 0x0431: STM32F411xC/E
  */
-#define TM_ID_GetSignature()	((*(uint16_t *) (ID_DBGMCU_IDCODE)) & 0x0FFF)
+#define ID_GetSignature()	((*(uint16_t *) (ID_DBGMCU_IDCODE)) & 0x0FFF)
 
 /**
  * @brief  Get STM32F4xx device revision
@@ -141,7 +141,7 @@ extern "C" {
  *           - 0x1007: Revision 1
  *           - 0x2001: Revision 3
  */
-#define TM_ID_GetRevision()		(*(uint16_t *) (DBGMCU->IDCODE + 2))
+#define ID_GetRevision()		(*(uint16_t *) (DBGMCU->IDCODE + 2))
 
 /**
  * @brief  Get STM32F4xx device's flash size in kilo bytes
@@ -149,7 +149,7 @@ extern "C" {
  * @param  None
  * @retval Flash size in kilo bytes
  */
-#define TM_ID_GetFlashSize()	(*(uint16_t *) (ID_FLASH_ADDRESS))
+#define ID_GetFlashSize()	(*(uint16_t *) (ID_FLASH_ADDRESS))
 
 /**
  * @brief  Get unique ID number in 8-bit format
@@ -159,7 +159,7 @@ extern "C" {
  *               - Values between 0 and 11 are allowed
  * @retval Unique ID address
  */
-#define TM_ID_GetUnique8(x)		((x >= 0 && x < 12) ? (*(uint8_t *) (ID_UNIQUE_ADDRESS + (x))) : 0)
+#define ID_GetUnique8(x)		((x >= 0 && x < 12) ? (*(uint8_t *) (ID_UNIQUE_ADDRESS + (x))) : 0)
 	
 /**
  * @brief  Get unique ID number in 16-bit format
@@ -169,7 +169,7 @@ extern "C" {
  *               - Values between 0 and 5 are allowed
  * @retval Unique ID address
  */
-#define TM_ID_GetUnique16(x)	((x >= 0 && x < 6) ? (*(uint16_t *) (ID_UNIQUE_ADDRESS + 2 * (x))) : 0)
+#define ID_GetUnique16(x)	((x >= 0 && x < 6) ? (*(uint16_t *) (ID_UNIQUE_ADDRESS + 2 * (x))) : 0)
 
 /**
  * @brief  Get unique ID number in 32-bit format
@@ -179,7 +179,7 @@ extern "C" {
  *               - Values between 0 and 2 are allowed
  * @retval Unique ID address
  */
-#define TM_ID_GetUnique32(x)	((x >= 0 && x < 3) ? (*(uint32_t *) (ID_UNIQUE_ADDRESS + 4 * (x))) : 0)
+#define ID_GetUnique32(x)	((x >= 0 && x < 3) ? (*(uint32_t *) (ID_UNIQUE_ADDRESS + 4 * (x))) : 0)
 
 /**
  * @}

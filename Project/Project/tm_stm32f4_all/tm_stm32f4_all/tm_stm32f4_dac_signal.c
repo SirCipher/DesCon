@@ -16,9 +16,9 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_dac_signal.h"
+#include "stm32f4_dac_signal.h"
 
-TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_SetCustomSignal(TM_DAC_SIGNAL_Channel_t DACx, uint16_t* Signal_Data, uint16_t Signal_Length, double frequency);
+DAC_SIGNAL_Result_t DAC_SIGNAL_SetCustomSignal(DAC_SIGNAL_Channel_t DACx, uint16_t* Signal_Data, uint16_t Signal_Length, double frequency);
 
 uint16_t DAC_SIGNAL_Sinus[DAC_SIGNAL_SINUS_LENGTH] = {
 	2047, 2447, 2831, 3185, 3498, 3750, 3939, 4056,
@@ -48,7 +48,7 @@ uint16_t DAC_SIGNAL_Square[DAC_SIGNAL_SQUARE_LENGTH] = {
 TIM_TypeDef *DAC_TIM[2];
 uint8_t dac_timer_set[2] = {0, 0};
 
-TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_Init(TM_DAC_SIGNAL_Channel_t DACx, TIM_TypeDef* TIMx) {
+DAC_SIGNAL_Result_t DAC_SIGNAL_Init(DAC_SIGNAL_Channel_t DACx, TIM_TypeDef* TIMx) {
 	uint16_t GPIO_Pin;
 	
 	/* Check used timer */
@@ -67,56 +67,56 @@ TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_Init(TM_DAC_SIGNAL_Channel_t DACx, TIM_Type
 		dac_timer_set[DACx] = 1;
 	} else {
 		/* Timer is not valid */
-		return TM_DAC_SIGNAL_Result_TimerNotValid;
+		return DAC_SIGNAL_Result_TimerNotValid;
 	}
 
 	
 	/* Select proper GPIO pin */
-	if (DACx == TM_DAC1) {
+	if (DACx == DAC1) {
 		GPIO_Pin = GPIO_PIN_4;
 	} else {
 		GPIO_Pin = GPIO_PIN_5;
 	}
 	
 	/* Initialize proper GPIO pin */
-	TM_GPIO_Init(GPIOA, GPIO_Pin, TM_GPIO_Mode_AN, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_Fast);
+	GPIO_Init(GPIOA, GPIO_Pin, GPIO_Mode_AN, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_Fast);
 	
 	/* Return OK */
-	return TM_DAC_SIGNAL_Result_Ok;
+	return DAC_SIGNAL_Result_Ok;
 }
 
-TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_SetSignal(TM_DAC_SIGNAL_Channel_t DACx, TM_DAC_SIGNAL_Signal_t signal_type, double frequency) {
-	TM_DAC_SIGNAL_Result_t result;
+DAC_SIGNAL_Result_t DAC_SIGNAL_SetSignal(DAC_SIGNAL_Channel_t DACx, DAC_SIGNAL_Signal_t signal_type, double frequency) {
+	DAC_SIGNAL_Result_t result;
 	switch (signal_type) {
-		case TM_DAC_SIGNAL_Signal_Sinus:
-			result = TM_DAC_SIGNAL_SetCustomSignal(DACx, DAC_SIGNAL_Sinus, DAC_SIGNAL_SINUS_LENGTH, frequency);
+		case DAC_SIGNAL_Signal_Sinus:
+			result = DAC_SIGNAL_SetCustomSignal(DACx, DAC_SIGNAL_Sinus, DAC_SIGNAL_SINUS_LENGTH, frequency);
 			break;
-		case TM_DAC_SIGNAL_Signal_Sawtooth:
-			result = TM_DAC_SIGNAL_SetCustomSignal(DACx, DAC_SIGNAL_Sawtooth, DAC_SIGNAL_SAWTOOTH_LENGTH, frequency);
+		case DAC_SIGNAL_Signal_Sawtooth:
+			result = DAC_SIGNAL_SetCustomSignal(DACx, DAC_SIGNAL_Sawtooth, DAC_SIGNAL_SAWTOOTH_LENGTH, frequency);
 			break;
-		case TM_DAC_SIGNAL_Signal_Triangle:
-			result = TM_DAC_SIGNAL_SetCustomSignal(DACx, DAC_SIGNAL_Triangle, DAC_SIGNAL_TRIANGLE_LENGTH, frequency);
+		case DAC_SIGNAL_Signal_Triangle:
+			result = DAC_SIGNAL_SetCustomSignal(DACx, DAC_SIGNAL_Triangle, DAC_SIGNAL_TRIANGLE_LENGTH, frequency);
 			break;
-		case TM_DAC_SIGNAL_Signal_Square:
-			result = TM_DAC_SIGNAL_SetCustomSignal(DACx, DAC_SIGNAL_Square, DAC_SIGNAL_SQUARE_LENGTH, frequency);
+		case DAC_SIGNAL_Signal_Square:
+			result = DAC_SIGNAL_SetCustomSignal(DACx, DAC_SIGNAL_Square, DAC_SIGNAL_SQUARE_LENGTH, frequency);
 			break;
 		default:
-			result = TM_DAC_SIGNAL_Result_Error;
+			result = DAC_SIGNAL_Result_Error;
 	}
 	
 	/* Return result */
 	return result;
 }
 
-TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_SetCustomSignal(TM_DAC_SIGNAL_Channel_t DACx, uint16_t* Signal_Data, uint16_t Signal_Length, double frequency) {
+DAC_SIGNAL_Result_t DAC_SIGNAL_SetCustomSignal(DAC_SIGNAL_Channel_t DACx, uint16_t* Signal_Data, uint16_t Signal_Length, double frequency) {
 	DAC_InitTypeDef DAC_InitStruct;
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStruct;
 	DMA_InitTypeDef DMA_InitStruct;
-	TM_TIMER_PROPERTIES_t Timer_Data;
+	TIMER_PROPERTIES_t Timer_Data;
 
 	/* Check if timer is set */
 	if (!dac_timer_set[DACx]) {
-		return TM_DAC_SIGNAL_Result_Error;
+		return DAC_SIGNAL_Result_Error;
 	}
 	
 	/* Check used timer */
@@ -135,18 +135,18 @@ TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_SetCustomSignal(TM_DAC_SIGNAL_Channel_t DAC
 		DAC_InitStruct.DAC_Trigger = DAC_Trigger_T8_TRGO;
 	} else {
 		/* Timer is not valid */
-		return TM_DAC_SIGNAL_Result_TimerNotValid;
+		return DAC_SIGNAL_Result_TimerNotValid;
 	}
 	
 	/* Get timer data */
-	TM_TIMER_PROPERTIES_GetTimerProperties(DAC_TIM[DACx], &Timer_Data);
+	TIMER_PROPERTIES_GetTimerProperties(DAC_TIM[DACx], &Timer_Data);
 	
 	/* Get period and prescaler values */
-	TM_TIMER_PROPERTIES_GenerateDataForWorkingFrequency(&Timer_Data, frequency * Signal_Length);
+	TIMER_PROPERTIES_GenerateDataForWorkingFrequency(&Timer_Data, frequency * Signal_Length);
 	
 	/* Check valid frequency */
 	if (Timer_Data.Frequency == 0) {
-		return TM_DAC_SIGNAL_Result_Error;
+		return DAC_SIGNAL_Result_Error;
 	}
 	
 	/* Enable DAC clock */
@@ -159,16 +159,16 @@ TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_SetCustomSignal(TM_DAC_SIGNAL_Channel_t DAC
 	DAC_InitStruct.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
 	
 	/* Disable DMA */
-	if (DACx == TM_DAC1) {
+	if (DACx == DAC1) {
 		/* Init DAC channel 1 */
 		DAC_Init(DAC_Channel_1, &DAC_InitStruct);
-	} else if (DACx == TM_DAC2) {
+	} else if (DACx == DAC2) {
 		/* Init DAC channel 2 */
 		DAC_Init(DAC_Channel_2, &DAC_InitStruct);
 	}
 	
 	/* Enable timer clock */
-	TM_TIMER_PROPERTIES_EnableClock(DAC_TIM[DACx]);
+	TIMER_PROPERTIES_EnableClock(DAC_TIM[DACx]);
 	
 	/* Time base configuration */
 	TIM_TimeBaseStructInit(&TIM_TimeBaseStruct); 
@@ -199,7 +199,7 @@ TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_SetCustomSignal(TM_DAC_SIGNAL_Channel_t DAC
 	DMA_InitStruct.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
 	
 	switch (DACx) {
-		case TM_DAC1:
+		case DAC1:
 			/* Set peripheral location = 12bit right aligned for channel 1 */
 			DMA_InitStruct.DMA_PeripheralBaseAddr = (uint32_t)&DAC->DHR12R1;
 		
@@ -221,7 +221,7 @@ TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_SetCustomSignal(TM_DAC_SIGNAL_Channel_t DAC
 			/* Enable DMA for DAC Channel 1 */
 			DAC_DMACmd(DAC_Channel_1, ENABLE);
 			break;
-		case TM_DAC2:
+		case DAC2:
 			/* Disable DMA */
 			DMA_DeInit(DAC_SIGNAL_DMA_DAC2_STREAM);
 			
@@ -251,6 +251,6 @@ TM_DAC_SIGNAL_Result_t TM_DAC_SIGNAL_SetCustomSignal(TM_DAC_SIGNAL_Channel_t DAC
 	DAC_TIM[DACx]->CR1 |= TIM_CR1_CEN;
 	
 	/* Return OK */
-	return TM_DAC_SIGNAL_Result_Ok;
+	return DAC_SIGNAL_Result_Ok;
 }
 

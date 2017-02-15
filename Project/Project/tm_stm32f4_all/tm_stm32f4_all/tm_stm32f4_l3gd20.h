@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_L3GD20_H
-#define TM_L3GD20_H	110
+#ifndef L3GD20_H
+#define L3GD20_H	110
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_L3GD20
+ * @defgroup L3GD20
  * @brief    L3GD20 library for STM32F4xx devices - http://stm32f4-discovery.com/2014/08/library-28-l3gd20-3-axis-gyroscope
  * @{
  *
@@ -64,7 +64,7 @@ CS				PC1				Chip select for SPI
 @verbatim
 //Select custom SPI for sensor
 #define L3GD20_SPI					SPI5
-#define L3GD20_SPI_PINSPACK			TM_SPI_PinsPack_1
+#define L3GD20_SPI_PINSPACK			SPI_PinsPack_1
 @endverbatim
  *
  * If you want to change CS pin, add these lines below in defines.h file and edit them:
@@ -101,11 +101,11 @@ CS				PC1				Chip select for SPI
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_spi.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_spi.h"
+#include "stm32f4_gpio.h"
 
 /**
- * @defgroup TM_L3GD20_Macros
+ * @defgroup L3GD20_Macros
  * @brief    Library defines
  * @{
  */
@@ -113,7 +113,7 @@ CS				PC1				Chip select for SPI
 /* Default SPI, used on STM32F429 Discovery board */
 #ifndef L3GD20_SPI
 #define L3GD20_SPI					SPI5
-#define L3GD20_SPI_PINSPACK			TM_SPI_PinsPack_1
+#define L3GD20_SPI_PINSPACK			SPI_PinsPack_1
 #endif
 
 /* Default CS pin on STM32F429 Discovery board */
@@ -123,8 +123,8 @@ CS				PC1				Chip select for SPI
 #endif
 
 /* Pin macros */
-#define L3GD20_CS_LOW				TM_GPIO_SetPinLow(L3GD20_CS_PORT, L3GD20_CS_PIN)
-#define L3GD20_CS_HIGH				TM_GPIO_SetPinHigh(L3GD20_CS_PORT, L3GD20_CS_PIN)
+#define L3GD20_CS_LOW				GPIO_SetPinLow(L3GD20_CS_PORT, L3GD20_CS_PIN)
+#define L3GD20_CS_HIGH				GPIO_SetPinHigh(L3GD20_CS_PORT, L3GD20_CS_PIN)
 
 /* Identification number */
 #define L3GD20_WHO_AM_I				0xD4
@@ -167,7 +167,7 @@ CS				PC1				Chip select for SPI
  */
  
 /**
- * @defgroup TM_L3GD20_Typedefs
+ * @defgroup L3GD20_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -179,50 +179,50 @@ typedef struct {
 	int16_t X; /*!< X axis rotation */
 	int16_t Y; /*!< Y axis rotation */
 	int16_t Z; /*!< Z axis rotation */
-} TM_L3GD20_t;
+} L3GD20_t;
 
 /**
  * @brief  L3GD20 Result enumerations
  */
 typedef enum {
-	TM_L3GD20_Result_Ok,   /*!< Everything OK */
-	TM_L3GD20_Result_Error /*!< Error occurred */
-} TM_L3GD20_Result_t;
+	L3GD20_Result_Ok,   /*!< Everything OK */
+	L3GD20_Result_Error /*!< Error occurred */
+} L3GD20_Result_t;
 
 /**
  * @brief  Enumeration for scale select	
  */
 typedef enum {
-	TM_L3GD20_Scale_250, /*!< Set full scale to 250 mdps */
-	TM_L3GD20_Scale_500, /*!< Set full scale to 500 mdps */
-	TM_L3GD20_Scale_2000 /*!< Set full scale to 2000 mdps */
-} TM_L3GD20_Scale_t;
+	L3GD20_Scale_250, /*!< Set full scale to 250 mdps */
+	L3GD20_Scale_500, /*!< Set full scale to 500 mdps */
+	L3GD20_Scale_2000 /*!< Set full scale to 2000 mdps */
+} L3GD20_Scale_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_L3GD20_Functions
+ * @defgroup L3GD20_Functions
  * @brief    Library Functions
  * @{
  */
  
 /**
  * @brief  Initializes L3GD20 sensor
- * @param  scale: L3GD20 scale selection. This parameter can be a value of @ref TM_L3GD20_Scale_t enumeration
+ * @param  scale: L3GD20 scale selection. This parameter can be a value of @ref L3GD20_Scale_t enumeration
  * @retval Sensor status:
- *            - TM_L3GD20_Result_Ok: Sensor detected
- *            - TM_L3GD20_Result_Error: Sensor not detected
+ *            - L3GD20_Result_Ok: Sensor detected
+ *            - L3GD20_Result_Error: Sensor not detected
  */
-TM_L3GD20_Result_t TM_L3GD20_Init(TM_L3GD20_Scale_t scale);
+L3GD20_Result_t L3GD20_Init(L3GD20_Scale_t scale);
 
 /**
  * @brief  Reads rotation data from sensor
- * @param  *L3DG20_Data: Pointer to working @ef TM_L3GD20_t structure
- * @retval Read status: TM_L3GD20_Result_Ok
+ * @param  *L3DG20_Data: Pointer to working @ef L3GD20_t structure
+ * @retval Read status: L3GD20_Result_Ok
  */
-TM_L3GD20_Result_t TM_L3GD20_Read(TM_L3GD20_t* L3DG20_Data);
+L3GD20_Result_t L3GD20_Read(L3GD20_t* L3DG20_Data);
 
 /**
  * @}

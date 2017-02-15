@@ -17,14 +17,14 @@
 #include "misc.h"
 #include "defines.h"
 
-#include "tm_stm32f4_spi.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_gpio.h"
-#include "tm_stm32f4_fatfs.h"
+#include "stm32f4_spi.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_gpio.h"
+#include "stm32f4_fatfs.h"
 
 #ifndef FATFS_SPI
 #define FATFS_SPI							SPI1
-#define FATFS_SPI_PINSPACK					TM_SPI_PinsPack_1
+#define FATFS_SPI_PINSPACK					SPI_PinsPack_1
 #endif
 
 #ifndef FATFS_CS_PIN		

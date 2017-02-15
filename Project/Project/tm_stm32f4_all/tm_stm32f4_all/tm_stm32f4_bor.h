@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_BOR_H
-#define TM_BOR_H 100
+#ifndef BOR_H
+#define BOR_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_BOR
+ * @defgroup BOR
  * @brief    Brown-Out detection for STM32F4xx
  * @{
  *
@@ -66,7 +66,7 @@ extern "C" {
 #include "defines.h"
 
 /**
- * @defgroup TM_BOR_Macros
+ * @defgroup BOR_Macros
  * @brief    Library defines
  * @{
  */
@@ -76,35 +76,35 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_BOR_Typedefs
+ * @defgroup BOR_Typedefs
  * @brief    Library Typedefs
  * @{
  */
  
 typedef enum {
-	TM_BOR_Level_None = OB_BOR_OFF,
-	TM_BOR_Level_1 = OB_BOR_LEVEL1,
-	TM_BOR_Level_2 = OB_BOR_LEVEL2,
-	TM_BOR_Level_3 = OB_BOR_LEVEL3
-} TM_BOR_Level_t;
+	BOR_Level_None = OB_BOR_OFF,
+	BOR_Level_1 = OB_BOR_LEVEL1,
+	BOR_Level_2 = OB_BOR_LEVEL2,
+	BOR_Level_3 = OB_BOR_LEVEL3
+} BOR_Level_t;
  
 typedef enum {
-	TM_BOR_Result_Ok,   /*!< Everything OK */
-	TM_BOR_Result_Error /*!< An error has occurred */
-} TM_BOR_Result_t;
+	BOR_Result_Ok,   /*!< Everything OK */
+	BOR_Result_Error /*!< An error has occurred */
+} BOR_Result_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_BOR_Functions
+ * @defgroup BOR_Functions
  * @brief    Library Functions
  * @{
  */
 
-TM_BOR_Result_t TM_BOR_Set(TM_BOR_Level_t BORValue);
-TM_BOR_Level_t TM_BOR_Get(void);
+BOR_Result_t BOR_Set(BOR_Level_t BORValue);
+BOR_Level_t BOR_Get(void);
 
 /**
  * @}

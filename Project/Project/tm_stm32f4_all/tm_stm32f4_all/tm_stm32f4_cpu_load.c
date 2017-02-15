@@ -16,9 +16,9 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_cpu_load.h"
+#include "stm32f4_cpu_load.h"
 
-uint8_t TM_CPULOAD_Init(TM_CPULOAD_t* CPU_Load) {
+uint8_t CPULOAD_Init(CPULOAD_t* CPU_Load) {
 	/* Set values to 0 */
 	CPU_Load->Load = 0;
 	CPU_Load->SCNT = 0;
@@ -26,10 +26,10 @@ uint8_t TM_CPULOAD_Init(TM_CPULOAD_t* CPU_Load) {
 	CPU_Load->Updated = 0;
 	
 	/* Return DWT counter enabled status */
-	return TM_GENERAL_DWTCounterEnable();
+	return GENERAL_DWTCounterEnable();
 }
 
-uint8_t TM_CPULOAD_GoToSleepMode(TM_CPULOAD_t* CPU_Load, TM_LOWPOWERMODE_t PowerMode) {
+uint8_t CPULOAD_GoToSleepMode(CPULOAD_t* CPU_Load, LOWPOWERMODE_t PowerMode) {
 	uint32_t t;
 	static uint32_t l = 0;
 	static uint32_t WorkingTime = 0;
@@ -46,7 +46,7 @@ uint8_t TM_CPULOAD_GoToSleepMode(TM_CPULOAD_t* CPU_Load, TM_LOWPOWERMODE_t Power
 	
 	/* Go to sleep mode */
 	/* Wait for wake up interrupt, systick can do it too */
-	if (PowerMode == TM_LOWPOWERMODE_SleepUntilInterrupt) {
+	if (PowerMode == LOWPOWERMODE_SleepUntilInterrupt) {
 		__WFI();
 	} else {
 		__WFE();

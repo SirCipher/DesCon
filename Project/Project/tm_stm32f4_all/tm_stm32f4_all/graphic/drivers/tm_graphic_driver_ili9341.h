@@ -45,7 +45,7 @@
  *		
  *	//Default SPI used is SPI5. Check my SPI library for other pinouts
  *	#define ILI9341_SPI 				SPI5
- *	#define ILI9341_SPI_PINS			TM_SPI_PinsPack_1
+ *	#define ILI9341_SPI_PINS			SPI_PinsPack_1
  *		
  *	//Default CS pin. Edit this in your defines.h file
  *	#define ILI9341_CS_CLK				RCC_AHB1Periph_GPIOC
@@ -73,8 +73,8 @@
  *		
  *		
  */
-#ifndef TM_ILI9341_H
-#define TM_ILI9341_H 100
+#ifndef ILI9341_H
+#define ILI9341_H 100
 /**
  * Dependencies
  * - STM32F4xx
@@ -91,14 +91,14 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_spi.h"
-#include "tm_stm32f4_graphic.h"
+#include "stm32f4_spi.h"
+#include "stm32f4_graphic.h"
 
 //SPI used
 //This SPI pins are used on STM32F429 Discovery board
 #ifndef ILI9341_SPI
 #define ILI9341_SPI 				SPI5
-#define ILI9341_SPI_PINS			TM_SPI_PinsPack_1
+#define ILI9341_SPI_PINS			SPI_PinsPack_1
 #endif
 
 #ifndef ILI9341_CS_PIN
@@ -190,42 +190,42 @@
  * Also, LCD should be in portrait mode by default, so width is smaller than height.
  * 
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		pointer to TM_GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		pointer to GRAPHIC_Options_t struct
  * 		
- * This function should return TM_GRAPHIC_OK or TM_GRAPHIC_ERROR
+ * This function should return GRAPHIC_OK or GRAPHIC_ERROR
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Init(TM_GRAPHIC_Options_t* LCD_Options);
+extern GRAPHIC_Result GRAPHICLCDDriver_Init(GRAPHIC_Options_t* LCD_Options);
 
 /**
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		Pointer to TM_GRAPHIC_Options_t struct
- * 	- TM_GRAPHIC_Orientation_t orientation
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		Pointer to GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Orientation_t orientation
  * 		Orientation you should set to LCD
  * 	
- * This function should return TM_GRAPHIC_OK on success or TM_GRAPHIC_ERROR on failure
+ * This function should return GRAPHIC_OK on success or GRAPHIC_ERROR on failure
  * 		
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Rotate(TM_GRAPHIC_Options_t* LCD_Options, TM_GRAPHIC_Orientation_t orientation);
+extern GRAPHIC_Result GRAPHICLCDDriver_Rotate(GRAPHIC_Options_t* LCD_Options, GRAPHIC_Orientation_t orientation);
 
 /**
  * Fill entire LCD with specific color
  * 
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		Pointer to TM_GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		Pointer to GRAPHIC_Options_t struct
  * 	- uint32_t color
  * 		Specific color to fill entire LCD
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Fill(TM_GRAPHIC_Options_t* LCD_Options, uint32_t color);
+extern GRAPHIC_Result GRAPHICLCDDriver_Fill(GRAPHIC_Options_t* LCD_Options, uint32_t color);
 
 /**
  * Draw pixel on specific X and Y location on Graphic LCD
  * 
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		Pointer to TM_GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		Pointer to GRAPHIC_Options_t struct
  * 	- uint16_t x
  * 		X position on LCD
  * 	- uint16_t y
@@ -233,7 +233,7 @@ extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Fill(TM_GRAPHIC_Options_t* LCD_Opti
  * 	- uint32_t color
  * 		Pixel color
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_DrawPixel(TM_GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color);
+extern GRAPHIC_Result GRAPHICLCDDriver_DrawPixel(GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color);
 
 #endif
 

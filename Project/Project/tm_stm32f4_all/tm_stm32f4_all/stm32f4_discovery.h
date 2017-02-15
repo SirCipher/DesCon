@@ -270,15 +270,15 @@ typedef enum
 /** @defgroup STM32F4_DISCOVERY_LOW_LEVEL_Exported_Functions
   * @{
   */
-void STM_EVAL_LEDInit(Led_TypeDef Led);
-void STM_EVAL_LEDOn(Led_TypeDef Led);
-void STM_EVAL_LEDOff(Led_TypeDef Led);
-void STM_EVAL_LEDToggle(Led_TypeDef Led);
+void SEVAL_LEDInit(Led_TypeDef Led);
+void SEVAL_LEDOn(Led_TypeDef Led);
+void SEVAL_LEDOff(Led_TypeDef Led);
+void SEVAL_LEDToggle(Led_TypeDef Led);
 
-void STM_EVAL_PBInit(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode);
-uint32_t STM_EVAL_PBGetState(Button_TypeDef Button);
+void SEVAL_PBInit(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode);
+uint32_t SEVAL_PBGetState(Button_TypeDef Button);
 
-void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct);
+void SEVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct);
 
 void SD_LowLevel_DeInit(void);
 void SD_LowLevel_Init(void); 

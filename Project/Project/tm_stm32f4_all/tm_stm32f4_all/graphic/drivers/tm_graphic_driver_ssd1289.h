@@ -71,8 +71,8 @@
  * 	#define SSD1289_RST_PORT		GPIOC
  * 	#define SSD1289_RST_PIN			GPIO_Pin_4
  */
-#ifndef TM_GRAPHIC_DRIVER_SSD1289_H
-#define TM_GRAPHIC_DRIVER_SSD1289_H 100
+#ifndef GRAPHIC_DRIVER_SSD1289_H
+#define GRAPHIC_DRIVER_SSD1289_H 100
 /**
  * Dependencies
  * - STM32F4xx
@@ -89,8 +89,8 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_graphic.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_graphic.h"
 
 /* Data port */
 #ifndef SSD1289_DATA_PORT
@@ -161,42 +161,42 @@
  * Also, LCD should be in portrait mode by default, so width is smaller than height.
  * 
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		pointer to TM_GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		pointer to GRAPHIC_Options_t struct
  * 		
- * This function should return TM_GRAPHIC_OK or TM_GRAPHIC_ERROR
+ * This function should return GRAPHIC_OK or GRAPHIC_ERROR
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Init(TM_GRAPHIC_Options_t* LCD_Options);
+extern GRAPHIC_Result GRAPHICLCDDriver_Init(GRAPHIC_Options_t* LCD_Options);
 
 /**
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		Pointer to TM_GRAPHIC_Options_t struct
- * 	- TM_GRAPHIC_Orientation_t orientation
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		Pointer to GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Orientation_t orientation
  * 		Orientation you should set to LCD
  * 	
- * This function should return TM_GRAPHIC_OK on success or TM_GRAPHIC_ERROR on failure
+ * This function should return GRAPHIC_OK on success or GRAPHIC_ERROR on failure
  * 		
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Rotate(TM_GRAPHIC_Options_t* LCD_Options, TM_GRAPHIC_Orientation_t orientation);
+extern GRAPHIC_Result GRAPHICLCDDriver_Rotate(GRAPHIC_Options_t* LCD_Options, GRAPHIC_Orientation_t orientation);
 
 /**
  * Fill entire LCD with specific color
  * 
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		Pointer to TM_GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		Pointer to GRAPHIC_Options_t struct
  * 	- uint32_t color
  * 		Specific color to fill entire LCD
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Fill(TM_GRAPHIC_Options_t* LCD_Options, uint32_t color);
+extern GRAPHIC_Result GRAPHICLCDDriver_Fill(GRAPHIC_Options_t* LCD_Options, uint32_t color);
 
 /**
  * Draw pixel on specific X and Y location on Graphic LCD
  * 
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		Pointer to TM_GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		Pointer to GRAPHIC_Options_t struct
  * 	- uint16_t x
  * 		X position on LCD
  * 	- uint16_t y
@@ -204,7 +204,7 @@ extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Fill(TM_GRAPHIC_Options_t* LCD_Opti
  * 	- uint32_t color
  * 		Pixel color
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_DrawPixel(TM_GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color);
+extern GRAPHIC_Result GRAPHICLCDDriver_DrawPixel(GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color);
 
 
 /**
@@ -212,12 +212,12 @@ extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_DrawPixel(TM_GRAPHIC_Options_t* LCD
 	Private function macros
 ------------------------------------------------------------
 */
-extern void TM_SSD1289_InitPins(void);
-extern void TM_SSD1289_InitSequence(void);
-extern void TM_SSD1289_WriteCommand(uint16_t command);
-extern void TM_SSD1289_WriteData(uint16_t data);
-extern void TM_SSD1289_WriteRegister(uint16_t reg, uint16_t val);
-extern void TM_SSD1289_SetCursor(uint16_t x, uint16_t y);
-extern void TM_SSD1289_Delay(volatile uint32_t ticks);
+extern void SSD1289_InitPins(void);
+extern void SSD1289_InitSequence(void);
+extern void SSD1289_WriteCommand(uint16_t command);
+extern void SSD1289_WriteData(uint16_t data);
+extern void SSD1289_WriteRegister(uint16_t reg, uint16_t val);
+extern void SSD1289_SetCursor(uint16_t x, uint16_t y);
+extern void SSD1289_Delay(volatile uint32_t ticks);
 #endif
 

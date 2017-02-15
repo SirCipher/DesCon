@@ -16,9 +16,9 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_rng.h"
+#include "stm32f4_rng.h"
 
-void TM_RNG_Init(void) {
+void RNG_Init(void) {
 	/* Enable RNG clock source */
 	RCC->AHB2ENR |= RCC_AHB2ENR_RNGEN;
 	
@@ -26,7 +26,7 @@ void TM_RNG_Init(void) {
 	RNG->CR |= RNG_CR_RNGEN;
 }
 
-void TM_RNG_DeInit(void) {
+void RNG_DeInit(void) {
 	/* Disable RNG peripheral */
 	RNG->CR &= ~RNG_CR_RNGEN;
 	
@@ -34,7 +34,7 @@ void TM_RNG_DeInit(void) {
 	RCC->AHB2ENR &= ~RCC_AHB2ENR_RNGEN;
 }
 
-uint32_t TM_RNG_Get(void) {
+uint32_t RNG_Get(void) {
 	/* Wait until one RNG number is ready */
 	while (!(RNG->SR & (RNG_SR_DRDY)));
 

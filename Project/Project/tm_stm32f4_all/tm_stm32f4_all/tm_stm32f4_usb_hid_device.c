@@ -16,12 +16,12 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_usb_hid_device.h"
+#include "stm32f4_usb_hid_device.h"
 
 extern USB_OTG_CORE_HANDLE USB_OTG_dev;
-extern TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_INT_Status;
+extern USB_HIDDEVICE_Status_t USB_HIDDEVICE_INT_Status;
 
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_Init(void) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_Init(void) {
 	/* Initialize HID device */
 	USBD_Init(&USB_OTG_dev,
 	#ifdef USE_USB_OTG_HS 
@@ -34,37 +34,37 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_Init(void) {
 			&USR_cb);
 	
 	/* Set not connected */
-	TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_Disconnected;
+	USB_HIDDEVICE_INT_Status = USB_HIDDEVICE_Status_Disconnected;
 	
 	/* Device not connected */
-	return TM_USB_HIDDEVICE_INT_Status;
+	return USB_HIDDEVICE_INT_Status;
 }
 
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GetStatus(void) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_GetStatus(void) {
 	/* Return status */
-	return TM_USB_HIDDEVICE_INT_Status;
+	return USB_HIDDEVICE_INT_Status;
 }
 
 /* Mouse */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_MouseStructInit(TM_USB_HIDDEVICE_Mouse_t* Mouse_Data) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_MouseStructInit(USB_HIDDEVICE_Mouse_t* Mouse_Data) {
 	/* Set defaults */
-	Mouse_Data->LeftButton = TM_USB_HIDDEVICE_Button_Released;
-	Mouse_Data->RightButton = TM_USB_HIDDEVICE_Button_Released;
-	Mouse_Data->MiddleButton = TM_USB_HIDDEVICE_Button_Released;
+	Mouse_Data->LeftButton = USB_HIDDEVICE_Button_Released;
+	Mouse_Data->RightButton = USB_HIDDEVICE_Button_Released;
+	Mouse_Data->MiddleButton = USB_HIDDEVICE_Button_Released;
 	Mouse_Data->XAxis = 0;
 	Mouse_Data->YAxis = 0;
 	Mouse_Data->Wheel = 0;
 	
 	/* Return currect status */
-	return TM_USB_HIDDEVICE_INT_Status;
+	return USB_HIDDEVICE_INT_Status;
 }
 
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_MouseSend(TM_USB_HIDDEVICE_Mouse_t* Mouse_Data) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_MouseSend(USB_HIDDEVICE_Mouse_t* Mouse_Data) {
 	uint8_t buff[5]; /* 5 bytes long report */
 	
 	/* Check status */
-	if (TM_USB_HIDDEVICE_INT_Status != TM_USB_HIDDEVICE_Status_Connected) {
-		return TM_USB_HIDDEVICE_Status_Disconnected;
+	if (USB_HIDDEVICE_INT_Status != USB_HIDDEVICE_Status_Connected) {
+		return USB_HIDDEVICE_Status_Disconnected;
 	}
 	
 	/* Report ID */
@@ -87,15 +87,15 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_MouseSend(TM_USB_HIDDEVICE_Mouse_t* M
 	USBD_HID_SendReport(&USB_OTG_dev, buff, 5);
 	
 	/* Return connected */
-	return TM_USB_HIDDEVICE_Status_Connected;
+	return USB_HIDDEVICE_Status_Connected;
 }
 
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_MouseReleaseAll(void) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_MouseReleaseAll(void) {
 	uint8_t buff[5] = {0, 0, 0, 0, 0}; /* 4 bytes long report */
 	
 	/* Check status */
-	if (TM_USB_HIDDEVICE_INT_Status != TM_USB_HIDDEVICE_Status_Connected) {
-		return TM_USB_HIDDEVICE_Status_Disconnected;
+	if (USB_HIDDEVICE_INT_Status != USB_HIDDEVICE_Status_Connected) {
+		return USB_HIDDEVICE_Status_Disconnected;
 	}
 	
 	/* Report ID */
@@ -105,43 +105,43 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_MouseReleaseAll(void) {
 	USBD_HID_SendReport(&USB_OTG_dev, buff, 5);
 	
 	/* Return connected */
-	return TM_USB_HIDDEVICE_Status_Connected;
+	return USB_HIDDEVICE_Status_Connected;
 }
 
 /* Gamepad */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GamepadStructInit(TM_USB_HIDDEVICE_Gamepad_t* Gamepad_Data) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_GamepadStructInit(USB_HIDDEVICE_Gamepad_t* Gamepad_Data) {
 	/* Set defaults */
-	Gamepad_Data->Button1 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button2 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button3 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button4 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button5 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button6 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button7 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button8 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button9 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button10 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button11 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button12 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button13 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button14 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button15 = TM_USB_HIDDEVICE_Button_Released;
-	Gamepad_Data->Button16 = TM_USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button1 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button2 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button3 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button4 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button5 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button6 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button7 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button8 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button9 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button10 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button11 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button12 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button13 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button14 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button15 = USB_HIDDEVICE_Button_Released;
+	Gamepad_Data->Button16 = USB_HIDDEVICE_Button_Released;
 	Gamepad_Data->LeftXAxis = 0;
 	Gamepad_Data->LeftYAxis = 0;
 	Gamepad_Data->RightXAxis = 0;
 	Gamepad_Data->RightYAxis = 0;
 	
 	/* Return currect status */
-	return TM_USB_HIDDEVICE_INT_Status;
+	return USB_HIDDEVICE_INT_Status;
 }
 
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GamepadSend(TM_USB_HIDDEVICE_Gamepad_Number_t gamepad_id, TM_USB_HIDDEVICE_Gamepad_t* Gamepad_Data) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_GamepadSend(USB_HIDDEVICE_Gamepad_Number_t gamepad_id, USB_HIDDEVICE_Gamepad_t* Gamepad_Data) {
 	uint8_t buff[7]; /* 7 bytes long report */
 	
 	/* Check status */
-	if (TM_USB_HIDDEVICE_INT_Status != TM_USB_HIDDEVICE_Status_Connected) {
-		return TM_USB_HIDDEVICE_Status_Disconnected;
+	if (USB_HIDDEVICE_INT_Status != USB_HIDDEVICE_Status_Connected) {
+		return USB_HIDDEVICE_Status_Disconnected;
 	}
 	
 	/* Report ID */
@@ -181,15 +181,15 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GamepadSend(TM_USB_HIDDEVICE_Gamepad_
 	USBD_HID_SendReport(&USB_OTG_dev, buff, 7);
 	
 	/* Return connected */
-	return TM_USB_HIDDEVICE_Status_Connected;
+	return USB_HIDDEVICE_Status_Connected;
 }
 
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GamepadReleaseAll(TM_USB_HIDDEVICE_Gamepad_Number_t gamepad_id) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_GamepadReleaseAll(USB_HIDDEVICE_Gamepad_Number_t gamepad_id) {
 	uint8_t buff[7] = {0, 0, 0, 0, 0, 0, 0}; /* 7 bytes long report */
 	
 	/* Check status */
-	if (TM_USB_HIDDEVICE_INT_Status != TM_USB_HIDDEVICE_Status_Connected) {
-		return TM_USB_HIDDEVICE_Status_Disconnected;
+	if (USB_HIDDEVICE_INT_Status != USB_HIDDEVICE_Status_Connected) {
+		return USB_HIDDEVICE_Status_Disconnected;
 	}
 	
 	/* Report ID */
@@ -199,20 +199,20 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GamepadReleaseAll(TM_USB_HIDDEVICE_Ga
 	USBD_HID_SendReport(&USB_OTG_dev, buff, 7);
 	
 	/* Return connected */
-	return TM_USB_HIDDEVICE_Status_Connected;	
+	return USB_HIDDEVICE_Status_Connected;	
 }
 
 /* Keyboard */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardStructInit(TM_USB_HIDDEVICE_Keyboard_t* Keyboard_Data) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_KeyboardStructInit(USB_HIDDEVICE_Keyboard_t* Keyboard_Data) {
 	/* Set defaults */
-	Keyboard_Data->L_CTRL = TM_USB_HIDDEVICE_Button_Released;
-	Keyboard_Data->L_ALT = TM_USB_HIDDEVICE_Button_Released;
-	Keyboard_Data->L_SHIFT = TM_USB_HIDDEVICE_Button_Released;
-	Keyboard_Data->L_GUI = TM_USB_HIDDEVICE_Button_Released;
-	Keyboard_Data->R_CTRL = TM_USB_HIDDEVICE_Button_Released;
-	Keyboard_Data->R_ALT = TM_USB_HIDDEVICE_Button_Released;
-	Keyboard_Data->R_SHIFT = TM_USB_HIDDEVICE_Button_Released;
-	Keyboard_Data->R_GUI = TM_USB_HIDDEVICE_Button_Released;
+	Keyboard_Data->L_CTRL = USB_HIDDEVICE_Button_Released;
+	Keyboard_Data->L_ALT = USB_HIDDEVICE_Button_Released;
+	Keyboard_Data->L_SHIFT = USB_HIDDEVICE_Button_Released;
+	Keyboard_Data->L_GUI = USB_HIDDEVICE_Button_Released;
+	Keyboard_Data->R_CTRL = USB_HIDDEVICE_Button_Released;
+	Keyboard_Data->R_ALT = USB_HIDDEVICE_Button_Released;
+	Keyboard_Data->R_SHIFT = USB_HIDDEVICE_Button_Released;
+	Keyboard_Data->R_GUI = USB_HIDDEVICE_Button_Released;
 	Keyboard_Data->Key1 = 0;
 	Keyboard_Data->Key2 = 0;
 	Keyboard_Data->Key3 = 0;
@@ -221,15 +221,15 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardStructInit(TM_USB_HIDDEVICE_K
 	Keyboard_Data->Key6 = 0;
 	
 	/* Return currect status */
-	return TM_USB_HIDDEVICE_INT_Status;
+	return USB_HIDDEVICE_INT_Status;
 }
 
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardSend(TM_USB_HIDDEVICE_Keyboard_t* Keyboard_Data) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_KeyboardSend(USB_HIDDEVICE_Keyboard_t* Keyboard_Data) {
 	uint8_t buff[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};; /* 9 bytes long report */
 	
 	/* Check status */
-	if (TM_USB_HIDDEVICE_INT_Status != TM_USB_HIDDEVICE_Status_Connected) {
-		return TM_USB_HIDDEVICE_Status_Disconnected;
+	if (USB_HIDDEVICE_INT_Status != USB_HIDDEVICE_Status_Connected) {
+		return USB_HIDDEVICE_Status_Disconnected;
 	}
 	
 	/* Report ID */
@@ -261,15 +261,15 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardSend(TM_USB_HIDDEVICE_Keyboar
 	USBD_HID_SendReport(&USB_OTG_dev, buff, 9);
 	
 	/* Return connected */
-	return TM_USB_HIDDEVICE_Status_Connected;	
+	return USB_HIDDEVICE_Status_Connected;	
 }
 
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardReleaseAll(void) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_KeyboardReleaseAll(void) {
 	uint8_t buff[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0}; /* 9 bytes long report */
 	
 	/* Check status */
-	if (TM_USB_HIDDEVICE_INT_Status != TM_USB_HIDDEVICE_Status_Connected) {
-		return TM_USB_HIDDEVICE_Status_Disconnected;
+	if (USB_HIDDEVICE_INT_Status != USB_HIDDEVICE_Status_Connected) {
+		return USB_HIDDEVICE_Status_Disconnected;
 	}	
 	
 	/* Report ID */
@@ -279,20 +279,20 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardReleaseAll(void) {
 	USBD_HID_SendReport(&USB_OTG_dev, buff, 9);
 	
 	/* Return connected */
-	return TM_USB_HIDDEVICE_Status_Connected;
+	return USB_HIDDEVICE_Status_Connected;
 }
 
 /* Custom report */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_SendCustom(uint8_t* buff, uint8_t count) {
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_SendCustom(uint8_t* buff, uint8_t count) {
 	/* Check status */
-	if (TM_USB_HIDDEVICE_INT_Status != TM_USB_HIDDEVICE_Status_Connected) {
-		return TM_USB_HIDDEVICE_Status_Disconnected;
+	if (USB_HIDDEVICE_INT_Status != USB_HIDDEVICE_Status_Connected) {
+		return USB_HIDDEVICE_Status_Disconnected;
 	}	
 	
 	/* Send to USB */
 	USBD_HID_SendReport(&USB_OTG_dev, buff, count);
 	
 	/* Return connected */
-	return TM_USB_HIDDEVICE_Status_Connected;
+	return USB_HIDDEVICE_Status_Connected;
 }
 

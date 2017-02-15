@@ -27,15 +27,15 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_USB_HIDDEVICE_H
-#define TM_USB_HIDDEVICE_H 100
+#ifndef USB_HIDDEVICE_H
+#define USB_HIDDEVICE_H 100
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_USB_HID_DEVICE
+ * @defgroup USB_HID_DEVICE
  * @brief    USB HID Device library for STM32F4xx - http://stm32f4-discovery.com/2014/09/library-34-stm32f4-usb-hid-device
  * @{
  *
@@ -126,7 +126,7 @@ VBUS		PA9								PB13						VBUS pin, used on F4 and F429 discovery board for act
 #include  "usbd_desc.h"
  
 /**
- * @defgroup TM_USB_HID_DEVICE_Typedefs
+ * @defgroup USB_HID_DEVICE_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -135,66 +135,66 @@ VBUS		PA9								PB13						VBUS pin, used on F4 and F429 discovery board for act
  * @brief  USB HID device enumeration	
  */
 typedef enum {
-	TM_USB_HIDDEVICE_Status_LibraryNotInitialized = 0x00, /*!< Library is not initialized yet */
-	TM_USB_HIDDEVICE_Status_Connected,                    /*!< Device is connected and ready to use */
-	TM_USB_HIDDEVICE_Status_Disconnected,                 /*!< Device is not connected */
-	TM_USB_HIDDEVICE_Status_IdleMode,                     /*!< Device is is IDLE mode */
-	TM_USB_HIDDEVICE_Status_SuspendMode                   /*!< Device is in suspend mode */
-} TM_USB_HIDDEVICE_Status_t;
+	USB_HIDDEVICE_Status_LibraryNotInitialized = 0x00, /*!< Library is not initialized yet */
+	USB_HIDDEVICE_Status_Connected,                    /*!< Device is connected and ready to use */
+	USB_HIDDEVICE_Status_Disconnected,                 /*!< Device is not connected */
+	USB_HIDDEVICE_Status_IdleMode,                     /*!< Device is is IDLE mode */
+	USB_HIDDEVICE_Status_SuspendMode                   /*!< Device is in suspend mode */
+} USB_HIDDEVICE_Status_t;
 
 /**
  * @brief  Button status enumeration
  */
 typedef enum {
-	TM_USB_HIDDEVICE_Button_Released = 0x00, /*!< Button is not pressed */
-	TM_USB_HIDDEVICE_Button_Pressed = 0x01   /*!< Button is pressed */
-} TM_USB_HIDDEVICE_Button_t;
+	USB_HIDDEVICE_Button_Released = 0x00, /*!< Button is not pressed */
+	USB_HIDDEVICE_Button_Pressed = 0x01   /*!< Button is pressed */
+} USB_HIDDEVICE_Button_t;
 
 /**
  * @brief  2 Game pads are supported simultaneously to work with
  */
 typedef enum {
-	TM_USB_HIDDEVICE_Gamepad_Number_1 = 0x03, /*!< Send data to computer for game pad 1 */
-	TM_USB_HIDDEVICE_Gamepad_Number_2 = 0x04  /*!< Send data to computer for game pad 2 */
-} TM_USB_HIDDEVICE_Gamepad_Number_t;
+	USB_HIDDEVICE_Gamepad_Number_1 = 0x03, /*!< Send data to computer for game pad 1 */
+	USB_HIDDEVICE_Gamepad_Number_2 = 0x04  /*!< Send data to computer for game pad 2 */
+} USB_HIDDEVICE_Gamepad_Number_t;
 
 /**
  * @brief  Mouse structure, to work with mouse
  */
 typedef struct {
-	TM_USB_HIDDEVICE_Button_t LeftButton;   /*!< Detect if left button is pressed and set this to send command to computer, This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t RightButton;  /*!< Detect if right button is pressed and set this to send command to computer, This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t MiddleButton; /*!< Detect if middle button is pressed and set this to send command to computer, This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t LeftButton;   /*!< Detect if left button is pressed and set this to send command to computer, This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t RightButton;  /*!< Detect if right button is pressed and set this to send command to computer, This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t MiddleButton; /*!< Detect if middle button is pressed and set this to send command to computer, This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
 	int8_t XAxis;                           /*!< Mouse X axis */
 	int8_t YAxis;                           /*!< Mouse Y axis */
 	int8_t Wheel;                           /*!< Mouse wheel rotation */
-} TM_USB_HIDDEVICE_Mouse_t;
+} USB_HIDDEVICE_Mouse_t;
 
 /**
  * @brief  Game pad structure for 2 game pads available
  */
 typedef struct {
-	TM_USB_HIDDEVICE_Button_t Button1;  /*!< Game pad button 1 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button2;  /*!< Game pad button 2 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button3;  /*!< Game pad button 3 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button4;  /*!< Game pad button 4 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button5;  /*!< Game pad button 5 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button6;  /*!< Game pad button 6 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button7;  /*!< Game pad button 7 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button8;  /*!< Game pad button 8 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button9;  /*!< Game pad button 9 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button10; /*!< Game pad button 10 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button11; /*!< Game pad button 11 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button12; /*!< Game pad button 12 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button13; /*!< Game pad button 13 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button14; /*!< Game pad button 14 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button15; /*!< Game pad button 15 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t Button16; /*!< Game pad button 16 status. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button1;  /*!< Game pad button 1 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button2;  /*!< Game pad button 2 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button3;  /*!< Game pad button 3 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button4;  /*!< Game pad button 4 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button5;  /*!< Game pad button 5 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button6;  /*!< Game pad button 6 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button7;  /*!< Game pad button 7 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button8;  /*!< Game pad button 8 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button9;  /*!< Game pad button 9 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button10; /*!< Game pad button 10 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button11; /*!< Game pad button 11 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button12; /*!< Game pad button 12 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button13; /*!< Game pad button 13 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button14; /*!< Game pad button 14 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button15; /*!< Game pad button 15 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t Button16; /*!< Game pad button 16 status. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
 	int8_t LeftXAxis;                   /*!< Left joystick X axis */
 	int8_t LeftYAxis;                   /*!< Left joystick Y axis */
 	int8_t RightXAxis;                  /*!< Right joystick X axis */
 	int8_t RightYAxis;                  /*!< Right joystick Y axis */
-} TM_USB_HIDDEVICE_Gamepad_t;
+} USB_HIDDEVICE_Gamepad_t;
 
 /**
  * @brief  Keyboard structure
@@ -203,28 +203,28 @@ typedef struct {
  *         If key is not used, then 0x00 value should be set!
  */
 typedef struct {
-	TM_USB_HIDDEVICE_Button_t L_CTRL;  /*!< Left CTRL button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t L_ALT;   /*!< Left ALT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t L_SHIFT; /*!< Left SHIFT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t L_GUI;   /*!< Left GUI (Win) button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t R_CTRL;  /*!< Right CTRL button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t R_ALT;   /*!< Right ALT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t R_SHIFT; /*!< Right SHIFT button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
-	TM_USB_HIDDEVICE_Button_t R_GUI;   /*!< Right GUI (Win) button. This parameter can be a value of @ref TM_USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t L_CTRL;  /*!< Left CTRL button. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t L_ALT;   /*!< Left ALT button. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t L_SHIFT; /*!< Left SHIFT button. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t L_GUI;   /*!< Left GUI (Win) button. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t R_CTRL;  /*!< Right CTRL button. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t R_ALT;   /*!< Right ALT button. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t R_SHIFT; /*!< Right SHIFT button. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
+	USB_HIDDEVICE_Button_t R_GUI;   /*!< Right GUI (Win) button. This parameter can be a value of @ref USB_HIDDEVICE_Button_t enumeration */
 	uint8_t Key1;                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
 	uint8_t Key2;                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
 	uint8_t Key3;                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
 	uint8_t Key4;                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
 	uint8_t Key5;                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
 	uint8_t Key6;                      /*!< Key used with keyboard. This can be whatever. Like numbers, letters, everything. */
-} TM_USB_HIDDEVICE_Keyboard_t;
+} USB_HIDDEVICE_Keyboard_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_USB_HID_DEVICE_Functions
+ * @defgroup USB_HID_DEVICE_Functions
  * @brief    Library Functions
  * @{
  */
@@ -232,95 +232,95 @@ typedef struct {
 /**
  * @brief  Initializes USB HID Device library
  * @param  None
- * @retval TM_USB_HIDDEVICE_Status_Disconnected
+ * @retval USB_HIDDEVICE_Status_Disconnected
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_Init(void);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_Init(void);
 
 /**
  * @brief  Gets USB status
  * @param  None
  * @retval Library usage status:
- *            - TM_USB_HIDDEVICE_Status_Connected: Library is ready to use with USB
- *            - Others: Look for @ref TM_USB_HIDDEVICE_Status_t enumeration
+ *            - USB_HIDDEVICE_Status_Connected: Library is ready to use with USB
+ *            - Others: Look for @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GetStatus(void);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_GetStatus(void);
 
 /**
  * @brief  Initializes structure for mouse 
  *         Sets default values, before you start working
- * @param  *Mouse_Data: Pointer to empty @ref TM_USB_HIDDEVICE_Mouse_t structure
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @param  *Mouse_Data: Pointer to empty @ref USB_HIDDEVICE_Mouse_t structure
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_MouseStructInit(TM_USB_HIDDEVICE_Mouse_t* Mouse_Data);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_MouseStructInit(USB_HIDDEVICE_Mouse_t* Mouse_Data);
 
 /**
  * @brief  Sends mouse data over USB
- * @param  *Mouse_Data: Pointer to empty @ref TM_USB_HIDDEVICE_Mouse_t structure to get data from
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @param  *Mouse_Data: Pointer to empty @ref USB_HIDDEVICE_Mouse_t structure to get data from
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_MouseSend(TM_USB_HIDDEVICE_Mouse_t* Mouse_Data);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_MouseSend(USB_HIDDEVICE_Mouse_t* Mouse_Data);
 
 /**
  * @brief  Sends command to release all mouse data in computer.
  *         This will release all button in computer for mouse and cursor will stop
  * @param  None
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_MouseReleaseAll(void);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_MouseReleaseAll(void);
 
 /**
  * @brief  Initializes structure for game pad 
  *         Sets default values, before you start working with game pads
- * @param  *Gamepad_Data: Pointer to empty @ref TM_USB_HIDDEVICE_Gamepad_t structure
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @param  *Gamepad_Data: Pointer to empty @ref USB_HIDDEVICE_Gamepad_t structure
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GamepadStructInit(TM_USB_HIDDEVICE_Gamepad_t* Gamepad_Data);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_GamepadStructInit(USB_HIDDEVICE_Gamepad_t* Gamepad_Data);
 
 /**
  * @brief  Sends game pad report over USB
- * @param  gamepad_id: Game pad number to work with. This parameter can be a value of @ref TM_USB_HIDDEVICE_Gamepad_Number_t enumeration
- * @param  *Gamepad_Data: Pointer to working @ref TM_USB_HIDDEVICE_Gamepad_t structure to get data from
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @param  gamepad_id: Game pad number to work with. This parameter can be a value of @ref USB_HIDDEVICE_Gamepad_Number_t enumeration
+ * @param  *Gamepad_Data: Pointer to working @ref USB_HIDDEVICE_Gamepad_t structure to get data from
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GamepadSend(TM_USB_HIDDEVICE_Gamepad_Number_t gamepad_id, TM_USB_HIDDEVICE_Gamepad_t* Gamepad_Data);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_GamepadSend(USB_HIDDEVICE_Gamepad_Number_t gamepad_id, USB_HIDDEVICE_Gamepad_t* Gamepad_Data);
 
 /**
  * @brief  Releases all buttons and joysticks over USB
  * @note   If you press a button, and don't release it, computer will recognize as long pressed button
- * @param  gamepad_id: Game pad number to work with. This parameter can be a value of @ref TM_USB_HIDDEVICE_Gamepad_Number_t enumeration
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @param  gamepad_id: Game pad number to work with. This parameter can be a value of @ref USB_HIDDEVICE_Gamepad_Number_t enumeration
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_GamepadReleaseAll(TM_USB_HIDDEVICE_Gamepad_Number_t gamepad_id);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_GamepadReleaseAll(USB_HIDDEVICE_Gamepad_Number_t gamepad_id);
 
 /**
  * @brief  Sets default values to work with keyboard
- * @param  *Keyboard_Data: Pointer to empty @ref TM_USB_HIDDEVICE_Keyboard_t structure
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @param  *Keyboard_Data: Pointer to empty @ref USB_HIDDEVICE_Keyboard_t structure
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardStructInit(TM_USB_HIDDEVICE_Keyboard_t* Keyboard_Data);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_KeyboardStructInit(USB_HIDDEVICE_Keyboard_t* Keyboard_Data);
 
 /**
  * @brief  Sends keyboard report over USB
- * @param  *Keyboard_Data: Pointer to @ref TM_USB_HIDDEVICE_Keyboard_t structure to get data from
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @param  *Keyboard_Data: Pointer to @ref USB_HIDDEVICE_Keyboard_t structure to get data from
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardSend(TM_USB_HIDDEVICE_Keyboard_t* Keyboard_Data);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_KeyboardSend(USB_HIDDEVICE_Keyboard_t* Keyboard_Data);
 
 /**
  * @brief  Release all buttons from keyboard
  * @note   If you press a button and don't release it, computer will detect like long pressed button
  * @param  None
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_KeyboardReleaseAll(void);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_KeyboardReleaseAll(void);
 
 /**
  * @brief  Sends custom HID report over USB
  * @param  *buff: Pointer to data to be sent
  * @param  count: Number of bytes to be sent
- * @retval Member of @ref TM_USB_HIDDEVICE_Status_t enumeration
+ * @retval Member of @ref USB_HIDDEVICE_Status_t enumeration
  */
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_SendCustom(uint8_t* buff, uint8_t count);
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_SendCustom(uint8_t* buff, uint8_t count);
 
 /**
  * @}

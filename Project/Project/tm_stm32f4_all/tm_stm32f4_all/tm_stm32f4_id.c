@@ -16,5 +16,5 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_id.h"
+#include "stm32f4_id.h"
 

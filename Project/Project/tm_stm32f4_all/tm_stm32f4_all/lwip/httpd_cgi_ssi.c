@@ -31,13 +31,13 @@
 //
 // Falls "USE_CGI_GPIO" = enable
 //    werden 4 Pins aus GPIO-Ausgang definiert (PD12, PD13, PD14, PD15)
-//    diese Ausgänge können per CGI-Kommando gesetzt werden
+//    diese Ausgï¿½nge kï¿½nnen per CGI-Kommando gesetzt werden
 //
 // Falls "USE_CGI_ADC" = enable
 //    wird 1 Pin aus ADC-Eingang definiert (PA3)
 //    dieser Eingang wird zyklisch gewandelt
 //    und kann per CGI-Kommando ausgelesen werden
-//    (CooCox-Lib : ADC, wird benötigt)
+//    (CooCox-Lib : ADC, wird benï¿½tigt)
 //--------------------------------------------------------------
 
 
@@ -46,7 +46,7 @@
 #include "httpd.h"
 #include "lwip/tcp.h"
 #include "fs.h"
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_ethernet.h"
 
 #include <string.h>
 #include <stdlib.h>

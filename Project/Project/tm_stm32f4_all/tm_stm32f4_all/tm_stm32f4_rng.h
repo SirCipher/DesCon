@@ -27,15 +27,15 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_RNG_H
-#define TM_RNG_H 110
+#ifndef RNG_H
+#define RNG_H 110
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_RNG
+ * @defgroup RNG
  * @brief    Random number generator library for STM32F4xx devices - http://stm32f4-discovery.com/2014/07/library-22-true-random-number-generator-stm32f4xx/
  * @{
  *
@@ -69,7 +69,7 @@
 #endif
 
 /**
- * @defgroup TM_RNG_Functions
+ * @defgroup RNG_Functions
  * @brief    Library Functions
  * @{
  */
@@ -79,21 +79,21 @@
  * @param  None
  * @retval None
  */
-void TM_RNG_Init(void);
+void RNG_Init(void);
 
 /**
  * @brief  De initializes RNG peripheral and disables clock
  * @param  None
  * @retval None
  */
-void TM_RNG_DeInit(void);
+void RNG_DeInit(void);
 
 /**
  * @brief  Gets 32-bit random number
  * @param  None
  * @retval 32-bit random number
  */
-uint32_t TM_RNG_Get(void);
+uint32_t RNG_Get(void);
 
 /**
  * @}

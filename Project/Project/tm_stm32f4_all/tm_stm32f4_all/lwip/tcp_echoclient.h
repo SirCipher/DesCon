@@ -31,7 +31,7 @@
 
 #include "stm32f4xx.h"
 #include "err.h"
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_ethernet.h"
 
 
 /* Includes ------------------------------------------------------------------*/

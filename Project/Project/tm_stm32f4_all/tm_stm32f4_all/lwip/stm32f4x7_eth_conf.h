@@ -35,8 +35,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_ethernet.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

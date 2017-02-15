@@ -16,52 +16,52 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_usart_dma.h"
+#include "stm32f4_usart_dma.h"
 
 /* Private structure */
 typedef struct {
 	uint32_t DMA_Channel;
 	DMA_Stream_TypeDef* DMA_Stream;
-} TM_USART_DMA_INT_t;
+} USART_DMA_INT_t;
 
 /* Create variables if necessary */
 #ifdef USE_USART1
-static TM_USART_DMA_INT_t USART1_DMA_INT = {USART1_DMA_TX_CHANNEL, USART1_DMA_TX_STREAM};
+static USART_DMA_INT_t USART1_DMA_INT = {USART1_DMA_TX_CHANNEL, USART1_DMA_TX_STREAM};
 #endif
 #ifdef USE_USART2
-static TM_USART_DMA_INT_t USART2_DMA_INT = {USART2_DMA_TX_CHANNEL, USART2_DMA_TX_STREAM};
+static USART_DMA_INT_t USART2_DMA_INT = {USART2_DMA_TX_CHANNEL, USART2_DMA_TX_STREAM};
 #endif
 #ifdef USE_USART3
-static TM_USART_DMA_INT_t USART3_DMA_INT = {USART3_DMA_TX_CHANNEL, USART3_DMA_TX_STREAM};
+static USART_DMA_INT_t USART3_DMA_INT = {USART3_DMA_TX_CHANNEL, USART3_DMA_TX_STREAM};
 #endif
 #ifdef USE_UART4
-static TM_USART_DMA_INT_t UART4_DMA_INT = {UART4_DMA_TX_CHANNEL, UART4_DMA_TX_STREAM};
+static USART_DMA_INT_t UART4_DMA_INT = {UART4_DMA_TX_CHANNEL, UART4_DMA_TX_STREAM};
 #endif
 #ifdef USE_UART5
-static TM_USART_DMA_INT_t UART5_DMA_INT = {UART5_DMA_TX_CHANNEL, UART5_DMA_TX_STREAM};
+static USART_DMA_INT_t UART5_DMA_INT = {UART5_DMA_TX_CHANNEL, UART5_DMA_TX_STREAM};
 #endif
 #ifdef USE_USART6
-static TM_USART_DMA_INT_t USART6_DMA_INT = {USART6_DMA_TX_CHANNEL, USART6_DMA_TX_STREAM};
+static USART_DMA_INT_t USART6_DMA_INT = {USART6_DMA_TX_CHANNEL, USART6_DMA_TX_STREAM};
 #endif
 #ifdef USE_UART7
-static TM_USART_DMA_INT_t UART7_DMA_INT = {UART7_DMA_TX_CHANNEL, UART7_DMA_TX_STREAM};
+static USART_DMA_INT_t UART7_DMA_INT = {UART7_DMA_TX_CHANNEL, UART7_DMA_TX_STREAM};
 #endif
 #ifdef USE_UART8
-static TM_USART_DMA_INT_t UART8_DMA_INT = {UART8_DMA_TX_CHANNEL, UART8_DMA_TX_STREAM};
+static USART_DMA_INT_t UART8_DMA_INT = {UART8_DMA_TX_CHANNEL, UART8_DMA_TX_STREAM};
 #endif
 
 /* Private DMA structure */
 static DMA_InitTypeDef DMA_InitStruct;
 
 /* Private functions */
-static TM_USART_DMA_INT_t* TM_USART_DMA_INT_GetSettings(USART_TypeDef* USARTx);
+static USART_DMA_INT_t* USART_DMA_INT_GetSettings(USART_TypeDef* USARTx);
 
-void TM_USART_DMA_Init(USART_TypeDef* USARTx) {
+void USART_DMA_Init(USART_TypeDef* USARTx) {
 	/* Init DMA TX mode */
 	/* Assuming USART is already initialized and clock is enabled */
 	
 	/* Get USART settings */
-	TM_USART_DMA_INT_t* USART_Settings = TM_USART_DMA_INT_GetSettings(USARTx);
+	USART_DMA_INT_t* USART_Settings = USART_DMA_INT_GetSettings(USARTx);
 	
 	/* Enable DMA clock */
 	if (USART_Settings->DMA_Stream >= DMA2_Stream0) {
@@ -73,7 +73,7 @@ void TM_USART_DMA_Init(USART_TypeDef* USARTx) {
 	}
 	
 	/* Clear flags */
-	TM_DMA_ClearFlags(USART_Settings->DMA_Stream);
+	DMA_ClearFlags(USART_Settings->DMA_Stream);
 	
 	/* Set DMA options */
 	DMA_InitStruct.DMA_DIR = DMA_DIR_MemoryToPeripheral;
@@ -89,34 +89,34 @@ void TM_USART_DMA_Init(USART_TypeDef* USARTx) {
 	DMA_InitStruct.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;	
 }
 
-void TM_USART_DMA_InitWithStreamAndChannel(USART_TypeDef* USARTx, DMA_Stream_TypeDef* DMA_Stream, uint32_t DMA_Channel) {
+void USART_DMA_InitWithStreamAndChannel(USART_TypeDef* USARTx, DMA_Stream_TypeDef* DMA_Stream, uint32_t DMA_Channel) {
 	/* Get USART settings */
-	TM_USART_DMA_INT_t* Settings = TM_USART_DMA_INT_GetSettings(USARTx);
+	USART_DMA_INT_t* Settings = USART_DMA_INT_GetSettings(USARTx);
 	
 	/* Set DMA stream and channel */
 	Settings->DMA_Stream = DMA_Stream;
 	Settings->DMA_Channel = DMA_Channel;
 	
 	/* Init DMA TX */
-	TM_USART_DMA_Init(USARTx);
+	USART_DMA_Init(USARTx);
 }
 
-DMA_Stream_TypeDef* TM_USART_DMA_GetStream(USART_TypeDef* USARTx) {
+DMA_Stream_TypeDef* USART_DMA_GetStream(USART_TypeDef* USARTx) {
 	/* Get USART settings */
-	return TM_USART_DMA_INT_GetSettings(USARTx)->DMA_Stream;
+	return USART_DMA_INT_GetSettings(USARTx)->DMA_Stream;
 }
 
-void TM_USART_DMA_Deinit(USART_TypeDef* USARTx) {
+void USART_DMA_Deinit(USART_TypeDef* USARTx) {
 	/* Get USART settings */
-	TM_USART_DMA_INT_t* Settings = TM_USART_DMA_INT_GetSettings(USARTx);
+	USART_DMA_INT_t* Settings = USART_DMA_INT_GetSettings(USARTx);
 	
 	/* Deinit DMA Stream */
 	DMA_DeInit(Settings->DMA_Stream);
 }
 
-uint8_t TM_USART_DMA_Send(USART_TypeDef* USARTx, uint8_t* DataArray, uint16_t count) {
+uint8_t USART_DMA_Send(USART_TypeDef* USARTx, uint8_t* DataArray, uint16_t count) {
 	/* Get USART settings */
-	TM_USART_DMA_INT_t* Settings = TM_USART_DMA_INT_GetSettings(USARTx);
+	USART_DMA_INT_t* Settings = USART_DMA_INT_GetSettings(USARTx);
 	
 	/* Check if DMA is working now */
 	if (Settings->DMA_Stream->NDTR) {
@@ -131,7 +131,7 @@ uint8_t TM_USART_DMA_Send(USART_TypeDef* USARTx, uint8_t* DataArray, uint16_t co
 	DMA_InitStruct.DMA_Memory0BaseAddr = (uint32_t) &DataArray[0];
 	
 	/* Deinit first, clear all flags */
-	TM_DMA_ClearFlags(Settings->DMA_Stream);
+	DMA_ClearFlags(Settings->DMA_Stream);
 	
 	/* Init DMA */
 	DMA_Init(Settings->DMA_Stream, &DMA_InitStruct);
@@ -146,14 +146,14 @@ uint8_t TM_USART_DMA_Send(USART_TypeDef* USARTx, uint8_t* DataArray, uint16_t co
 	return 1;
 }
 
-uint8_t TM_USART_DMA_Puts(USART_TypeDef* USARTx, char* DataArray) {
+uint8_t USART_DMA_Puts(USART_TypeDef* USARTx, char* DataArray) {
 	/* Call DMA Send function */
-	return TM_USART_DMA_Send(USARTx, (uint8_t *)DataArray, strlen(DataArray));
+	return USART_DMA_Send(USARTx, (uint8_t *)DataArray, strlen(DataArray));
 }
 
-uint16_t TM_USART_DMA_Sending(USART_TypeDef* USARTx) {
+uint16_t USART_DMA_Sending(USART_TypeDef* USARTx) {
 	/* Get USART settings */
-	TM_USART_DMA_INT_t* Settings = TM_USART_DMA_INT_GetSettings(USARTx);
+	USART_DMA_INT_t* Settings = USART_DMA_INT_GetSettings(USARTx);
 	
 	/* DMA has work to do still */
 	if (Settings->DMA_Stream->NDTR) {
@@ -164,25 +164,25 @@ uint16_t TM_USART_DMA_Sending(USART_TypeDef* USARTx) {
 	return !USART_TXEMPTY(USARTx);
 }
 
-void TM_USART_DMA_EnableInterrupts(USART_TypeDef* USARTx) {
+void USART_DMA_EnableInterrupts(USART_TypeDef* USARTx) {
 	/* Get USART settings */
-	TM_USART_DMA_INT_t* Settings = TM_USART_DMA_INT_GetSettings(USARTx);
+	USART_DMA_INT_t* Settings = USART_DMA_INT_GetSettings(USARTx);
 	
 	/* Enable DMA interrupts */
-	TM_DMA_EnableInterrupts(Settings->DMA_Stream);
+	DMA_EnableInterrupts(Settings->DMA_Stream);
 }
 
-void TM_USART_DMA_DisableInterrupts(USART_TypeDef* USARTx) {
+void USART_DMA_DisableInterrupts(USART_TypeDef* USARTx) {
 	/* Get USART settings */
-	TM_USART_DMA_INT_t* Settings = TM_USART_DMA_INT_GetSettings(USARTx);
+	USART_DMA_INT_t* Settings = USART_DMA_INT_GetSettings(USARTx);
 	
 	/* Disable DMA interrupts */
-	TM_DMA_DisableInterrupts(Settings->DMA_Stream);
+	DMA_DisableInterrupts(Settings->DMA_Stream);
 }
 
 /* Private functions */
-static TM_USART_DMA_INT_t* TM_USART_DMA_INT_GetSettings(USART_TypeDef* USARTx) {
-	TM_USART_DMA_INT_t* result;
+static USART_DMA_INT_t* USART_DMA_INT_GetSettings(USART_TypeDef* USARTx) {
+	USART_DMA_INT_t* result;
 #ifdef USE_USART1
 	if (USARTx == USART1) {
 		result = &USART1_DMA_INT;

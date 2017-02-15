@@ -27,15 +27,15 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_SDRAM_H
-#define TM_SDRAM_H 130
+#ifndef SDRAM_H
+#define SDRAM_H 130
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_SDRAM
+ * @defgroup SDRAM
  * @brief    Connect external SDRAM to STM32F4xx devices with integrated FMC peripheral -  http://stm32f4-discovery.com/2014/05/library-14-working-with-sdram-on-stm32f429-discovery/
  * @{
  *
@@ -127,18 +127,18 @@ PD15 <-> FMC_D1   | PE11 <-> FMC_D8    | PF11 <-> FC_NRAS   | PH11 <-> FMC_D19  
 #include "stm32f4xx_fmc.h"
 #include "defines.h"
 #include "attributes.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_gpio.h"
 
 /* Library supports STM324x9_Eval board too */
 
 /**
- * @defgroup TM_SDRAM_Macros
+ * @defgroup SDRAM_Macros
  * @brief    Library defines
  * @{
  *
  * Library defines depends on board you use.
  */
-#if defined(SDRAM_USE_STM324x9_EVAL) || defined(TM_DISCO_STM324x9_EVAL)
+#if defined(SDRAM_USE_STM324x9_EVAL) || defined(DISCO_STM324x9_EVAL)
 
 /* Make define */
 #ifndef SDRAM_USE_STM324x9_EVAL
@@ -146,7 +146,7 @@ PD15 <-> FMC_D1   | PE11 <-> FMC_D8    | PF11 <-> FC_NRAS   | PH11 <-> FMC_D19  
 #endif
 
 /**
- * @defgroup TM_SDRAM_STM324x9_EVAL_Macros
+ * @defgroup SDRAM_STM324x9_EVAL_Macros
  * @brief    Macros for STM324x9-EVAL board
  * @{
  */
@@ -173,7 +173,7 @@ PD15 <-> FMC_D1   | PE11 <-> FMC_D8    | PF11 <-> FC_NRAS   | PH11 <-> FMC_D19  
  */
 #else
 /**
- * @defgroup TM_SDRAM_STM32F429_Discovery_Macros
+ * @defgroup SDRAM_STM32F429_Discovery_Macros
  * @brief    Macros for STM32F429-Discovery board
  * @{
  */
@@ -208,7 +208,7 @@ PD15 <-> FMC_D1   | PE11 <-> FMC_D8    | PF11 <-> FC_NRAS   | PH11 <-> FMC_D19  
  */
 
 /**
- * @defgroup TM_SDRAM_Functions
+ * @defgroup SDRAM_Functions
  * @brief    Library Functions
  * @{
  */
@@ -220,14 +220,14 @@ PD15 <-> FMC_D1   | PE11 <-> FMC_D8    | PF11 <-> FC_NRAS   | PH11 <-> FMC_D19  
  *            - 0: SDRAM is not configured OK
  *            - > 0: SDRAM is configured OK and prepared to work
  */
-uint8_t TM_SDRAM_Init(void);
+uint8_t SDRAM_Init(void);
 
 /**
  * @brief  Gets SDRAM memory size
  * @param  None
  * @retval SDRAM memory size in bytes
  */
-#define TM_SDRAM_GetSize()                  (SDRAM_MEMORY_SIZE)
+#define SDRAM_GetSize()                  (SDRAM_MEMORY_SIZE)
 
 /**
  * @brief  Writes 8-bit value to SDRAM
@@ -236,7 +236,7 @@ uint8_t TM_SDRAM_Init(void);
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_SDRAM_Write8(address, value)		(*(__IO uint8_t *) (SDRAM_START_ADR + (address)) = (value))
+#define SDRAM_Write8(address, value)		(*(__IO uint8_t *) (SDRAM_START_ADR + (address)) = (value))
 
 /**
  * @brief  Reads 8-bit value from SDRAM
@@ -244,7 +244,7 @@ uint8_t TM_SDRAM_Init(void);
  * @retval 8-bit value stored at desired location
  * @note   Defined as macro for faster execution
  */
-#define TM_SDRAM_Read8(address)				(*(__IO uint8_t *) (SDRAM_START_ADR + (address)))
+#define SDRAM_Read8(address)				(*(__IO uint8_t *) (SDRAM_START_ADR + (address)))
 
 /**
  * @brief  Writes 16-bit value to SDRAM
@@ -253,7 +253,7 @@ uint8_t TM_SDRAM_Init(void);
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_SDRAM_Write16(address, value)	(*(__IO uint16_t *) (SDRAM_START_ADR + (address)) = (value))
+#define SDRAM_Write16(address, value)	(*(__IO uint16_t *) (SDRAM_START_ADR + (address)) = (value))
 
 /**
  * @brief  Reads 16-bit value from SDRAM
@@ -261,7 +261,7 @@ uint8_t TM_SDRAM_Init(void);
  * @retval 16-bit value stored at desired location
  * @note   Defined as macro for faster execution
  */
-#define TM_SDRAM_Read16(address)			(*(__IO uint16_t *) (SDRAM_START_ADR + (address)))
+#define SDRAM_Read16(address)			(*(__IO uint16_t *) (SDRAM_START_ADR + (address)))
 
 /**
  * @brief  Writes 32-bit value to SDRAM
@@ -270,7 +270,7 @@ uint8_t TM_SDRAM_Init(void);
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_SDRAM_Write32(address, value)	(*(__IO uint32_t *) (SDRAM_START_ADR + (address)) = (value))
+#define SDRAM_Write32(address, value)	(*(__IO uint32_t *) (SDRAM_START_ADR + (address)) = (value))
 
 /**
  * @brief  Reads 32-bit value from SDRAM
@@ -278,7 +278,7 @@ uint8_t TM_SDRAM_Init(void);
  * @retval 32-bit value stored at desired location
  * @note   Defined as macro for faster execution
  */
-#define TM_SDRAM_Read32(address)			(*(__IO uint32_t *) (SDRAM_START_ADR + (address)))
+#define SDRAM_Read32(address)			(*(__IO uint32_t *) (SDRAM_START_ADR + (address)))
 
 /**
  * @brief  Writes float value to SDRAM
@@ -287,7 +287,7 @@ uint8_t TM_SDRAM_Init(void);
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_SDRAM_WriteFloat(address, value)	(*(__IO float *) (SDRAM_START_ADR + (address)) = (value))
+#define SDRAM_WriteFloat(address, value)	(*(__IO float *) (SDRAM_START_ADR + (address)) = (value))
 
 /**
  * @brief  Reads float value from SDRAM
@@ -295,19 +295,19 @@ uint8_t TM_SDRAM_Init(void);
  * @retval float value stored at desired location
  * @note   Defined as macro for faster execution
  */
-#define TM_SDRAM_ReadFloat(address)			(*(__IO float *) (SDRAM_START_ADR + (address)))
+#define SDRAM_ReadFloat(address)			(*(__IO float *) (SDRAM_START_ADR + (address)))
 
 /**
  * @brief  Initialize custom pins callback.
  *         It can be used by user to implement custom pins for application if needed
- * @note   This function is called every time @ref TM_SDRAM_Init() function is called
+ * @note   This function is called every time @ref SDRAM_Init() function is called
  * @param  None
  * @retval Initialization status:
  *            - 0: User did not initialize custom pins, default will be used, depending on already supported boards
  *            - > 0: User has initialized custom pins, default pins will be ignored
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-uint8_t TM_SDRAM_InitCustomPinsCallback(void);
+uint8_t SDRAM_InitCustomPinsCallback(void);
 
 /**
  * @}

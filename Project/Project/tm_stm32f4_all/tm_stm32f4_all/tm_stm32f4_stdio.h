@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_STDIO_H
-#define TM_STDIO_H 100
+#ifndef STDIO_H
+#define STDIO_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_STDIO
+ * @defgroup STDIO
  * @brief    Simple STDIO output & input stream implementation for STM32F4 - http://stm32f4-discovery.com/2014/10/library-41-stdio-implementation-for-stm32f4
  * @{
  *
@@ -89,7 +89,7 @@ extern "C" {
 #include "stdio.h"
 
 /**
- * @defgroup TM_STDIO_Typedefs
+ * @defgroup STDIO_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -107,7 +107,7 @@ struct __FILE {
  */
 
 /**
- * @defgroup TM_STDIO_Functions
+ * @defgroup STDIO_Functions
  * @brief    Library Functions
  * @{
  */
@@ -118,7 +118,7 @@ struct __FILE {
  * @param  *outputFuncPointer: Pointer to function to be used to output data to stream
  * @retval None
  */
-void TM_STDIO_SetOutputFunction(FILE* f, int (*outputFuncPointer)(int, FILE *));
+void STDIO_SetOutputFunction(FILE* f, int (*outputFuncPointer)(int, FILE *));
 
 /**
  * @brief  Links file input stream with input get character function
@@ -126,7 +126,7 @@ void TM_STDIO_SetOutputFunction(FILE* f, int (*outputFuncPointer)(int, FILE *));
  * @param  *inputFuncPointer: Pointer to function to be used for input data from stream
  * @retval None
  */
-void TM_STDIO_SetInputFunction(FILE* f, int (*inputFuncPointer)(FILE *));
+void STDIO_SetInputFunction(FILE* f, int (*inputFuncPointer)(FILE *));
 
 /**
  * @brief  Default output handler for standard output (stdout)
@@ -139,7 +139,7 @@ void TM_STDIO_SetInputFunction(FILE* f, int (*inputFuncPointer)(FILE *));
  *                 to continue with more characters if needed
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-int TM_STDIO_StdoutHandler(int c, FILE* f);
+int STDIO_StdoutHandler(int c, FILE* f);
 
 /**
  * @brief  Default input handler for standard input (stdin)
@@ -150,7 +150,7 @@ int TM_STDIO_StdoutHandler(int c, FILE* f);
  *            - character: Return character value
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-int TM_STDIO_StdinHandler(FILE* f);
+int STDIO_StdinHandler(FILE* f);
 
 /**
  * @}

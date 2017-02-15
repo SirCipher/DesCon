@@ -1,9 +1,9 @@
 <html>
 <body>
 <pre>
-<h1>µVision Build Log</h1>
+<h1>ï¿½Vision Build Log</h1>
 <h2>Tool Versions:</h2>
-IDE-Version: µVision V5.20.0.0
+IDE-Version: ï¿½Vision V5.20.0.0
 Copyright (C) 2016 ARM Ltd and ARM Germany GmbH. All rights reserved.
 License Information: Page TheUniversity Flex license: MDK-ARM Professional: 100 user(s) (mdk_pro) Operation stops: 30 Mar 2017
  
@@ -51,16 +51,16 @@ compiling misc.c...
 ..\..\PICKIT_DEMO\PICKIT_DEMO\STM32F4xx_StdPeriph_Driver\misc.c(226): warning:  #223-D: function "assert_param" declared implicitly
     assert_param(IS_SYSTICK_CLK_SOURCE(SysTick_CLKSource));
 ..\..\PICKIT_DEMO\PICKIT_DEMO\STM32F4xx_StdPeriph_Driver\misc.c: 5 warnings, 0 errors
-compiling tm_stm32f4_usart.c...
-tm_stm32f4_all\tm_stm32f4_all\tm_stm32f4_usart.c(752): warning:  #177-D: function "TM_USART_INT_Init" was declared but never referenced
-  static void TM_USART_INT_Init(
-tm_stm32f4_all\tm_stm32f4_all\tm_stm32f4_usart.c: 1 warning, 0 errors
+compiling stm32f4_usart.c...
+stm32f4_all\stm32f4_all\stm32f4_usart.c(752): warning:  #177-D: function "USART_INT_Init" was declared but never referenced
+  static void USART_INT_Init(
+stm32f4_all\stm32f4_all\stm32f4_usart.c: 1 warning, 0 errors
 compiling system_stm32f4xx.c...
 linking...
 .\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_ClearITPendingBit (referred from project.o).
 .\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_GetITStatus (referred from project.o).
-.\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_DeInit (referred from tm_stm32f4_usart.o).
-.\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_Init (referred from tm_stm32f4_usart.o).
+.\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_DeInit (referred from stm32f4_usart.o).
+.\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_Init (referred from stm32f4_usart.o).
 .\Flash\Blinky.axf: Error: L6218E: Undefined symbol assert_param (referred from misc.o).
 Not enough information to list image symbols.
 Finished: 1 information, 0 warning and 5 error messages.

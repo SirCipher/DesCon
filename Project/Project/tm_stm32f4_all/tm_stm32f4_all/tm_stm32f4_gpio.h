@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_GPIO_H
-#define TM_GPIO_H 150
+#ifndef GPIO_H
+#define GPIO_H 150
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 	
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_GPIO
+ * @defgroup GPIO
  * @brief    TM GPIO Library for STM32F4xx - http://stm32f4-discovery.com/2015/03/library-53-gpio-for-stm32f4
  * @{
  *
@@ -69,8 +69,8 @@ extern "C" {
   
  Version 1.2
   - March 10, 2015
-  - Added functions TM_GPIO_SetPinAsInput and TM_GPIO_SetPinAsOutput
-  - Added functions TM_GPIO_GetPortSource and TM_GPIO_GetPinSource
+  - Added functions GPIO_SetPinAsInput and GPIO_SetPinAsOutput
+  - Added functions GPIO_GetPortSource and GPIO_GetPinSource
 0
  Version 1.1
   - March 09, 2015
@@ -95,7 +95,7 @@ extern "C" {
 #include "defines.h"
 
 /**
- * @defgroup TM_GPIO_Macros
+ * @defgroup GPIO_Macros
  * @brief    GPIO Library macros
  * @{
  */
@@ -155,7 +155,7 @@ extern "C" {
  */
 
 /**
- * @defgroup TM_GPIO_Typedefs
+ * @defgroup GPIO_Typedefs
  * @brief    GPIO Typedefs used for GPIO library for initialization purposes
  * @{
  */
@@ -164,45 +164,45 @@ extern "C" {
  * @brief GPIO Mode enumeration
  */
 typedef enum {
-	TM_GPIO_Mode_IN = 0x00,  /*!< GPIO Pin as General Purpose Input */
-	TM_GPIO_Mode_OUT = 0x01, /*!< GPIO Pin as General Purpose Output */
-	TM_GPIO_Mode_AF = 0x02,  /*!< GPIO Pin as Alternate Function */
-	TM_GPIO_Mode_AN = 0x03,  /*!< GPIO Pin as Analog */
-} TM_GPIO_Mode_t;
+	GPIO_Mode_IN = 0x00,  /*!< GPIO Pin as General Purpose Input */
+	GPIO_Mode_OUT = 0x01, /*!< GPIO Pin as General Purpose Output */
+	GPIO_Mode_AF = 0x02,  /*!< GPIO Pin as Alternate Function */
+	GPIO_Mode_AN = 0x03,  /*!< GPIO Pin as Analog */
+} GPIO_Mode_t;
 
 /**
  * @brief GPIO Output type enumeration
  */
 typedef enum {
-	TM_GPIO_OType_PP = 0x00, /*!< GPIO Output Type Push-Pull */
-	TM_GPIO_OType_OD = 0x01  /*!< GPIO Output Type Open-Drain */
-} TM_GPIO_OType_t;
+	GPIO_OType_PP = 0x00, /*!< GPIO Output Type Push-Pull */
+	GPIO_OType_OD = 0x01  /*!< GPIO Output Type Open-Drain */
+} GPIO_OType_t;
 
 /**
  * @brief  GPIO Speed enumeration
  */
 typedef enum {
-	TM_GPIO_Speed_Low = 0x00,    /*!< GPIO Speed Low */
-	TM_GPIO_Speed_Medium = 0x01, /*!< GPIO Speed Medium */
-	TM_GPIO_Speed_Fast = 0x02,   /*!< GPIO Speed Fast */
-	TM_GPIO_Speed_High = 0x03    /*!< GPIO Speed High */
-} TM_GPIO_Speed_t;
+	GPIO_Speed_Low = 0x00,    /*!< GPIO Speed Low */
+	GPIO_Speed_Medium = 0x01, /*!< GPIO Speed Medium */
+	GPIO_Speed_Fast = 0x02,   /*!< GPIO Speed Fast */
+	GPIO_Speed_High = 0x03    /*!< GPIO Speed High */
+} GPIO_Speed_t;
 
 /**
  * @brief GPIO pull resistors enumeration
  */
 typedef enum {
-	TM_GPIO_PuPd_NOPULL = 0x00, /*!< No pull resistor */
-	TM_GPIO_PuPd_UP = 0x01,     /*!< Pull up resistor enabled */
-	TM_GPIO_PuPd_DOWN = 0x02    /*!< Pull down resistor enabled */
-} TM_GPIO_PuPd_t;
+	GPIO_PuPd_NOPULL = 0x00, /*!< No pull resistor */
+	GPIO_PuPd_UP = 0x01,     /*!< Pull up resistor enabled */
+	GPIO_PuPd_DOWN = 0x02    /*!< Pull down resistor enabled */
+} GPIO_PuPd_t;
 
 /**
- * @} TM_GPIO_Typedefs
+ * @} GPIO_Typedefs
  */
 
 /**
- * @defgroup TM_GPIO_Functions
+ * @defgroup GPIO_Functions
  * @brief    GPIO Functions
  * @{
  */
@@ -212,26 +212,26 @@ typedef enum {
  * @note   This function also enables clock for GPIO port
  * @param  GPIOx: Pointer to GPIOx port you will use for initialization
  * @param  GPIO_Pin: GPIO pin(s) you will use for initialization
- * @param  GPIO_Mode: Select GPIO mode. This parameter can be a value of @ref TM_GPIO_Mode_t enumeration
- * @param  GPIO_OType: Select GPIO Output type. This parameter can be a value of @ref TM_GPIO_OType_t enumeration
- * @param  GPIO_PuPd: Select GPIO pull resistor. This parameter can be a value of @ref TM_GPIO_PuPd_t enumeration
- * @param  GPIO_Speed: Select GPIO speed. This parameter can be a value of @ref TM_GPIO_Speed_t enumeration
+ * @param  GPIO_Mode: Select GPIO mode. This parameter can be a value of @ref GPIO_Mode_t enumeration
+ * @param  GPIO_OType: Select GPIO Output type. This parameter can be a value of @ref GPIO_OType_t enumeration
+ * @param  GPIO_PuPd: Select GPIO pull resistor. This parameter can be a value of @ref GPIO_PuPd_t enumeration
+ * @param  GPIO_Speed: Select GPIO speed. This parameter can be a value of @ref GPIO_Speed_t enumeration
  * @retval None
  */
-void TM_GPIO_Init(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_Mode_t GPIO_Mode, TM_GPIO_OType_t GPIO_OType, TM_GPIO_PuPd_t GPIO_PuPd, TM_GPIO_Speed_t GPIO_Speed);
+void GPIO_Init(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_Mode_t GPIO_Mode, GPIO_OType_t GPIO_OType, GPIO_PuPd_t GPIO_PuPd, GPIO_Speed_t GPIO_Speed);
 
 /**
  * @brief  Initializes GPIO pins(s) as alternate function
  * @note   This function also enables clock for GPIO port
  * @param  GPIOx: Pointer to GPIOx port you will use for initialization
  * @param  GPIO_Pin: GPIO pin(s) you will use for initialization
- * @param  GPIO_OType: Select GPIO Output type. This parameter can be a value of @ref TM_GPIO_OType_t enumeration
- * @param  GPIO_PuPd: Select GPIO pull resistor. This parameter can be a value of @ref TM_GPIO_PuPd_t enumeration
- * @param  GPIO_Speed: Select GPIO speed. This parameter can be a value of @ref TM_GPIO_Speed_t enumeration
+ * @param  GPIO_OType: Select GPIO Output type. This parameter can be a value of @ref GPIO_OType_t enumeration
+ * @param  GPIO_PuPd: Select GPIO pull resistor. This parameter can be a value of @ref GPIO_PuPd_t enumeration
+ * @param  GPIO_Speed: Select GPIO speed. This parameter can be a value of @ref GPIO_Speed_t enumeration
  * @param  Alternate: Alternate function you will use
  * @retval None
  */
-void TM_GPIO_InitAlternate(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_OType_t GPIO_OType, TM_GPIO_PuPd_t GPIO_PuPd, TM_GPIO_Speed_t GPIO_Speed, uint8_t Alternate);
+void GPIO_InitAlternate(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_OType_t GPIO_OType, GPIO_PuPd_t GPIO_PuPd, GPIO_Speed_t GPIO_Speed, uint8_t Alternate);
 
 /**
  * @brief  Deinitializes pin(s)
@@ -240,57 +240,57 @@ void TM_GPIO_InitAlternate(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_OType
  * @param  GPIO_Pin: Select GPIO pin(s). You can select more pins with | (OR) operator to set them as input
  * @retval None
  */
-void TM_GPIO_DeInit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+void GPIO_DeInit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 /**
  * @brief  Sets pin(s) as input 
- * @note   Pins HAVE to be initialized first using @ref TM_GPIO_Init() or @ref TM_GPIO_InitAlternate() function
+ * @note   Pins HAVE to be initialized first using @ref GPIO_Init() or @ref GPIO_InitAlternate() function
  * @note   This is just an option for fast input mode
  * @param  GPIOx: GPIOx PORT where you want to set pin as input
  * @param  GPIO_Pin: Select GPIO pin(s). You can select more pins with | (OR) operator to set them as input
  * @retval None
  */
-void TM_GPIO_SetPinAsInput(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+void GPIO_SetPinAsInput(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 /**
  * @brief  Sets pin(s) as output
- * @note   Pins HAVE to be initialized first using @ref TM_GPIO_Init() or @ref TM_GPIO_InitAlternate() function
+ * @note   Pins HAVE to be initialized first using @ref GPIO_Init() or @ref GPIO_InitAlternate() function
  * @note   This is just an option for fast output mode 
  * @param  GPIOx: GPIOx PORT where you want to set pin as output
  * @param  GPIO_Pin: Select GPIO pin(s). You can select more pins with | (OR) operator to set them as output
  * @retval None
  */
-void TM_GPIO_SetPinAsOutput(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+void GPIO_SetPinAsOutput(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 /**
  * @brief  Sets pin(s) as analog
- * @note   Pins HAVE to be initialized first using @ref TM_GPIO_Init() or @ref TM_GPIO_InitAlternate() function
+ * @note   Pins HAVE to be initialized first using @ref GPIO_Init() or @ref GPIO_InitAlternate() function
  * @note   This is just an option for fast analog mode 
  * @param  GPIOx: GPIOx PORT where you want to set pin as analog
  * @param  GPIO_Pin: Select GPIO pin(s). You can select more pins with | (OR) operator to set them as analog
  * @retval None
  */
-void TM_GPIO_SetPinAsAnalog(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+void GPIO_SetPinAsAnalog(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 /** 
  * @brief  Sets pin(s) as alternate function
- * @note   For proper alternate function, you should first init pin using @ref TM_GPIO_InitAlternate() function.
+ * @note   For proper alternate function, you should first init pin using @ref GPIO_InitAlternate() function.
  *            This functions is only used for changing GPIO mode
  * @param  GPIOx: GPIOx PORT where you want to set pin as alternate
  * @param  GPIO_Pin: Select GPIO pin(s). You can select more pins with | (OR) operator to set them as alternate
  * @retval None
  */
-void TM_GPIO_SetPinAsAlternate(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+void GPIO_SetPinAsAlternate(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 /**
  * @brief  Sets pull resistor settings to GPIO pin(s)
- * @note   Pins HAVE to be initialized first using @ref TM_GPIO_Init() or @ref TM_GPIO_InitAlternate() function
+ * @note   Pins HAVE to be initialized first using @ref GPIO_Init() or @ref GPIO_InitAlternate() function
  * @param  *GPIOx: GPIOx PORT where you want to select pull resistor
  * @param  GPIO_Pin: Select GPIO pin(s). You can select more pins with | (OR) operator to set them as output
- * @param  GPIO_PuPd: Pull resistor option. This parameter can be a value of @ref TM_GPIO_PuPd_t enumeration
+ * @param  GPIO_PuPd: Pull resistor option. This parameter can be a value of @ref GPIO_PuPd_t enumeration
  * @retval None
  */
-void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuPd_t GPIO_PuPd);
+void GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PuPd_t GPIO_PuPd);
 
 /**
  * @brief  Sets pin(s) low
@@ -299,7 +299,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  GPIO_Pin: Select GPIO pin(s). You can select more pins with | (OR) operator to set them low
  * @retval None
  */
-#define TM_GPIO_SetPinLow(GPIOx, GPIO_Pin)			((GPIOx)->BSRRH = (GPIO_Pin))
+#define GPIO_SetPinLow(GPIOx, GPIO_Pin)			((GPIOx)->BSRRH = (GPIO_Pin))
 
 /**
  * @brief  Sets pin(s) high
@@ -308,7 +308,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  GPIO_Pin: Select GPIO pin(s). You can select more pins with | (OR) operator to set them high
  * @retval None
  */
-#define TM_GPIO_SetPinHigh(GPIOx, GPIO_Pin) 		((GPIOx)->BSRRL = (GPIO_Pin))
+#define GPIO_SetPinHigh(GPIOx, GPIO_Pin) 		((GPIOx)->BSRRL = (GPIO_Pin))
 
 /**
  * @brief  Sets pin(s) value
@@ -318,7 +318,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  val: If parameter is 0 then pin will be low, otherwise high
  * @retval None
  */
-#define TM_GPIO_SetPinValue(GPIOx, GPIO_Pin, val)	((val) ? TM_GPIO_SetPinHigh(GPIOx, GPIO_Pin) : TM_GPIO_SetPinLow(GPIOx, GPIO_Pin))
+#define GPIO_SetPinValue(GPIOx, GPIO_Pin, val)	((val) ? GPIO_SetPinHigh(GPIOx, GPIO_Pin) : GPIO_SetPinLow(GPIOx, GPIO_Pin))
 
 /**
  * @brief  Toggles pin(s)
@@ -327,7 +327,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  GPIO_Pin: Select GPIO pin(s). You can select more pins with | (OR) operator to toggle them all at a time
  * @retval None
  */
-#define TM_GPIO_TogglePinValue(GPIOx, GPIO_Pin)		((GPIOx)->ODR ^= (GPIO_Pin))
+#define GPIO_TogglePinValue(GPIOx, GPIO_Pin)		((GPIOx)->ODR ^= (GPIO_Pin))
 
 /**
  * @brief  Sets value to entire GPIO PORT
@@ -336,7 +336,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  value: Value for GPIO OUTPUT data
  * @retval None
  */
-#define TM_GPIO_SetPortValue(GPIOx, value)			((GPIOx)->ODR = (value))
+#define GPIO_SetPortValue(GPIOx, value)			((GPIOx)->ODR = (value))
 
 /**
  * @brief  Gets input data bit
@@ -345,7 +345,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  GPIO_Pin: GPIO pin where you want to read value
  * @retval 1 in case pin is high, or 0 if low
  */
-#define TM_GPIO_GetInputPinValue(GPIOx, GPIO_Pin)	(((GPIOx)->IDR & (GPIO_Pin)) == 0 ? 0 : 1)
+#define GPIO_GetInputPinValue(GPIOx, GPIO_Pin)	(((GPIOx)->IDR & (GPIO_Pin)) == 0 ? 0 : 1)
 
 /**
  * @brief  Gets output data bit
@@ -354,7 +354,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  GPIO_Pin: GPIO pin where you want to read value
  * @retval 1 in case pin is high, or 0 if low
  */
-#define TM_GPIO_GetOutputPinValue(GPIOx, GPIO_Pin)	(((GPIOx)->ODR & (GPIO_Pin)) == 0 ? 0 : 1)
+#define GPIO_GetOutputPinValue(GPIOx, GPIO_Pin)	(((GPIOx)->ODR & (GPIO_Pin)) == 0 ? 0 : 1)
 
 /**
  * @brief  Gets input value from entire GPIO PORT
@@ -362,7 +362,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  GPIOx: GPIOx PORT where you want to read input data value
  * @retval Entire PORT INPUT register
  */
-#define TM_GPIO_GetPortInputValue(GPIOx)			((GPIOx)->IDR)
+#define GPIO_GetPortInputValue(GPIOx)			((GPIOx)->IDR)
 
 /**
  * @brief  Gets output value from entire GPIO PORT
@@ -370,7 +370,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  GPIOx: GPIOx PORT where you want to read output data value
  * @retval Entire PORT OUTPUT register
  */
-#define TM_GPIO_GetPortOutputValue(GPIOx)			((GPIOx)->ODR)
+#define GPIO_GetPortOutputValue(GPIOx)			((GPIOx)->ODR)
 
 /**
  * @brief  Gets port source from desired GPIOx PORT
@@ -378,7 +378,7 @@ void TM_GPIO_SetPullResistor(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, TM_GPIO_PuP
  * @param  GPIOx: GPIO PORT for calculating port source
  * @retval Calculated port source for GPIO
  */
-uint16_t TM_GPIO_GetPortSource(GPIO_TypeDef* GPIOx);
+uint16_t GPIO_GetPortSource(GPIO_TypeDef* GPIOx);
 
 /**
  * @brief  Gets pin source from desired GPIO pin
@@ -386,7 +386,7 @@ uint16_t TM_GPIO_GetPortSource(GPIO_TypeDef* GPIOx);
  * @param  GPIO_Pin: GPIO pin for calculating port source
  * @retval Calculated pin source for GPIO pin
  */
-uint16_t TM_GPIO_GetPinSource(uint16_t GPIO_Pin);
+uint16_t GPIO_GetPinSource(uint16_t GPIO_Pin);
 
 /**
  * @brief  Locks GPIOx register for future changes
@@ -395,21 +395,21 @@ uint16_t TM_GPIO_GetPinSource(uint16_t GPIO_Pin);
  * @param  GPIO_Pin: GPIO pin(s) where you want to lock config registers
  * @retval None
  */
-void TM_GPIO_Lock(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+void GPIO_Lock(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 /** 
  * @brief  Gets bit separated pins which were used at least once in library and were not deinitialized
  * @param  *GPIOx: Pointer to GPIOx peripheral where to check used GPIO pins
  * @retval Bit values for used pins
  */
-uint16_t TM_GPIO_GetUsedPins(GPIO_TypeDef* GPIOx);
+uint16_t GPIO_GetUsedPins(GPIO_TypeDef* GPIOx);
 
 /** 
  * @brief  Gets bit separated pins which were not used at in library or were deinitialized
  * @param  *GPIOx: Pointer to GPIOx peripheral where to check used GPIO pins
  * @retval Bit values for free pins
  */
-uint16_t TM_GPIO_GetFreePins(GPIO_TypeDef* GPIOx);
+uint16_t GPIO_GetFreePins(GPIO_TypeDef* GPIOx);
 
 /**
  * @}

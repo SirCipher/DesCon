@@ -71,7 +71,7 @@ void STM32f4_Discovery_Debug_Init(void)
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
   USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 
-  STM_EVAL_COMInit(COM1, &USART_InitStructure);
+  SEVAL_COMInit(COM1, &USART_InitStructure);
   printf("\n\r Debug Module Init \n\r");
 }
 

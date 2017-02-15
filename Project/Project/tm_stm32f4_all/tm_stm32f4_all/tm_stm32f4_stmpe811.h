@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_STMPE811_H
-#define TM_STMPE811_H  120
+#ifndef STMPE811_H
+#define STMPE811_H  120
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_STMPE811
+ * @defgroup STMPE811
  * @brief    STMPE811 Touch screen controller library - http://stm32f4-discovery.com/2014/05/library-10-stmpe811-touch-screen-driver-for-stm32f429-discovery-board/
  * @{
  *
@@ -65,7 +65,7 @@ SDA        PC9         Data pin for I2C
 @verbatim
 //Use custom I2C settings. Check TM I2C library for corresponding pins
 #define STMPE811_I2C             I2C3
-#define STMPE811_I2C_PINSPACK    TM_I2C_PinsPack_1
+#define STMPE811_I2C_PINSPACK    I2C_PinsPack_1
 @endverbatim
  *
  * \par Changelog
@@ -99,11 +99,11 @@ SDA        PC9         Data pin for I2C
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_i2c.h"
-#include "tm_stm32f4_delay.h"
+#include "stm32f4_i2c.h"
+#include "stm32f4_delay.h"
 
 /**
- * @defgroup TM_STMPE811_Macros
+ * @defgroup STMPE811_Macros
  * @brief    Library defines
  * @{
  */
@@ -113,7 +113,7 @@ SDA        PC9         Data pin for I2C
  */
 #ifndef STMPE811_I2C
 #define STMPE811_I2C					I2C3
-#define STMPE811_I2C_PINSPACK			TM_I2C_PinsPack_1
+#define STMPE811_I2C_PINSPACK			I2C_PinsPack_1
 #endif
 
 /**
@@ -128,7 +128,7 @@ SDA        PC9         Data pin for I2C
  */
  
 /**
- * @defgroup TM_STMPE811_Typedefs
+ * @defgroup STMPE811_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -138,42 +138,42 @@ SDA        PC9         Data pin for I2C
  * @note   You may need experimenting to get proper orientation to match your LCD
  */
 typedef enum {
-	TM_STMPE811_Orientation_Portrait_1,  /*!< Portrait orientation mode 1 */
-	TM_STMPE811_Orientation_Portrait_2,  /*!< Portrait orientation mode 2 */
-	TM_STMPE811_Orientation_Landscape_1, /*!< Landscape orientation mode 1 */
-	TM_STMPE811_Orientation_Landscape_2, /*!< Landscape orientation mode 2 */
-} TM_STMPE811_Orientation_t;
+	STMPE811_Orientation_Portrait_1,  /*!< Portrait orientation mode 1 */
+	STMPE811_Orientation_Portrait_2,  /*!< Portrait orientation mode 2 */
+	STMPE811_Orientation_Landscape_1, /*!< Landscape orientation mode 1 */
+	STMPE811_Orientation_Landscape_2, /*!< Landscape orientation mode 2 */
+} STMPE811_Orientation_t;
 
 /**
  * @brief  Enumeration for touch pressed or released
  */
 typedef enum {
-	TM_STMPE811_State_Pressed,  /*!< Touch detected as pressed */
-	TM_STMPE811_State_Released, /*!< Touch detected as released/not pressed */
-	TM_STMPE811_State_Ok,       /*!< Result OK. Used on initialization */
-	TM_STMPE811_State_Error     /*!< Result error. Used on initialization */
-} TM_STMPE811_State_t;
+	STMPE811_State_Pressed,  /*!< Touch detected as pressed */
+	STMPE811_State_Released, /*!< Touch detected as released/not pressed */
+	STMPE811_State_Ok,       /*!< Result OK. Used on initialization */
+	STMPE811_State_Error     /*!< Result error. Used on initialization */
+} STMPE811_State_t;
 
 /**
- * @brief  Main structure, which is passed into @ref TM_STMPE811_ReadTouch function
+ * @brief  Main structure, which is passed into @ref STMPE811_ReadTouch function
  */
 typedef struct {
 	uint16_t x;                            /*!< X coordinate on LCD for touch */ 
 	uint16_t y;                            /*!< Y coordinate on LCD for touch */
-	TM_STMPE811_State_t pressed;           /*!< Pressed touch status */
-	TM_STMPE811_State_t last_pressed;      /*!< Last pressed touch status */
-	TM_STMPE811_Orientation_t orientation; /*!< Touch screen orientation to match your LCD orientation */
-} TM_STMPE811_t;
+	STMPE811_State_t pressed;           /*!< Pressed touch status */
+	STMPE811_State_t last_pressed;      /*!< Last pressed touch status */
+	STMPE811_Orientation_t orientation; /*!< Touch screen orientation to match your LCD orientation */
+} STMPE811_t;
 
 /* Backward compatibility */
-typedef TM_STMPE811_t TM_STMPE811_TouchData;
+typedef STMPE811_t STMPE811_TouchData;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_STMPE811_Functions
+ * @defgroup STMPE811_Functions
  * @brief    Library Functions
  * @{
  */
@@ -181,22 +181,22 @@ typedef TM_STMPE811_t TM_STMPE811_TouchData;
 /**
  * @brief  Initializes STMPE811 Touch driver
  * @param  None
- * @retval Member of @ref TM_STMPE811_State_t
+ * @retval Member of @ref STMPE811_State_t
  */
-TM_STMPE811_State_t TM_STMPE811_Init(void);
+STMPE811_State_t STMPE811_Init(void);
 
 /**
  * @brief  Reads touch coordinates
- * @param  *structdata: Pointer to @ref TM_STMPE811_t to store data into
+ * @param  *structdata: Pointer to @ref STMPE811_t to store data into
  * @retval Touch status:
- *            - TM_STMPE811_State_Pressed: Touch detected as pressed, coordinates valid
- *            - TM_STMPE811_State_Released: Touch detected as not pressed, coordinates not valid
+ *            - STMPE811_State_Pressed: Touch detected as pressed, coordinates valid
+ *            - STMPE811_State_Released: Touch detected as not pressed, coordinates not valid
  */
-TM_STMPE811_State_t TM_STMPE811_ReadTouch(TM_STMPE811_t* structdata);
+STMPE811_State_t STMPE811_ReadTouch(STMPE811_t* structdata);
 
 /**
  * @brief  Checks if touch data is inside specific rectangle coordinates
- * @param  sd: Pointer to @ref TM_STMPE811_t to get data from
+ * @param  sd: Pointer to @ref STMPE811_t to get data from
  * @param  xPos: Top-left X position of rectangle
  * @param  yPos: Top-left Y position of rectangle
  * @param  w: Rectangle width
@@ -206,7 +206,7 @@ TM_STMPE811_State_t TM_STMPE811_ReadTouch(TM_STMPE811_t* structdata);
  *            - > 0: Touch is inside rectangle
  * @note   Defined as macro for faster execution
  */ 
-#define TM_STMPE811_TouchInRectangle(sd, xPos, yPos, w, h)	(((sd)->x >= (xPos)) && ((sd)->x < (xPos + w)) && ((sd)->y >= (yPos)) && ((sd)->y < (yPos + h)))
+#define STMPE811_TouchInRectangle(sd, xPos, yPos, w, h)	(((sd)->x >= (xPos)) && ((sd)->x < (xPos + w)) && ((sd)->y >= (yPos)) && ((sd)->y < (yPos + h)))
 
 /**
  * @}

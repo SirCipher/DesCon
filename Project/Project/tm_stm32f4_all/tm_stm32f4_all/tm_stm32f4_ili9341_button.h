@@ -30,22 +30,22 @@
  *	By default, library supports up to 10 buttons.
  *	If you want to use more of them, change line below in your defines.h file:
  *	
- *	#define TM_ILI9341_BUTTON_MAX_BUTTONS	10
+ *	#define ILI9341_BUTTON_MAX_BUTTONS	10
  *	
  */
-#ifndef TM_ILI9341_BUTTON_H
-#define TM_ILI9341_BUTTON_H
+#ifndef ILI9341_BUTTON_H
+#define ILI9341_BUTTON_H
 /**
  * Library dependencies
  * - STM32F4xx
  * - STM32F4xx RCC
  * - STM32F4xx GPIO
  * - defines.h
- * - TM_I2C
- * - TM_DELAY
- * - TM_ILI9341
- * - TM_FONTS
- * - TM_STMPE811
+ * - I2C
+ * - DELAY
+ * - ILI9341
+ * - FONTS
+ * - STMPE811
  */
 /**
  * Includes
@@ -54,23 +54,23 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_i2c.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_ili9341.h"
-#include "tm_stm32f4_fonts.h"
-#include "tm_stm32f4_stmpe811.h"
+#include "stm32f4_i2c.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_ili9341.h"
+#include "stm32f4_fonts.h"
+#include "stm32f4_stmpe811.h"
 
 // Maximum number of buttons available
-#ifndef TM_ILI9341_BUTTON_MAX_BUTTONS
-#define TM_ILI9341_BUTTON_MAX_BUTTONS	10
+#ifndef ILI9341_BUTTON_MAX_BUTTONS
+#define ILI9341_BUTTON_MAX_BUTTONS	10
 #endif
 
 //Button flags
-#define TM_BUTTON_FLAG_ENABLED			0x0001	// Button is enabled - internal flag
-#define TM_BUTTON_FLAG_NOBORDER			0x0002	// No border used in
-#define TM_BUTTON_FLAG_IMAGE			0x0004	// Use image for background
-#define TM_BUTTON_FLAG_NOLABEL			0x0008	// Do not display button label
-#define TM_BUTTON_FLAG_USED				0x8000	// Button is used - internal flag
+#define BUTTON_FLAG_ENABLED			0x0001	// Button is enabled - internal flag
+#define BUTTON_FLAG_NOBORDER			0x0002	// No border used in
+#define BUTTON_FLAG_IMAGE			0x0004	// Use image for background
+#define BUTTON_FLAG_NOLABEL			0x0008	// Do not display button label
+#define BUTTON_FLAG_USED				0x8000	// Button is used - internal flag
 
 /**
  * Button options struct
@@ -84,7 +84,7 @@
  *	- uint16_t borderColor: 16bit border color
  *	- uint16_t flags: Button flags
  *	- char *label: pointer to first character of label
- *	- TM_FontDef_t *font: pointer to font structure
+ *	- FontDef_t *font: pointer to font structure
  *	- uint16_t color: label color
  *	- uint16_t *image: pointer to location at first color for pixel
  */
@@ -97,22 +97,22 @@ typedef struct {
 	uint16_t borderColor;
 	uint16_t flags;
 	char* label;
-	TM_FontDef_t* font;
+	FontDef_t* font;
 	uint16_t color;
 	uint16_t* image;
-} TM_ILI9341_Button_t;
+} ILI9341_Button_t;
 
-extern TM_ILI9341_Button_t TM_ILI9341_Buttons[TM_ILI9341_BUTTON_MAX_BUTTONS];
+extern ILI9341_Button_t ILI9341_Buttons[ILI9341_BUTTON_MAX_BUTTONS];
 
 /**
  * Add new button to library
  *
  * Parameters:
- * 	- TM_ILI9341_Button_t *button: pointer to TM_ILI9341_Button_t structure
+ * 	- ILI9341_Button_t *button: pointer to ILI9341_Button_t structure
  *
  * Returns button id on success (starting from 0), or -1 on failure
  */
-extern int8_t TM_ILI9341_Button_Add(TM_ILI9341_Button_t* button);
+extern int8_t ILI9341_Button_Add(ILI9341_Button_t* button);
 
 /**
  * Draw button on LCD
@@ -122,14 +122,14 @@ extern int8_t TM_ILI9341_Button_Add(TM_ILI9341_Button_t* button);
  *
  * Return SUCCESS on success, otherwise ERROR
  */
-extern ErrorStatus TM_ILI9341_Button_Draw(uint8_t id);
+extern ErrorStatus ILI9341_Button_Draw(uint8_t id);
 
 /**
  * Draw all buttons in library
  *
  *
  */
-extern void TM_ILI9341_Button_DrawAll(void);
+extern void ILI9341_Button_DrawAll(void);
 
 /**
  * Enable button
@@ -137,7 +137,7 @@ extern void TM_ILI9341_Button_DrawAll(void);
  * Parameters:
  * 	- uint8_t id: button id
  */
-extern void TM_ILI9341_Button_Enable(uint8_t id);
+extern void ILI9341_Button_Enable(uint8_t id);
 
 /**
  * Disable button
@@ -145,14 +145,14 @@ extern void TM_ILI9341_Button_Enable(uint8_t id);
  * Parameters:
  * 	- uint8_t id: button id
  */
-extern void TM_ILI9341_Button_Disable(uint8_t id);
+extern void ILI9341_Button_Disable(uint8_t id);
 
 /**
  * Delete all buttons in library
  *
  *
  */
-extern void TM_ILI9341_Button_DeleteAll(void);
+extern void ILI9341_Button_DeleteAll(void);
 
 /**
  * Delete button
@@ -160,17 +160,17 @@ extern void TM_ILI9341_Button_DeleteAll(void);
  * Parameters:
  * 	- uint8_t id: button id
  */
-extern void TM_ILI9341_Button_Delete(uint8_t id);
+extern void ILI9341_Button_Delete(uint8_t id);
 
 /**
  * Get pressed button
  *
  * Parameters:
- * 	- TM_STMPE811_TouchData *TouchData: pointer to TM_STMPE811_TouchData structure
+ * 	- STMPE811_TouchData *TouchData: pointer to STMPE811_TouchData structure
  *
  * Returns button id on success, otherwise -1
  */
-extern int8_t TM_ILI9341_Button_Touch(TM_STMPE811_TouchData* TouchData);
+extern int8_t ILI9341_Button_Touch(STMPE811_TouchData* TouchData);
 
 #endif
 

@@ -16,17 +16,17 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_rcc.h"
+#include "stm32f4_rcc.h"
 
-void TM_RCC_SetPLL(TM_RCC_PLL_t* PLL_Settings) {
+void RCC_SetPLL(RCC_PLL_t* PLL_Settings) {
 	uint16_t timeout;
-	TM_RCC_PLL_t tmp;
+	RCC_PLL_t tmp;
 	
 	/* Read PLL settings */
-	TM_RCC_GetPLL(&tmp);
+	RCC_GetPLL(&tmp);
 	
 	/* Check if structures are equal */
-	if (memcmp(PLL_Settings, &tmp, sizeof(TM_RCC_PLL_t)) == 0) {
+	if (memcmp(PLL_Settings, &tmp, sizeof(RCC_PLL_t)) == 0) {
 		/* Don't change PLL settings if settings are the same */
 		return;
 	}
@@ -66,7 +66,7 @@ void TM_RCC_SetPLL(TM_RCC_PLL_t* PLL_Settings) {
 	
 	/* Wait till PLL is ready */
 	timeout = 0xFFFF;
-	while (!TM_RCC_IsPLLReady() && timeout--);
+	while (!RCC_IsPLLReady() && timeout--);
 	
 	/* Enable PLL as main clock */
 	RCC->CFGR = (RCC->CFGR & ~(RCC_CFGR_SW)) | RCC_CFGR_SW_PLL;
@@ -75,7 +75,7 @@ void TM_RCC_SetPLL(TM_RCC_PLL_t* PLL_Settings) {
 	SystemCoreClockUpdate();
 }
 
-void TM_RCC_GetPLL(TM_RCC_PLL_t* PLL_Settings) {
+void RCC_GetPLL(RCC_PLL_t* PLL_Settings) {
 	/* Read all PLL settings */
 	PLL_Settings->PLLM = (RCC->PLLCFGR & RCC_PLLM_MASK) >> RCC_PLLM_POS;
 	PLL_Settings->PLLN = (RCC->PLLCFGR & RCC_PLLN_MASK) >> RCC_PLLN_POS;
@@ -84,7 +84,7 @@ void TM_RCC_GetPLL(TM_RCC_PLL_t* PLL_Settings) {
 	PLL_Settings->PLLR = (RCC->PLLCFGR & RCC_PLLR_MASK) >> RCC_PLLR_POS;
 }
 
-uint8_t TM_RCC_IsPLLReady(void) {
+uint8_t RCC_IsPLLReady(void) {
 	/* Return PLL ready status */
 	return (RCC->CR & RCC_CR_PLLRDY);
 }

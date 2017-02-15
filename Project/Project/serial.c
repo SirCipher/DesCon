@@ -1,6 +1,6 @@
 #include "stm32f4xx.h"
 #include "serial.h"
-#include "tm_stm32f4_usart.h"
+#include "stm32f4_usart.h"
 
 static void _configUSART2(uint32_t BAUD, uint32_t fosc)
 {
@@ -19,7 +19,7 @@ static void _configUSART2(uint32_t BAUD, uint32_t fosc)
 
   USART2->CR1 |= USART_CR1_UE;	/* Enable USART */
 	USART2->CR1 |= (1 << 4);
-  integerdivider = ((25 * apbclock) / (2 * (BAUD)));  
+  integerdivider = ((25 * apbclock) / (2 * (BAUD)));
   tmpreg = (integerdivider / 100) << 4;
   fractionaldivider = integerdivider - (100 * (tmpreg >> 4));
 
@@ -32,5 +32,3 @@ static void _configUSART2(uint32_t BAUD, uint32_t fosc)
 void serial_init(void) {
 	_configUSART2(38400, 168000000);
 }
-
-

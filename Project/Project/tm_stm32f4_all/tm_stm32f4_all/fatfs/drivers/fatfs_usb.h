@@ -18,11 +18,11 @@
 
 /*---------------------------------------*/
 /* Prototypes for disk control functions */
-extern DSTATUS TM_FATFS_USB_disk_initialize(void);
-extern DSTATUS TM_FATFS_USB_disk_status(void);
-extern DRESULT TM_FATFS_USB_disk_read(BYTE* buff, DWORD sector, UINT count);
-extern DRESULT TM_FATFS_USB_disk_write(const BYTE* buff, DWORD sector, UINT count);
-extern DRESULT TM_FATFS_USB_disk_ioctl(BYTE cmd, void* buff);
+extern DSTATUS FATFS_USB_disk_initialize(void);
+extern DSTATUS FATFS_USB_disk_status(void);
+extern DRESULT FATFS_USB_disk_read(BYTE* buff, DWORD sector, UINT count);
+extern DRESULT FATFS_USB_disk_write(const BYTE* buff, DWORD sector, UINT count);
+extern DRESULT FATFS_USB_disk_ioctl(BYTE cmd, void* buff);
 
 #endif
 

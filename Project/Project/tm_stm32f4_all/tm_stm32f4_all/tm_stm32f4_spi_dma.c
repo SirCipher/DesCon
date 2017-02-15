@@ -16,7 +16,7 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_spi_dma.h"
+#include "stm32f4_spi_dma.h"
 
 /* Private structure */
 typedef struct {
@@ -26,40 +26,40 @@ typedef struct {
 	DMA_Stream_TypeDef* RX_Stream;
 	uint32_t Dummy32;
 	uint16_t Dummy16;
-} TM_SPI_DMA_INT_t;
+} SPI_DMA_INT_t;
 
 /* Private variables */
 #ifdef SPI1
-static TM_SPI_DMA_INT_t SPI1_DMA_INT = {SPI1_DMA_TX_CHANNEL, SPI1_DMA_TX_STREAM, SPI1_DMA_RX_CHANNEL, SPI1_DMA_RX_STREAM};
+static SPI_DMA_INT_t SPI1_DMA_INT = {SPI1_DMA_TX_CHANNEL, SPI1_DMA_TX_STREAM, SPI1_DMA_RX_CHANNEL, SPI1_DMA_RX_STREAM};
 #endif
 #ifdef SPI2
-static TM_SPI_DMA_INT_t SPI2_DMA_INT = {SPI2_DMA_TX_CHANNEL, SPI2_DMA_TX_STREAM, SPI2_DMA_RX_CHANNEL, SPI2_DMA_RX_STREAM};
+static SPI_DMA_INT_t SPI2_DMA_INT = {SPI2_DMA_TX_CHANNEL, SPI2_DMA_TX_STREAM, SPI2_DMA_RX_CHANNEL, SPI2_DMA_RX_STREAM};
 #endif
 #ifdef SPI3
-static TM_SPI_DMA_INT_t SPI3_DMA_INT = {SPI3_DMA_TX_CHANNEL, SPI3_DMA_TX_STREAM, SPI3_DMA_RX_CHANNEL, SPI3_DMA_RX_STREAM};
+static SPI_DMA_INT_t SPI3_DMA_INT = {SPI3_DMA_TX_CHANNEL, SPI3_DMA_TX_STREAM, SPI3_DMA_RX_CHANNEL, SPI3_DMA_RX_STREAM};
 #endif
 #ifdef SPI4
-static TM_SPI_DMA_INT_t SPI4_DMA_INT = {SPI4_DMA_TX_CHANNEL, SPI4_DMA_TX_STREAM, SPI4_DMA_RX_CHANNEL, SPI4_DMA_RX_STREAM};
+static SPI_DMA_INT_t SPI4_DMA_INT = {SPI4_DMA_TX_CHANNEL, SPI4_DMA_TX_STREAM, SPI4_DMA_RX_CHANNEL, SPI4_DMA_RX_STREAM};
 #endif
 #ifdef SPI5
-static TM_SPI_DMA_INT_t SPI5_DMA_INT = {SPI5_DMA_TX_CHANNEL, SPI5_DMA_TX_STREAM, SPI5_DMA_RX_CHANNEL, SPI5_DMA_RX_STREAM};
+static SPI_DMA_INT_t SPI5_DMA_INT = {SPI5_DMA_TX_CHANNEL, SPI5_DMA_TX_STREAM, SPI5_DMA_RX_CHANNEL, SPI5_DMA_RX_STREAM};
 #endif
 #ifdef SPI6
-static TM_SPI_DMA_INT_t SPI6_DMA_INT = {SPI6_DMA_TX_CHANNEL, SPI6_DMA_TX_STREAM, SPI6_DMA_RX_CHANNEL, SPI6_DMA_RX_STREAM};
+static SPI_DMA_INT_t SPI6_DMA_INT = {SPI6_DMA_TX_CHANNEL, SPI6_DMA_TX_STREAM, SPI6_DMA_RX_CHANNEL, SPI6_DMA_RX_STREAM};
 #endif
 
 /* Private DMA structure */
 static DMA_InitTypeDef DMA_InitStruct;
 
 /* Private functions */
-static TM_SPI_DMA_INT_t* TM_SPI_DMA_INT_GetSettings(SPI_TypeDef* SPIx);
+static SPI_DMA_INT_t* SPI_DMA_INT_GetSettings(SPI_TypeDef* SPIx);
 	
-void TM_SPI_DMA_Init(SPI_TypeDef* SPIx) {
+void SPI_DMA_Init(SPI_TypeDef* SPIx) {
 	/* Init DMA TX mode */
 	/* Assuming SPI is already initialized and clock is enabled */
 	
 	/* Get USART settings */
-	TM_SPI_DMA_INT_t* Settings = TM_SPI_DMA_INT_GetSettings(SPIx);
+	SPI_DMA_INT_t* Settings = SPI_DMA_INT_GetSettings(SPIx);
 	
 	/* Enable DMA clock */
 	if (Settings->TX_Stream >= DMA2_Stream0) {
@@ -91,9 +91,9 @@ void TM_SPI_DMA_Init(SPI_TypeDef* SPIx) {
 	DMA_InitStruct.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
 }
 
-void TM_SPI_DMA_InitWithStreamAndChannel(SPI_TypeDef* SPIx, DMA_Stream_TypeDef* TX_Stream, uint32_t TX_Channel, DMA_Stream_TypeDef* RX_Stream, uint32_t RX_Channel) {
+void SPI_DMA_InitWithStreamAndChannel(SPI_TypeDef* SPIx, DMA_Stream_TypeDef* TX_Stream, uint32_t TX_Channel, DMA_Stream_TypeDef* RX_Stream, uint32_t RX_Channel) {
 	/* Get USART settings */
-	TM_SPI_DMA_INT_t* Settings = TM_SPI_DMA_INT_GetSettings(SPIx);
+	SPI_DMA_INT_t* Settings = SPI_DMA_INT_GetSettings(SPIx);
 	
 	/* Set values */
 	Settings->RX_Channel = RX_Channel;
@@ -102,21 +102,21 @@ void TM_SPI_DMA_InitWithStreamAndChannel(SPI_TypeDef* SPIx, DMA_Stream_TypeDef* 
 	Settings->TX_Stream = TX_Stream;
 	
 	/* Init SPI */
-	TM_SPI_DMA_Init(SPIx);
+	SPI_DMA_Init(SPIx);
 }
 
-void TM_SPI_DMA_Deinit(SPI_TypeDef* SPIx) {
+void SPI_DMA_Deinit(SPI_TypeDef* SPIx) {
 	/* Get USART settings */
-	TM_SPI_DMA_INT_t* Settings = TM_SPI_DMA_INT_GetSettings(SPIx);
+	SPI_DMA_INT_t* Settings = SPI_DMA_INT_GetSettings(SPIx);
 	
 	/* Deinit DMA Streams */
 	DMA_DeInit(Settings->TX_Stream);
 	DMA_DeInit(Settings->RX_Stream);
 }
 
-uint8_t TM_SPI_DMA_Transmit(SPI_TypeDef* SPIx, uint8_t* TX_Buffer, uint8_t* RX_Buffer, uint16_t count) {
+uint8_t SPI_DMA_Transmit(SPI_TypeDef* SPIx, uint8_t* TX_Buffer, uint8_t* RX_Buffer, uint16_t count) {
 	/* Get USART settings */
-	TM_SPI_DMA_INT_t* Settings = TM_SPI_DMA_INT_GetSettings(SPIx);
+	SPI_DMA_INT_t* Settings = SPI_DMA_INT_GetSettings(SPIx);
 	
 	/* Check if DMA available */
 	if (
@@ -151,7 +151,7 @@ uint8_t TM_SPI_DMA_Transmit(SPI_TypeDef* SPIx, uint8_t* TX_Buffer, uint8_t* RX_B
 	}
 	
 	/* Deinit first TX stream */
-	TM_DMA_ClearFlag(Settings->TX_Stream, DMA_FLAG_ALL);
+	DMA_ClearFlag(Settings->TX_Stream, DMA_FLAG_ALL);
 	
 	/* Init TX stream */
 	DMA_Init(Settings->TX_Stream, &DMA_InitStruct);	
@@ -169,7 +169,7 @@ uint8_t TM_SPI_DMA_Transmit(SPI_TypeDef* SPIx, uint8_t* TX_Buffer, uint8_t* RX_B
 	}
 	
 	/* Deinit first RX stream */
-	TM_DMA_ClearFlag(Settings->RX_Stream, DMA_FLAG_ALL);
+	DMA_ClearFlag(Settings->RX_Stream, DMA_FLAG_ALL);
 	
 	/* Init RX stream */
 	DMA_Init(Settings->RX_Stream, &DMA_InitStruct);
@@ -187,9 +187,9 @@ uint8_t TM_SPI_DMA_Transmit(SPI_TypeDef* SPIx, uint8_t* TX_Buffer, uint8_t* RX_B
 	return 1;
 }
 
-uint8_t TM_SPI_DMA_SendByte(SPI_TypeDef* SPIx, uint8_t value, uint16_t count) {
+uint8_t SPI_DMA_SendByte(SPI_TypeDef* SPIx, uint8_t value, uint16_t count) {
 	/* Get USART settings */
-	TM_SPI_DMA_INT_t* Settings = TM_SPI_DMA_INT_GetSettings(SPIx);
+	SPI_DMA_INT_t* Settings = SPI_DMA_INT_GetSettings(SPIx);
 	
 	/* Check if DMA available */
 	if (Settings->TX_Stream->NDTR) {
@@ -213,7 +213,7 @@ uint8_t TM_SPI_DMA_SendByte(SPI_TypeDef* SPIx, uint8_t value, uint16_t count) {
 	DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
 	
 	/* Deinit first TX stream */
-	TM_DMA_ClearFlag(Settings->TX_Stream, DMA_FLAG_ALL);
+	DMA_ClearFlag(Settings->TX_Stream, DMA_FLAG_ALL);
 	
 	/* Init TX stream */
 	DMA_Init(Settings->TX_Stream, &DMA_InitStruct);
@@ -228,9 +228,9 @@ uint8_t TM_SPI_DMA_SendByte(SPI_TypeDef* SPIx, uint8_t value, uint16_t count) {
 	return 1;
 }
 
-uint8_t TM_SPI_DMA_SendHalfWord(SPI_TypeDef* SPIx, uint16_t value, uint16_t count) {
+uint8_t SPI_DMA_SendHalfWord(SPI_TypeDef* SPIx, uint16_t value, uint16_t count) {
 	/* Get USART settings */
-	TM_SPI_DMA_INT_t* Settings = TM_SPI_DMA_INT_GetSettings(SPIx);
+	SPI_DMA_INT_t* Settings = SPI_DMA_INT_GetSettings(SPIx);
 	
 	/* Check if DMA available */
 	if (Settings->TX_Stream->NDTR) {
@@ -255,7 +255,7 @@ uint8_t TM_SPI_DMA_SendHalfWord(SPI_TypeDef* SPIx, uint16_t value, uint16_t coun
 	DMA_InitStruct.DMA_PeripheralDataSize = DMA_PeripheralDataSize_HalfWord;
 	
 	/* Deinit first TX stream */
-	TM_DMA_ClearFlag(Settings->TX_Stream, DMA_FLAG_ALL);
+	DMA_ClearFlag(Settings->TX_Stream, DMA_FLAG_ALL);
 	
 	/* Init TX stream */
 	DMA_Init(Settings->TX_Stream, &DMA_InitStruct);
@@ -270,9 +270,9 @@ uint8_t TM_SPI_DMA_SendHalfWord(SPI_TypeDef* SPIx, uint16_t value, uint16_t coun
 	return 1;
 }
 
-uint8_t TM_SPI_DMA_Working(SPI_TypeDef* SPIx) {
+uint8_t SPI_DMA_Working(SPI_TypeDef* SPIx) {
 	/* Get SPI settings */
-	TM_SPI_DMA_INT_t* Settings = TM_SPI_DMA_INT_GetSettings(SPIx);
+	SPI_DMA_INT_t* Settings = SPI_DMA_INT_GetSettings(SPIx);
 	
 	/* Check if TX or RX DMA are working */
 	return (
@@ -282,37 +282,37 @@ uint8_t TM_SPI_DMA_Working(SPI_TypeDef* SPIx) {
 	);
 }
 
-DMA_Stream_TypeDef* TM_SPI_DMA_GetStreamTX(SPI_TypeDef* SPIx) {
+DMA_Stream_TypeDef* SPI_DMA_GetStreamTX(SPI_TypeDef* SPIx) {
 	/* Return pointer to TX stream */
-	return TM_SPI_DMA_INT_GetSettings(SPIx)->TX_Stream;
+	return SPI_DMA_INT_GetSettings(SPIx)->TX_Stream;
 }
 
-DMA_Stream_TypeDef* TM_SPI_DMA_GetStreamRX(SPI_TypeDef* SPIx) {
+DMA_Stream_TypeDef* SPI_DMA_GetStreamRX(SPI_TypeDef* SPIx) {
 	/* Return pointer to TX stream */
-	return TM_SPI_DMA_INT_GetSettings(SPIx)->RX_Stream;
+	return SPI_DMA_INT_GetSettings(SPIx)->RX_Stream;
 }
 
-void TM_SPI_DMA_EnableInterrupts(SPI_TypeDef* SPIx) {
+void SPI_DMA_EnableInterrupts(SPI_TypeDef* SPIx) {
 	/* Get SPI settings */
-	TM_SPI_DMA_INT_t* Settings = TM_SPI_DMA_INT_GetSettings(SPIx);
+	SPI_DMA_INT_t* Settings = SPI_DMA_INT_GetSettings(SPIx);
 	
 	/* Enable interrupts for TX and RX streams */
-	TM_DMA_EnableInterrupts(Settings->TX_Stream);
-	TM_DMA_EnableInterrupts(Settings->RX_Stream);
+	DMA_EnableInterrupts(Settings->TX_Stream);
+	DMA_EnableInterrupts(Settings->RX_Stream);
 }
 
-void TM_SPI_DMA_DisableInterrupts(SPI_TypeDef* SPIx) {
+void SPI_DMA_DisableInterrupts(SPI_TypeDef* SPIx) {
 	/* Get SPI settings */
-	TM_SPI_DMA_INT_t* Settings = TM_SPI_DMA_INT_GetSettings(SPIx);
+	SPI_DMA_INT_t* Settings = SPI_DMA_INT_GetSettings(SPIx);
 	
 	/* Enable interrupts for TX and RX streams */
-	TM_DMA_DisableInterrupts(Settings->TX_Stream);
-	TM_DMA_DisableInterrupts(Settings->RX_Stream);
+	DMA_DisableInterrupts(Settings->TX_Stream);
+	DMA_DisableInterrupts(Settings->RX_Stream);
 }
 
 /* Private functions */
-static TM_SPI_DMA_INT_t* TM_SPI_DMA_INT_GetSettings(SPI_TypeDef* SPIx) {
-	TM_SPI_DMA_INT_t* result;
+static SPI_DMA_INT_t* SPI_DMA_INT_GetSettings(SPI_TypeDef* SPIx) {
+	SPI_DMA_INT_t* result;
 #ifdef SPI1
 	if (SPIx == SPI1) {
 		result = &SPI1_DMA_INT;

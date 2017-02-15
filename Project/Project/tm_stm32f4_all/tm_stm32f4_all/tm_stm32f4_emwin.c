@@ -16,10 +16,10 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_emwin.h"
+#include "stm32f4_emwin.h"
 
 /* Private variables */
-static TM_STMPE811_TouchData TS_Data;
+static STMPE811_TouchData TS_Data;
 static GUI_PID_STATE TS_State;
 static __IO uint8_t MemoryEnabled = 0;
 __IO uint32_t EMWIN_LCD_DRIVER_CB_CALLED = 0;
@@ -28,60 +28,60 @@ __IO uint32_t EMWIN_LCD_DRIVER_CB_CALLED = 0;
 extern void LTDC_ISR_Handler(void);
 extern void DMA2D_ISR_Handler(void);
 
-TM_EMWIN_Result_t TM_EMWIN_Init(void) {
+EMWIN_Result_t EMWIN_Init(void) {
 	/* Initialize CRC for emWin */
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_CRC, ENABLE);
 	
 	/* Initialize delay */
-	TM_DELAY_Init();
+	DELAY_Init();
 
 	/* Initialize LCD */
-	TM_ILI9341_Init();
+	ILI9341_Init();
 	
 	/* Initialize touch screen */
-	if (TM_STMPE811_Init() != TM_STMPE811_State_Ok) {
+	if (STMPE811_Init() != STMPE811_State_Ok) {
 		/* Return touch error */
-		return TM_EMWIN_Result_TouchError;
+		return EMWIN_Result_TouchError;
 	}
 	
 	/* Initialize GUI */
 	if (GUI_Init() != 0) {
 		/* Return GUI error */
-		return TM_EMWIN_Result_GUIError;
+		return EMWIN_Result_GUIError;
 	}
 	
 	/* Set LCD default orientation */
-	TS_Data.orientation = TM_STMPE811_Orientation_Portrait_2;
+	TS_Data.orientation = STMPE811_Orientation_Portrait_2;
 	
 	/* Return OK */
-	return TM_EMWIN_Result_Ok;
+	return EMWIN_Result_Ok;
 }
 
-void TM_EMWIN_MemoryEnable(void) {
+void EMWIN_MemoryEnable(void) {
 	/* Set layer 2 as view layer for LCD */
 	/* EMWIN works on layer 1 and data will be transfered from layer 1 to layer 2 */
-	/* after EMWIN finishes drawings using @ref TM_EMWIN_Exec() function */
-	TM_ILI9341_SetLayer1Opacity(0);
-	TM_ILI9341_SetLayer2Opacity(255);
-	TM_ILI9341_SetLayer2();
+	/* after EMWIN finishes drawings using @ref EMWIN_Exec() function */
+	ILI9341_SetLayer1Opacity(0);
+	ILI9341_SetLayer2Opacity(255);
+	ILI9341_SetLayer2();
 	
 	/* Memory is enabled */
 	MemoryEnabled = 1;
 }
 
-void TM_EMWIN_MemoryDisable(void) {
+void EMWIN_MemoryDisable(void) {
 	/* Set layer 2 as view layer for LCD */
 	/* EMWIN works on layer 1 and data will be transfered from layer 1 to layer 2 */
-	/* after EMWIN finishes drawings using @ref TM_EMWIN_Exec() function */
-	TM_ILI9341_SetLayer2Opacity(0);
-	TM_ILI9341_SetLayer1Opacity(255);
-	TM_ILI9341_SetLayer1();
+	/* after EMWIN finishes drawings using @ref EMWIN_Exec() function */
+	ILI9341_SetLayer2Opacity(0);
+	ILI9341_SetLayer1Opacity(255);
+	ILI9341_SetLayer1();
 	
 	/* Memory is enabled */
 	MemoryEnabled = 0;
 }
 
-uint32_t TM_EMWIN_Exec(void) {
+uint32_t EMWIN_Exec(void) {
 	int exec;
 		
 	/* Execute pending tasks */
@@ -93,38 +93,38 @@ uint32_t TM_EMWIN_Exec(void) {
 		//EMWIN_LCD_DRIVER_CB_CALLED = 0;
 		
 		/* Copy content from layer1 (EMWIN drawing layer) to layer2 (visible layer) */
-		TM_ILI9341_Layer1To2();
+		ILI9341_Layer1To2();
 	}
 	
 	/* Return GUI status */
 	return exec;
 }
 
-TM_EMWIN_Result_t TM_EMWIN_Rotate(TM_EMWIN_Rotate_t rotation) {	
-#if TM_EMWIN_ROTATE_LCD == 0
+EMWIN_Result_t EMWIN_Rotate(EMWIN_Rotate_t rotation) {	
+#if EMWIN_ROTATE_LCD == 0
 	/* Return error */
-	return TM_EMWIN_Result_Error;	
+	return EMWIN_Result_Error;	
 #else
 	uint8_t result;
-	TM_STMPE811_TouchData td;
+	STMPE811_TouchData td;
 	
 	/* Try to rotate LCD */
 	switch (rotation) {
-		case TM_EMWIN_Rotate_0:
+		case EMWIN_Rotate_0:
 			result = GUI_SetOrientation(0);
-			td.orientation = TM_STMPE811_Orientation_Portrait_2;
+			td.orientation = STMPE811_Orientation_Portrait_2;
 			break;
-		case TM_EMWIN_Rotate_90:
+		case EMWIN_Rotate_90:
 			result = GUI_SetOrientation(GUI_SWAP_XY | GUI_MIRROR_X);
-			td.orientation = TM_STMPE811_Orientation_Landscape_2;
+			td.orientation = STMPE811_Orientation_Landscape_2;
 			break;
-		case TM_EMWIN_Rotate_180:
+		case EMWIN_Rotate_180:
 			result = GUI_SetOrientation(GUI_MIRROR_X | GUI_MIRROR_Y);
-			td.orientation = TM_STMPE811_Orientation_Portrait_1;
+			td.orientation = STMPE811_Orientation_Portrait_1;
 			break;
-		case TM_EMWIN_Rotate_270:
+		case EMWIN_Rotate_270:
 			result = GUI_SetOrientation(GUI_SWAP_XY | GUI_MIRROR_Y);
-			td.orientation = TM_STMPE811_Orientation_Landscape_1;
+			td.orientation = STMPE811_Orientation_Landscape_1;
 			break;
 		default:
 			break;
@@ -136,15 +136,15 @@ TM_EMWIN_Result_t TM_EMWIN_Rotate(TM_EMWIN_Rotate_t rotation) {
 		TS_Data.orientation = td.orientation;
 		
 		/* Return OK */
-		return TM_EMWIN_Result_Ok;
+		return EMWIN_Result_Ok;
 	}
 	
 	/* Return error */
-	return TM_EMWIN_Result_Error;
+	return EMWIN_Result_Error;
 #endif
 }
 
-TM_EMWIN_Result_t TM_EMWIN_UpdateTouch(void) {
+EMWIN_Result_t EMWIN_UpdateTouch(void) {
 	static uint8_t millis = 0, last = 0;
 	
 	/* If we need to update it */
@@ -153,14 +153,14 @@ TM_EMWIN_Result_t TM_EMWIN_UpdateTouch(void) {
 		millis = 0;
 		
 		/* Get data from touch */
-		TM_STMPE811_ReadTouch(&TS_Data);
+		STMPE811_ReadTouch(&TS_Data);
 		
 		/* Get data */
 		TS_State.x = TS_Data.x;
 		TS_State.y = TS_Data.y;
 		
 		/* Pressed */
-		TS_State.Pressed = (TS_Data.pressed == TM_STMPE811_State_Pressed);
+		TS_State.Pressed = (TS_Data.pressed == STMPE811_State_Pressed);
 		
 		/* Set layer */
 		TS_State.Layer = 0;
@@ -182,7 +182,7 @@ TM_EMWIN_Result_t TM_EMWIN_UpdateTouch(void) {
 	}
 	
 	/* Return OK */
-	return TM_EMWIN_Result_Ok;
+	return EMWIN_Result_Ok;
 }
 
 /* LTDC IRQ Handler */

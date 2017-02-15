@@ -159,7 +159,7 @@ NVIC_InitTypeDef   NVIC_InitStructure;
   *     @arg LED6
   * @retval None
   */
-void STM_EVAL_LEDInit(Led_TypeDef Led)
+void SEVAL_LEDInit(Led_TypeDef Led)
 {
   GPIO_InitTypeDef  GPIO_InitStructure;
   
@@ -185,7 +185,7 @@ void STM_EVAL_LEDInit(Led_TypeDef Led)
   *     @arg LED6  
   * @retval None
   */
-void STM_EVAL_LEDOn(Led_TypeDef Led)
+void SEVAL_LEDOn(Led_TypeDef Led)
 {
   GPIO_PORT[Led]->BSRRL = GPIO_PIN[Led];
 }
@@ -200,7 +200,7 @@ void STM_EVAL_LEDOn(Led_TypeDef Led)
   *     @arg LED6 
   * @retval None
   */
-void STM_EVAL_LEDOff(Led_TypeDef Led)
+void SEVAL_LEDOff(Led_TypeDef Led)
 {
   GPIO_PORT[Led]->BSRRH = GPIO_PIN[Led];  
 }
@@ -215,7 +215,7 @@ void STM_EVAL_LEDOff(Led_TypeDef Led)
   *     @arg LED6  
   * @retval None
   */
-void STM_EVAL_LEDToggle(Led_TypeDef Led)
+void SEVAL_LEDToggle(Led_TypeDef Led)
 {
   GPIO_PORT[Led]->ODR ^= GPIO_PIN[Led];
 }
@@ -231,7 +231,7 @@ void STM_EVAL_LEDToggle(Led_TypeDef Led)
   *                            generation capability  
   * @retval None
   */
-void STM_EVAL_PBInit(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode)
+void SEVAL_PBInit(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
   EXTI_InitTypeDef EXTI_InitStructure;
@@ -275,7 +275,7 @@ void STM_EVAL_PBInit(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode)
   *   This parameter should be: BUTTON_USER  
   * @retval The Button GPIO pin value.
   */
-uint32_t STM_EVAL_PBGetState(Button_TypeDef Button)
+uint32_t SEVAL_PBGetState(Button_TypeDef Button)
 {
   return GPIO_ReadInputDataBit(BUTTON_PORT[Button], BUTTON_PIN[Button]);
 }
@@ -293,7 +293,7 @@ uint32_t STM_EVAL_PBGetState(Button_TypeDef Button)
   *   contains the configuration information for the specified USART peripheral.
   * @retval None
   */
-void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct)
+void SEVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 

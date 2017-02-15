@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_EXTI_H
-#define TM_EXTI_H 140
+#ifndef EXTI_H
+#define EXTI_H 140
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_EXTI
+ * @defgroup EXTI
  * @brief    External interrupts library for STM32F4 devices - http://stm32f4-discovery.com/2014/10/library-38-external-interrupts-for-stm32f4
  * @{
  *
@@ -74,19 +74,19 @@ extern "C" {
  * 
 @verbatim
 //Disable EXTI0_IRQHandler function
-#define TM_EXTI_DISABLE_DEFAULT_HANDLER_0
+#define EXTI_DISABLE_DEFAULT_HANDLER_0
 //Disable EXTI1_IRQHandler function
-#define TM_EXTI_DISABLE_DEFAULT_HANDLER_1
+#define EXTI_DISABLE_DEFAULT_HANDLER_1
 //Disable EXTI2_IRQHandler function
-#define TM_EXTI_DISABLE_DEFAULT_HANDLER_2
+#define EXTI_DISABLE_DEFAULT_HANDLER_2
 //Disable EXTI3_IRQHandler function
-#define TM_EXTI_DISABLE_DEFAULT_HANDLER_3
+#define EXTI_DISABLE_DEFAULT_HANDLER_3
 //Disable EXTI4_IRQHandler function
-#define TM_EXTI_DISABLE_DEFAULT_HANDLER_4
+#define EXTI_DISABLE_DEFAULT_HANDLER_4
 //Disable EXTI9_5_IRQHandler function
-#define TM_EXTI_DISABLE_DEFAULT_HANDLER_9_5
+#define EXTI_DISABLE_DEFAULT_HANDLER_9_5
 //Disable EXTI15_10_IRQHandler function
-#define TM_EXTI_DISABLE_DEFAULT_HANDLER_15_10
+#define EXTI_DISABLE_DEFAULT_HANDLER_15_10
 @endverbatim
  * 
  * If you need higher priority for external interrupts in NVIC, add lines below in defines.h file and edit them
@@ -105,7 +105,7 @@ extern "C" {
  Version 1.3
   - March 23 2015 - Totally independent from HAL / SPD drivers
   - Library can be used with any drivers or totally itself
-  - Now only one function handler TM_EXTI_Handler for all lines. No separate handlers anymore.
+  - Now only one function handler EXTI_Handler for all lines. No separate handlers anymore.
   
  Version 1.2
   - March 10, 2015
@@ -113,7 +113,7 @@ extern "C" {
 
  Version 1.1
   - March 08, 2015
-  - Added function TM_EXTI_Handler, which is called anytime EXTI interrupt occur,
+  - Added function EXTI_Handler, which is called anytime EXTI interrupt occur,
        no matter on which GPIO_Pin. GPIO_Pin_x is passed as argument where x is 0 to 15
 
  Version 1.0
@@ -134,10 +134,10 @@ extern "C" {
 #include "misc.h"
 #include "defines.h"
 #include "attributes.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_gpio.h"
 
 /**
- * @defgroup TM_EXTI_Macros
+ * @defgroup EXTI_Macros
  * @brief    Library defines
  * @{
  */
@@ -154,7 +154,7 @@ extern "C" {
  */
 
 /**
- * @defgroup TM_EXTI_Typedefs
+ * @defgroup EXTI_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -163,25 +163,25 @@ extern "C" {
  * @brief  Result enumeration
  */
 typedef enum {
-	TM_EXTI_Result_Ok = 0x00, /*!< Everything ok */
-	TM_EXTI_Result_Error      /*!< An error has occured */
-} TM_EXTI_Result_t;
+	EXTI_Result_Ok = 0x00, /*!< Everything ok */
+	EXTI_Result_Error      /*!< An error has occured */
+} EXTI_Result_t;
 
 /**
  * @brief  Interrupt trigger enumeration	
  */
 typedef enum {
-	TM_EXTI_Trigger_Rising = 0x00, /*!< Trigger interrupt on rising edge on line, pull down resistor active */
-	TM_EXTI_Trigger_Falling,       /*!< Trigger interrupt on falling edge on line, pull up resistor active */
-	TM_EXTI_Trigger_Rising_Falling /*!< Trigger interrupt on any edge on line, no pull resistor active */
-} TM_EXTI_Trigger_t;
+	EXTI_Trigger_Rising = 0x00, /*!< Trigger interrupt on rising edge on line, pull down resistor active */
+	EXTI_Trigger_Falling,       /*!< Trigger interrupt on falling edge on line, pull up resistor active */
+	EXTI_Trigger_Rising_Falling /*!< Trigger interrupt on any edge on line, no pull resistor active */
+} EXTI_Trigger_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_EXTI_Functions
+ * @defgroup EXTI_Functions
  * @brief    Library Functions
  * @{
  */
@@ -201,25 +201,25 @@ typedef enum {
  * @param  *GPIOx: GPIO port where you want EXTI interrupt line
  * @param  GPIO_Line: GPIO pin where you want EXTI interrupt line. Use OR (|) operator if you want to attach
  *            interrupt in more than one GPIO pin at the same GPIOx at the same time.
- * @param  trigger: Pin trigger source. This parameter can be a value of @ref TM_EXTI_Trigger_t enumeration
+ * @param  trigger: Pin trigger source. This parameter can be a value of @ref EXTI_Trigger_t enumeration
  * @retval Attach result:
- *            - @arg TM_EXTI_Result_Ok: Everything ok, interrupt attached
- *            - @arg TM_EXTI_Result_Error: An error occurred, interrupt was not attached
+ *            - @arg EXTI_Result_Ok: Everything ok, interrupt attached
+ *            - @arg EXTI_Result_Error: An error occurred, interrupt was not attached
  * @note   If you use more than one GPIO_Pin with OR (|) operator at single call and if GPIO_Pin can't be attached because
  *         there is already one GPIO_Pin at this line, function will return error and other pins might not be initialized.
- *         If function return @arg TM_EXTI_Result_Ok, then all pins are attached correctly.
+ *         If function return @arg EXTI_Result_Ok, then all pins are attached correctly.
  */
-TM_EXTI_Result_t TM_EXTI_Attach(GPIO_TypeDef* GPIOx, uint16_t GPIO_Line, TM_EXTI_Trigger_t trigger);
+EXTI_Result_t EXTI_Attach(GPIO_TypeDef* GPIOx, uint16_t GPIO_Line, EXTI_Trigger_t trigger);
 
 /**
  * @brief  Detach GPIO pin from interrupt lines
  * @param  GPIO_Line: GPIO line you want to disable. Valid GPIO is GPIO_Pin_0 to GPIO_Pin_15. 
  *         Use OR (|) operator if you want to detach interrupt in more than one GPIO pin at the same GPIOx at the same time.
  * @retval Detaching result:
- *            - @arg TM_EXTI_Result_Ok: Everything ok
- *            - @arg TM_EXTI_Result_Error: An error occurred
+ *            - @arg EXTI_Result_Ok: Everything ok
+ *            - @arg EXTI_Result_Error: An error occurred
  */
-TM_EXTI_Result_t TM_EXTI_Detach(uint16_t GPIO_Line);
+EXTI_Result_t EXTI_Detach(uint16_t GPIO_Line);
 
 /**
  * @brief  Clears all interrupts on EXTI line
@@ -228,7 +228,7 @@ TM_EXTI_Result_t TM_EXTI_Detach(uint16_t GPIO_Line);
  * @param  None
  * @retval None
  */
-void TM_EXTI_DeInit(void);
+void EXTI_DeInit(void);
 
 /**
  * @brief  Creates software interrupt for specific external GPIO line
@@ -237,7 +237,7 @@ void TM_EXTI_DeInit(void);
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_EXTI_SoftwareInterrupt(GPIO_Line)	(EXTI->SWIER |= (GPIO_Line))
+#define EXTI_SoftwareInterrupt(GPIO_Line)	(EXTI->SWIER |= (GPIO_Line))
 
 /**
  * @brief  EXTI Global handler
@@ -246,7 +246,7 @@ void TM_EXTI_DeInit(void);
  * @param  GPIO_Pin: GPIO Line where interrupt occurred so you can identify what to do
  * @retval None
  */
-__weak void TM_EXTI_Handler(uint16_t GPIO_Pin);
+__weak void EXTI_Handler(uint16_t GPIO_Pin);
 
 /**
  * @}

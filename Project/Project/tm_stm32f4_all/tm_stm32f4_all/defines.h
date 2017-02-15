@@ -25,8 +25,8 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#ifndef TM_DEFINES_H
-#define TM_DEFINES_H
+#ifndef DEFINES_H
+#define DEFINES_H
 
 /* Put your global defines for all libraries here used in your project */
 

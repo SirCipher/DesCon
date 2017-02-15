@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_SERVO_H
-#define TM_SERVO_H 110
+#ifndef SERVO_H
+#define SERVO_H 110
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_SERVO
+ * @defgroup SERVO
  * @brief    SERVO library for STM32F4xx devices - http://stm32f4-discovery.com/2014/10/library-42-control-rc-servo-stm32f4
  * @{
  *
@@ -97,11 +97,11 @@ Degrees (pulse_length) = (pulse_length – MIN) * 180 / (MAX – MIN)
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_tim.h"
 #include "defines.h"
-#include "tm_stm32f4_pwm.h"
-#include "tm_stm32f4_timer_properties.h"
+#include "stm32f4_pwm.h"
+#include "stm32f4_timer_properties.h"
 
 /**
- * @defgroup TM_SERVO_Macros
+ * @defgroup SERVO_Macros
  * @brief    Library defines
  * @{
  */
@@ -125,7 +125,7 @@ Degrees (pulse_length) = (pulse_length – MIN) * 180 / (MAX – MIN)
  */
  
 /**
- * @defgroup TM_SERVO_Typedefs
+ * @defgroup SERVO_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -134,58 +134,58 @@ Degrees (pulse_length) = (pulse_length – MIN) * 180 / (MAX – MIN)
  * @brief  Servo structure	
  */
 typedef struct {
-	TM_PWM_TIM_t PWM;           /*!< PWM settings */
+	PWM_TIM_t PWM;           /*!< PWM settings */
 	TIM_TypeDef* TIM;           /*!< Pointer to specific timer you will use for servo */
-	TM_PWM_Channel_t Channel;   /*!< Output channel on specific timer */
-	TM_PWM_PinsPack_t Pinspack; /*!< Pinspack for specific channel */
+	PWM_Channel_t Channel;   /*!< Output channel on specific timer */
+	PWM_PinsPack_t Pinspack; /*!< Pinspack for specific channel */
 	float Degrees;              /*!< Position of servo in degrees */
 	uint16_t Micros;            /*!< Pulse length in micro seconds for current servo position */
-} TM_SERVO_t;
+} SERVO_t;
 
 /**
  * @brief Results enumeration	
  */
 typedef enum {
-	TM_SERVO_Result_Ok = 0, /*!< Everything OK */
-	TM_SERVO_Result_Error   /*!< An error occurred somewhere */
-} TM_SERVO_Result_t;
+	SERVO_Result_Ok = 0, /*!< Everything OK */
+	SERVO_Result_Error   /*!< An error occurred somewhere */
+} SERVO_Result_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_SERVO_Functions
+ * @defgroup SERVO_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Initializes TIM and PWM for servo motor purpose
- * @param  *ServoStruct: Pointer to an empty @ref TM_SERVO_t servo structure
+ * @param  *ServoStruct: Pointer to an empty @ref SERVO_t servo structure
  * @param  *TIMx: Pointer to TIMx you will use for servo
- * @param  PWMChannel: Channel you will use for timer. This parameter can be a value of @ref TM_PWM_Channel_t enumeration
- * @param  Pinspack: Pinspack for channel. This parameter can be a value of @ref TM_PWM_PinsPack_t enumeration
- * @retval Member of TM_SERVO_Result_t
+ * @param  PWMChannel: Channel you will use for timer. This parameter can be a value of @ref PWM_Channel_t enumeration
+ * @param  Pinspack: Pinspack for channel. This parameter can be a value of @ref PWM_PinsPack_t enumeration
+ * @retval Member of SERVO_Result_t
  */
-TM_SERVO_Result_t TM_SERVO_Init(TM_SERVO_t* ServoStruct, TIM_TypeDef* TIMx, TM_PWM_Channel_t PWMChannel, TM_PWM_PinsPack_t Pinspack);
+SERVO_Result_t SERVO_Init(SERVO_t* ServoStruct, TIM_TypeDef* TIMx, PWM_Channel_t PWMChannel, PWM_PinsPack_t Pinspack);
 
 /**
  * @brief  Set rotation degrees for servo
  * @note   Degrees can be between 0 and 180
- * @param  *ServoStruct: Pointer to an @ref TM_SERVO_t servo structure
+ * @param  *ServoStruct: Pointer to an @ref SERVO_t servo structure
  * @param  degrees: Rotation in degrees, between 0 and 180
- * @retval Member of TM_SERVO_Result_t
+ * @retval Member of SERVO_Result_t
  */
-TM_SERVO_Result_t TM_SERVO_SetDegrees(TM_SERVO_t* ServoStruct, float degrees);
+SERVO_Result_t SERVO_SetDegrees(SERVO_t* ServoStruct, float degrees);
 
 /**
  * @brief  Sets pulse length in microseconds
- * @param  *ServoStruct: Pointer to an @ref TM_SERVO_t servo structure
+ * @param  *ServoStruct: Pointer to an @ref SERVO_t servo structure
  * @param  micros: pulse length in microseconds
- * @retval Member of TM_SERVO_Result_t
+ * @retval Member of SERVO_Result_t
  */
-TM_SERVO_Result_t TM_SERVO_SetMicros(TM_SERVO_t* ServoStruct, uint16_t micros);
+SERVO_Result_t SERVO_SetMicros(SERVO_t* ServoStruct, uint16_t micros);
 
 /**
  * @}

@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_RCC_H
-#define TM_RCC_H 100
+#ifndef RCC_H
+#define RCC_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_RCC
+ * @defgroup RCC
  * @brief    RCC library for STM32F4xx devices - http://stm32f4-discovery.com/2015/05/library-59-change-pll-settings-while-stm32f4xx-is-running
  * @{
  *
@@ -74,7 +74,7 @@ extern "C" {
 #include "string.h"
 
 /**
- * @defgroup TM_RCC_Macros
+ * @defgroup RCC_Macros
  * @brief    Library defines
  * @{
  */
@@ -96,7 +96,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_RCC_Typedefs
+ * @defgroup RCC_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -111,14 +111,14 @@ typedef struct {
 	uint16_t PLLQ; /*!< PLL Q parameter. This value can be between 2 and 15.    Use 0 if you don't want to change parameter. */
 	uint16_t PLLR; /*!< PLL R parameter. This value can be between 2 and 7 and is only available for STM32F446 devices. 
 	                       Use 0 if you don't want to change parameter. */
-} TM_RCC_PLL_t;
+} RCC_PLL_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_RCC_Functions
+ * @defgroup RCC_Functions
  * @brief    Library Functions
  * @{
  */
@@ -134,19 +134,19 @@ typedef struct {
  *              - Waits will PLL is ready and locked
  *              - Enables PLL as system core clock
  *              - Updates system core clock variable
- * @param  *PLL_Settings: Pointer to @ref TM_RCC_PLL_t structure with PLL settings.
+ * @param  *PLL_Settings: Pointer to @ref RCC_PLL_t structure with PLL settings.
  *            Use 0 for setting you don't want to change
  * @retval None
  */
-void TM_RCC_SetPLL(TM_RCC_PLL_t* PLL_Settings);
+void RCC_SetPLL(RCC_PLL_t* PLL_Settings);
 
 /**
  * @brief  Gets current PLL settings from RCC registers
  * @note   You can use this function to read current PLL settings before applying new settings
- * @param  *PLL_Settings: Pointer to @ref TM_RCC_PLL_t structure where PLL settings will be stored
+ * @param  *PLL_Settings: Pointer to @ref RCC_PLL_t structure where PLL settings will be stored
  * @retval None
  */
-void TM_RCC_GetPLL(TM_RCC_PLL_t* PLL_Settings);
+void RCC_GetPLL(RCC_PLL_t* PLL_Settings);
 
 /**
  * @brief  Checks if main PLL is ready
@@ -155,7 +155,7 @@ void TM_RCC_GetPLL(TM_RCC_PLL_t* PLL_Settings);
  *            - 0: PLL is not ready
  *            - > 0: PLL is ready
  */
-uint8_t TM_RCC_IsPLLReady(void);
+uint8_t RCC_IsPLLReady(void);
 
 /**
  * @}

@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include "tcp_echoclient.h"
 
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_ethernet.h"
 
 #define TCPCLIENT_MAX_CONNECTIONS	4
 
@@ -22,35 +22,35 @@ uint8_t data[ETHERNET_MAX_HEADER_SIZE];
 static uint8_t CablePluggedWithActiveConnection = 0;
 
 /* For private use, connections */
-TM_TCPCLIENT_t TM_Client[TCPCLIENT_MAX_CONNECTIONS];
+TCPCLIENT_t Client[TCPCLIENT_MAX_CONNECTIONS];
 
 /* Private function prototypes */
 static err_t tcp_echoclient_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err);
-static void tcp_echoclient_connection_close(TM_TCPCLIENT_t* client, uint8_t success);
+static void tcp_echoclient_connection_close(TCPCLIENT_t* client, uint8_t success);
 static err_t tcp_echoclient_poll(void *arg, struct tcp_pcb *tpcb);
 static err_t tcp_echoclient_sent(void *arg, struct tcp_pcb *tpcb, u16_t len);
-static void tcp_echoclient_send(TM_TCPCLIENT_t* client);
+static void tcp_echoclient_send(TCPCLIENT_t* client);
 static err_t tcp_echoclient_connected(void *arg, struct tcp_pcb *tpcb, err_t err);
 static void tcp_echoclient_error(void *arg, err_t err);
 
-static TM_TCPCLIENT_t* tcp_client_malloc(void) {
+static TCPCLIENT_t* tcp_client_malloc(void) {
 	uint8_t i;
 	
 	/* Go through all free memory */
 	for (i = 0; i < TCPCLIENT_MAX_CONNECTIONS; i++) {
 		/* If not in use */
-		if (TM_Client[i].active == 0) {
+		if (Client[i].active == 0) {
 			/* Use it */
-			TM_Client[i].active = 1;
+			Client[i].active = 1;
 			
 			/* Increase number of active connections */
 			tcp_active_connections++;
 			
 			/* Set pointer to active connections */
-			TM_Client[i].active_connections_count = &tcp_active_connections;
+			Client[i].active_connections_count = &tcp_active_connections;
 			
 			/* Return it */
-			return &TM_Client[i];
+			return &Client[i];
 		}
 	}
 	
@@ -58,13 +58,13 @@ static TM_TCPCLIENT_t* tcp_client_malloc(void) {
 	return NULL;
 }
 
-static void tcp_client_free(TM_TCPCLIENT_t* client) {
+static void tcp_client_free(TCPCLIENT_t* client) {
 	uint8_t i;
 	
 	/* Go through memory */
 	for (i = 0; i < TCPCLIENT_MAX_CONNECTIONS; i++) {
 		/* If they are the same */
-		if (&TM_Client[i] == client) {
+		if (&Client[i] == client) {
 			/* Set all to NULL */
 			client->pcb = NULL;
 			client->p_tx = NULL;
@@ -73,7 +73,7 @@ static void tcp_client_free(TM_TCPCLIENT_t* client) {
 			tcp_active_connections--;
 			
 			/* Clear flag */
-			TM_Client[i].active = 0x00;
+			Client[i].active = 0x00;
 		}
 	}
 }
@@ -85,7 +85,7 @@ static uint8_t tcp_client_get_number_active_connections(void) {
 
 void tcp_echoclient_link_is_up_callback(void) {
 	/* Called when cable is plugged back */
-	/* Called from TM_ETHERNET library */
+	/* Called from ETHERNET library */
 	
 	/* */
 	
@@ -105,14 +105,14 @@ void tcp_echoclient_link_is_down_callback(void) {
 /* Connects to the TCP echo server */
 err_t tcp_echoclient_connect(char* conn_name, uint8_t ip1, uint8_t ip2, uint8_t ip3, uint8_t ip4, uint16_t port, void* user_parameters) {
 	struct ip_addr DestIPaddr;
-	TM_TCPCLIENT_t* client;
+	TCPCLIENT_t* client;
 	
 	/* Check if we have already active connections */
 	if (tcp_client_get_number_active_connections()) {
 		/* If cable is unplugged and we want to make a new connection */
 		if (CablePluggedWithActiveConnection) {
 			/* Call user function if he wants to reset MCU */
-			TM_ETHERNET_SystemResetCallback();
+			ETHERNET_SystemResetCallback();
 			
 			/* Return "error" */
 			return ERR_CONN;
@@ -167,7 +167,7 @@ err_t tcp_echoclient_connect(char* conn_name, uint8_t ip1, uint8_t ip2, uint8_t 
 		tcp_connect(client->pcb, &DestIPaddr, port, tcp_echoclient_connected);
 		
 		/* Connection has started */
-		TM_ETHERNETCLIENT_ConnectionStartedCallback(client);
+		ETHERNETCLIENT_ConnectionStartedCallback(client);
 		
 		/* Return OK */
 		return ERR_OK;
@@ -185,17 +185,17 @@ err_t tcp_echoclient_connect(char* conn_name, uint8_t ip1, uint8_t ip2, uint8_t 
   */
 static err_t tcp_echoclient_connected(void *arg, struct tcp_pcb *tpcb, err_t err) {
 	uint16_t length;
-	TM_TCPCLIENT_t* client;
+	TCPCLIENT_t* client;
 
 	/* Client is passed as arguments */
-	client = (TM_TCPCLIENT_t *)arg;
+	client = (TCPCLIENT_t *)arg;
 	
 	if (err == ERR_OK) {
 		/* We are connected */
 		client->state = CLIENT_CONNECTED;
 
 		/* Get HTTP request from user */
-		length = TM_ETHERNETCLIENT_CreateHeadersCallback(client, (char *)data, sizeof(data));
+		length = ETHERNETCLIENT_CreateHeadersCallback(client, (char *)data, sizeof(data));
 		
 		/* Check if length = 0 */
 		if (length == 0) {
@@ -212,7 +212,7 @@ static err_t tcp_echoclient_connected(void *arg, struct tcp_pcb *tpcb, err_t err
 		/* If we have memory for buffer */
 		if (client->p_tx) {
 			/* Call user function */
-			TM_ETHERNETCLIENT_ConnectedCallback(client);
+			ETHERNETCLIENT_ConnectedCallback(client);
 			
 			/* copy data to pbuf */
 			pbuf_take(client->p_tx, (char *)data, length);
@@ -248,20 +248,20 @@ static err_t tcp_echoclient_connected(void *arg, struct tcp_pcb *tpcb, err_t err
 static err_t tcp_echoclient_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err) { 
 	struct pbuf* point_pbuf;
 	err_t ret_err;
-	TM_TCPCLIENT_t* client;
+	TCPCLIENT_t* client;
 
 	/* Client is passed as arguments */
-	client = (TM_TCPCLIENT_t *)arg;
+	client = (TCPCLIENT_t *)arg;
 
 	/* Check all next buffers and pointers */
 	if (p != NULL && p->tot_len <= 1460) {
 		/* Increase RX bytes */
-		TM_ETHERNET.Client_RX_Bytes += p->tot_len;
+		ETHERNET.Client_RX_Bytes += p->tot_len;
 		
 		for (point_pbuf = p; point_pbuf != NULL; point_pbuf = point_pbuf->next) {
 			if (point_pbuf->len == 0) continue;
 			/* Call user function if defined to respond to incoming data */
-			TM_ETHERNETCLIENT_ReceiveDataCallback(client, (uint8_t *) point_pbuf->payload, point_pbuf->len, point_pbuf->tot_len);
+			ETHERNETCLIENT_ReceiveDataCallback(client, (uint8_t *) point_pbuf->payload, point_pbuf->len, point_pbuf->tot_len);
 		}
 	}
 	
@@ -306,7 +306,7 @@ static err_t tcp_echoclient_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p
 /**
   * @brief function used to send data
   */
-static void tcp_echoclient_send(TM_TCPCLIENT_t* client) {
+static void tcp_echoclient_send(TCPCLIENT_t* client) {
 	struct pbuf *ptr;
 	err_t wr_err = ERR_OK;
 	
@@ -322,7 +322,7 @@ static void tcp_echoclient_send(TM_TCPCLIENT_t* client) {
 		
 		if (wr_err == ERR_OK) {
 			/* Increase number of TX bytes sent as client */
-			TM_ETHERNET.Client_TX_Bytes += ptr->len;
+			ETHERNET.Client_TX_Bytes += ptr->len;
 			
 			/* Continue with next pbuf in chain (if any) */
 			client->p_tx = ptr->next;
@@ -347,10 +347,10 @@ static void tcp_echoclient_send(TM_TCPCLIENT_t* client) {
   */
 static err_t tcp_echoclient_poll(void *arg, struct tcp_pcb *tpcb) {
 	err_t ret_err;
-	TM_TCPCLIENT_t* client;
+	TCPCLIENT_t* client;
 
 	/* Client is passed as arguments */
-	client = (TM_TCPCLIENT_t *)arg;
+	client = (TCPCLIENT_t *)arg;
 	
 	/* Valid client */
 	if (client != NULL) {
@@ -378,10 +378,10 @@ static err_t tcp_echoclient_poll(void *arg, struct tcp_pcb *tpcb) {
   *         is received from remote host for sent data)
   */
 static err_t tcp_echoclient_sent(void *arg, struct tcp_pcb *tpcb, u16_t len) {
-	TM_TCPCLIENT_t* client;
+	TCPCLIENT_t* client;
 
 	/* Client is passed as arguments */
-	client = (TM_TCPCLIENT_t *)arg;
+	client = (TCPCLIENT_t *)arg;
 
 	if (client->p_tx != NULL) {
 		/* still got pbufs to send */
@@ -394,7 +394,7 @@ static err_t tcp_echoclient_sent(void *arg, struct tcp_pcb *tpcb, u16_t len) {
 /**
   * @brief This function is used to close the tcp connection with server
   */
-static void tcp_echoclient_connection_close(TM_TCPCLIENT_t* client, uint8_t success) {
+static void tcp_echoclient_connection_close(TCPCLIENT_t* client, uint8_t success) {
 	/* Remove callbacks from PCB */
 	if (client->pcb != NULL) {
 		tcp_recv(client->pcb, NULL);
@@ -411,12 +411,12 @@ static void tcp_echoclient_connection_close(TM_TCPCLIENT_t* client, uint8_t succ
 	mem_free(client->pcb);
 	
 	/* Increase number of connections */
-	TM_ETHERNET.ClientConnections++;
+	ETHERNET.ClientConnections++;
 	
 	/* In case connection was successfull */
 	if (success) {
 		/* Increase successfull connections counter */
-		TM_ETHERNET.ClientSuccessfullConnections++;
+		ETHERNET.ClientSuccessfullConnections++;
 	}
 	
 	/* Free client, it's not real free, only free flag is set */
@@ -425,20 +425,20 @@ static void tcp_echoclient_connection_close(TM_TCPCLIENT_t* client, uint8_t succ
 	tcp_client_free(client);
 	
 	/* Call user function if defined */
-	TM_ETHERNETCLIENT_ConnectionClosedCallback(client, success);
+	ETHERNETCLIENT_ConnectionClosedCallback(client, success);
 }
 
 /**
   * @brief Function called when TCP connection error
   */
 static void tcp_echoclient_error(void *arg, err_t err) {
-	TM_TCPCLIENT_t* client;
+	TCPCLIENT_t* client;
 
 	/* Client is passed as arguments */
-	client = (TM_TCPCLIENT_t *)arg;
+	client = (TCPCLIENT_t *)arg;
 	
 	/* Call user function */
-	TM_ETHERNETCLIENT_ErrorCallback(client);
+	ETHERNETCLIENT_ErrorCallback(client);
 
 	/* Close connection */
 	tcp_echoclient_connection_close(client, 0);

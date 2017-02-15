@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_STRING_H
-#define TM_STRING_H 110
+#ifndef STRING_H
+#define STRING_H 110
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_STRING
+ * @defgroup STRING
  * @brief    String library for STM32F4xx devices - http://stm32f4-discovery.com/2015/05/library-58-dynamic-strings-on-stm32f4xx
  * @{
  *
@@ -81,7 +81,7 @@ extern "C" {
 #include "stdlib.h"
 
 /**
- * @defgroup TM_STRING_Macros
+ * @defgroup STRING_Macros
  * @brief    Library defines
  * @{
  */
@@ -101,7 +101,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_STRING_Typedefs
+ * @defgroup STRING_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -113,14 +113,14 @@ typedef struct {
 	char** Strings;    /*!< Pointer to pointers to strings */
 	uint32_t Count;    /*!< Number of string elementsz */
 	uint32_t Size;     /*!< Number of all allocated pointers for strings */
-} TM_STRING_t;
+} STRING_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_STRING_Functions
+ * @defgroup STRING_Functions
  * @brief    Library Functions
  * @{
  */
@@ -131,73 +131,73 @@ typedef struct {
  *            so make sure that you have enough HEAP memory reserved
  * @param  count: Number of strings you will use. Set to 1, if you don't know how many of them will be used.
  *            It's recommended that you select the number which is greater or equal to count of all strings
- * @retval Pointer to allocated @ref TM_STRING_t structure or NULL of malloc() fails
+ * @retval Pointer to allocated @ref STRING_t structure or NULL of malloc() fails
  */
-TM_STRING_t* TM_STRING_Create(uint16_t count);
+STRING_t* STRING_Create(uint16_t count);
 
 /**
  * @brief  Adds new string to main string structure
  * @note   Function uses @ref malloc() to allocate memory for string where it will copy it.
  *            Memory size for allocation is string length + 1
- * @param  *String: Pointer to @ref TM_STRING_t structure
+ * @param  *String: Pointer to @ref STRING_t structure
  * @param  *str: Pointer to string to be added to string
  * @retval String position in strings array
  */
-uint16_t TM_STRING_AddString(TM_STRING_t* String, char* str);
+uint16_t STRING_AddString(STRING_t* String, char* str);
 
 /**
  * @brief  Replaces already added string with new string
  * @note   If new string is larger than string before, new memory is allocated and old is free,
  *         but if new string length is smaller than old, only new string is copied to already allocateed memory
- * @param  *String: Pointer to @ref TM_STRING_t structure
+ * @param  *String: Pointer to @ref STRING_t structure
  * @param  pos: Position in array where to replace string
  * @param  *str: Pointer to new string which will be applied to memory
- * @retval Pointer to @ref TM_STRING_t structure
+ * @retval Pointer to @ref STRING_t structure
  */
-TM_STRING_t* TM_STRING_ReplaceString(TM_STRING_t* String, uint16_t pos, char* str);
+STRING_t* STRING_ReplaceString(STRING_t* String, uint16_t pos, char* str);
 
 /**
  * @brief  Deletes string from strings array
- * @param  *String: Pointer to @ref TM_STRING_t structure
+ * @param  *String: Pointer to @ref STRING_t structure
  * @param  pos: Position number in string array which string will be deleted.
  *            This number can be a value between 0 and number of strings - 1
- * @retval Pointer to @ref TM_STRING_t structure
+ * @retval Pointer to @ref STRING_t structure
  */
-TM_STRING_t* TM_STRING_DeleteString(TM_STRING_t* String, uint16_t pos);
+STRING_t* STRING_DeleteString(STRING_t* String, uint16_t pos);
 
 /**
  * @brief  Gets pointer to string at desired position
- * @param  *String: Pointer to @ref TM_STRING_t structure
+ * @param  *String: Pointer to @ref STRING_t structure
  * @param  pos: Position number in string array which string pointer will be returned.
  *            This number can be a value between 0 and number of strings - 1
  * @retval Pointer to string at desired position in string array
  */
-char* TM_STRING_GetString(TM_STRING_t* String, uint16_t pos);
+char* STRING_GetString(STRING_t* String, uint16_t pos);
 
 /**
  * @brief  Free all. It will free all strings, all pointers to strings and also main string structure
- * @note   Use @ref TM_STRING_DeleteString() to delete only one string if needed
- * @param  *String: Pointer to @ref TM_STRING_t structure
+ * @note   Use @ref STRING_DeleteString() to delete only one string if needed
+ * @param  *String: Pointer to @ref STRING_t structure
  * @retval None
  */
-void TM_STRING_FreeAll(TM_STRING_t* String);
+void STRING_FreeAll(STRING_t* String);
 
 /**
  * @brief  Gets number of strings in a string array
- * @param  *String: Pointer to @ref TM_STRING_t structure
+ * @param  *String: Pointer to @ref STRING_t structure
  * @retval Number of strings in array
  * @note   Defined as macro for faster execution
  */
-#define TM_STRING_GetCount(str)    ((str)->Count)
+#define STRING_GetCount(str)    ((str)->Count)
 
 /**
  * @brief  Free main structure and pointer to all pointers.
  * @note   This is not meant for public use unless you know what you are doing.
  *            It will deallocate structure, but all strings will stay untouched in heap memory!
- *            Use @ref TM_STRING_FreeAll() instead.
- * @param  *String: Pointer to @ref TM_STRING_t structure
+ *            Use @ref STRING_FreeAll() instead.
+ * @param  *String: Pointer to @ref STRING_t structure
  */
-void TM_STRING_Free(TM_STRING_t* String);
+void STRING_Free(STRING_t* String);
 
 /**
  * @}

@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "STM32F4xx.h"
-#include ".\tm_stm32f4_all\tm_stm32f4_all\tm_stm32f4_usart.h"
+#include ".\stm32f4_all\stm32f4_all\stm32f4_usart.h"
 #include "LED.h"
 #include "SWT.h"
 #include "LCD.h"

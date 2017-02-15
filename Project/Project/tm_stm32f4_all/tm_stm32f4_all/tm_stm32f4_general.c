@@ -16,7 +16,7 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_general.h"
+#include "stm32f4_general.h"
 
 /* System speed in MHz */
 uint16_t GENERAL_SystemSpeedInMHz = 0;
@@ -35,7 +35,7 @@ static uint32_t x_na_y(uint32_t x, uint8_t y) {
 	return output;
 }
 
-void TM_GENERAL_DisableInterrupts(void) {
+void GENERAL_DisableInterrupts(void) {
 	/* Disable interrupts */
 	__disable_irq();
 	
@@ -43,7 +43,7 @@ void TM_GENERAL_DisableInterrupts(void) {
 	InterruptDisabledCount++;
 }
 
-uint8_t TM_GENERAL_EnableInterrupts(void) {
+uint8_t GENERAL_EnableInterrupts(void) {
 	/* Decrease number of disable interrupt function calls */
 	if (InterruptDisabledCount) {
 		InterruptDisabledCount--;
@@ -59,15 +59,15 @@ uint8_t TM_GENERAL_EnableInterrupts(void) {
 	return !InterruptDisabledCount;
 }
 
-void TM_GENERAL_SystemReset(void) {
+void GENERAL_SystemReset(void) {
 	/* Call user callback function */
-	TM_GENERAL_SystemResetCallback();
+	GENERAL_SystemResetCallback();
 	
 	/* Perform a system software reset */
 	NVIC_SystemReset();
 }
 
-uint32_t TM_GENERAL_GetClockSpeed(TM_GENERAL_Clock_t clock) {
+uint32_t GENERAL_GetClockSpeed(GENERAL_Clock_t clock) {
 	static RCC_ClocksTypeDef RCC_Clocks;
 	uint32_t c = 0;
 	
@@ -79,22 +79,22 @@ uint32_t TM_GENERAL_GetClockSpeed(TM_GENERAL_Clock_t clock) {
 	
 	/* Return clock speed */
 	switch (clock) {
-		case TM_GENERAL_Clock_HSI:
+		case GENERAL_Clock_HSI:
 			c = HSI_VALUE;
 			break;
-		case TM_GENERAL_Clock_HSE:
+		case GENERAL_Clock_HSE:
 			c = HSE_VALUE;
 			break;
-		case TM_GENERAL_Clock_HCLK:
+		case GENERAL_Clock_HCLK:
 			c = RCC_Clocks.HCLK_Frequency;
 			break;
-		case TM_GENERAL_Clock_PCLK1:
+		case GENERAL_Clock_PCLK1:
 			c = RCC_Clocks.PCLK1_Frequency;
 			break;
-		case TM_GENERAL_Clock_PCLK2:
+		case GENERAL_Clock_PCLK2:
 			c = RCC_Clocks.PCLK2_Frequency;
 			break;
-		case TM_GENERAL_Clock_SYSCLK:
+		case GENERAL_Clock_SYSCLK:
 			c = RCC_Clocks.SYSCLK_Frequency;
 			break;
 		default:
@@ -105,24 +105,24 @@ uint32_t TM_GENERAL_GetClockSpeed(TM_GENERAL_Clock_t clock) {
 	return c;
 }
 
-TM_GENERAL_ResetSource_t TM_GENERAL_GetResetSource(uint8_t reset_flags) {
-	TM_GENERAL_ResetSource_t source = TM_GENERAL_ResetSource_None;
+GENERAL_ResetSource_t GENERAL_GetResetSource(uint8_t reset_flags) {
+	GENERAL_ResetSource_t source = GENERAL_ResetSource_None;
 
 	/* Check bits */
 	if (RCC->CSR & RCC_CSR_LPWRRSTF) {
-		source = TM_GENERAL_ResetSource_LowPower;
+		source = GENERAL_ResetSource_LowPower;
 	} else if (RCC->CSR & RCC_CSR_WWDGRSTF) {
-		source = TM_GENERAL_ResetSource_WWDG;
+		source = GENERAL_ResetSource_WWDG;
 	} else if (RCC->CSR & RCC_CSR_WDGRSTF) {
-		source = TM_GENERAL_ResetSource_IWDG;
+		source = GENERAL_ResetSource_IWDG;
 	} else if (RCC->CSR & RCC_CSR_SFTRSTF) {
-		source = TM_GENERAL_ResetSource_Software;
+		source = GENERAL_ResetSource_Software;
 	} else if (RCC->CSR & RCC_CSR_PORRSTF) {
-		source = TM_GENERAL_ResetSource_POR;
+		source = GENERAL_ResetSource_POR;
 	} else if (RCC->CSR & RCC_CSR_BORRSTF) {
-		source = TM_GENERAL_ResetSource_BOR;
+		source = GENERAL_ResetSource_BOR;
 	} else if (RCC->CSR & RCC_CSR_PADRSTF) {
-		source = TM_GENERAL_ResetSource_PIN;
+		source = GENERAL_ResetSource_PIN;
 	}
 	
 	/* Check for clearing flags */
@@ -134,13 +134,13 @@ TM_GENERAL_ResetSource_t TM_GENERAL_GetResetSource(uint8_t reset_flags) {
 	return source;
 }
 
-uint8_t TM_GENERAL_DWTCounterEnable(void) {
+uint8_t GENERAL_DWTCounterEnable(void) {
 	uint32_t c;
 	
 	/* Set clock speed if not already */
 	if (GENERAL_SystemSpeedInMHz == 0) {
 		/* Get clock speed in MHz */
-		GENERAL_SystemSpeedInMHz = TM_GENERAL_GetClockSpeed(TM_GENERAL_Clock_SYSCLK) / 1000000;
+		GENERAL_SystemSpeedInMHz = GENERAL_GetClockSpeed(GENERAL_Clock_SYSCLK) / 1000000;
 	}
 	
     /* Enable TRC */
@@ -165,7 +165,7 @@ uint8_t TM_GENERAL_DWTCounterEnable(void) {
 	return (DWT->CYCCNT - c);
 }
 
-void TM_GENERAL_ConvertFloat(TM_GENERAL_Float_t* Float_Struct, float Number, uint8_t decimals) {
+void GENERAL_ConvertFloat(GENERAL_Float_t* Float_Struct, float Number, uint8_t decimals) {
 	/* Check decimals */
 	if (decimals > 9) {
 		decimals = 9;
@@ -182,7 +182,7 @@ void TM_GENERAL_ConvertFloat(TM_GENERAL_Float_t* Float_Struct, float Number, uin
 	}
 }
 
-float TM_GENERAL_RoundFloat(float Number, uint8_t decimals) {
+float GENERAL_RoundFloat(float Number, uint8_t decimals) {
 	float x;
 		
 	/* Check decimals */
@@ -204,7 +204,7 @@ float TM_GENERAL_RoundFloat(float Number, uint8_t decimals) {
 	return 0;
 }
 
-uint32_t TM_GENERAL_NextPowerOf2(uint32_t number) {
+uint32_t GENERAL_NextPowerOf2(uint32_t number) {
 	/* Check number */
 	if (number <= 1) {
 		return 1;
@@ -223,7 +223,7 @@ uint32_t TM_GENERAL_NextPowerOf2(uint32_t number) {
 	return number;
 }
 
-void TM_GENERAL_ForceHardFaultError(void) {
+void GENERAL_ForceHardFaultError(void) {
 	/* Create hard-fault-function typedef */
 	typedef void (*hff)(void);
 	hff hf_func = 0;
@@ -232,9 +232,9 @@ void TM_GENERAL_ForceHardFaultError(void) {
 	hf_func();
 }
 
-__weak void TM_GENERAL_SystemResetCallback(void) {
+__weak void GENERAL_SystemResetCallback(void) {
 	/* NOTE: This function should not be modified, when the callback is needed,
-            the TM_GENERAL_SystemResetCallback could be implemented in the user file
+            the GENERAL_SystemResetCallback could be implemented in the user file
 	*/
 }
 

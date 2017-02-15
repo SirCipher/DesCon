@@ -33,7 +33,7 @@
 #include "netconf.h"
 #include "lwip/dhcp.h"
 
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_ethernet.h"
 #include "defines.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,7 +65,7 @@ static void ETH_MACDMA_Config(void);
   */
 uint8_t ETH_BSP_Config(void) {	
 	/* Initialize delay */
-	TM_DELAY_Init();
+	DELAY_Init();
 	
 	/* Configure the GPIO ports for ethernet pins */
 	ETH_GPIO_Config();
@@ -82,7 +82,7 @@ uint8_t ETH_BSP_Config(void) {
 	/* Call user function for specific PHY settings */
 	/* User can do stuff in this function */
 	/* For example, on DP83848 you can change led behaviour */
-	TM_ETHERNET_INT_CustomOptions(ETHERNET_PHY_ADDRESS);
+	ETHERNET_INT_CustomOptions(ETHERNET_PHY_ADDRESS);
 	
 	/* Return Eternet status */
 	return EthStatus;
@@ -161,7 +161,7 @@ void ETH_GPIO_Config(void) {
 	/* This pin must be initialized as MCO, but not needed to be used */
 	/* It looks like a bug in STM32F4 */
 	/* Init alternate function for PA8 = MCO */
-	TM_GPIO_Init(GPIOA, GPIO_PIN_8, TM_GPIO_Mode_AF, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
+	GPIO_Init(GPIOA, GPIO_PIN_8, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High);
 	
 #ifdef ETHERNET_MCO_CLOCK
 	/* Set PA8 output HSE value */
@@ -176,42 +176,42 @@ void ETH_GPIO_Config(void) {
 	SYSCFG_ETH_MediaInterfaceConfig(SYSCFG_ETH_MediaInterface_RMII);
 #endif
 	/* Check if user has defined it's own pins */
-	if (!TM_ETHERNET_InitPinsCallback()) {
+	if (!ETHERNET_InitPinsCallback()) {
 #ifdef ETHERNET_MII_MODE
 		/* MII */
 		/* GPIOA                     REF_CLK      MDIO         RX_DV */
-		TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOA, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 		
 		/* GPIOB                     PPS_PUT      TDX3 */
-		TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_5 | GPIO_PIN_8, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOB, GPIO_PIN_5 | GPIO_PIN_8, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 		
 		/* GPIOC                     MDC          TDX2         TX_CLK       RXD0         RXD1 */
-		TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOC, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 		
 		/* GPIOG                     TX_EN         TXD0          TXD1 */
-		TM_GPIO_InitAlternate(GPIOG, GPIO_PIN_11 | GPIO_PIN_13 | GPIO_PIN_14, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOG, GPIO_PIN_11 | GPIO_PIN_13 | GPIO_PIN_14, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 		
 		/* GPIOH                     CRS          COL          RDX2         RXD3 */
-		TM_GPIO_InitAlternate(GPIOH, GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_6 | GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOH, GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_6 | GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 		
 		/* GPIOI                     RX_ER */
-		TM_GPIO_InitAlternate(GPIOI, GPIO_PIN_10, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOI, GPIO_PIN_10, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 #else
 		/* RMII */
 		/* Init default pins */		
 		/* Ethernet pins configuration */
-		TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOA, GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 
 		/* RX pins and MDC */
-		TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOC, GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 
 		/* Check TX pins */
 #ifdef ETHERNET_RMII_PINSPACK_2
 		/* Pinspack 2, TXD0, TXD1 and TX_EN pins are connected to GPIOG pins */
-		TM_GPIO_InitAlternate(GPIOG, GPIO_PIN_11 | GPIO_PIN_13 | GPIO_PIN_14, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOG, GPIO_PIN_11 | GPIO_PIN_13 | GPIO_PIN_14, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 #else
 		/* Pinspack 1, TXD0, TXD1 and TX_EN pins are connected to GPIOB pins */
-		TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_ETH);
+		GPIO_InitAlternate(GPIOB, GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_ETH);
 #endif /* RMII pinspack 2 */
 #endif /* ETHERNET_USE_MII */
 	}
@@ -298,9 +298,9 @@ void ETH_link_callback(struct netif *netif) {
 		gw.addr = 0;
 		DHCP_state = DHCP_START;
 #else
-		IP4_ADDR(&ipaddr, TM_ETHERNET.ip_addr[0], TM_ETHERNET.ip_addr[1], TM_ETHERNET.ip_addr[2], TM_ETHERNET.ip_addr[3]);
-		IP4_ADDR(&netmask, TM_ETHERNET.netmask[0], TM_ETHERNET.netmask[1], TM_ETHERNET.netmask[2], TM_ETHERNET.netmask[3]);
-		IP4_ADDR(&gw, TM_ETHERNET.gateway[0], TM_ETHERNET.gateway[1], TM_ETHERNET.gateway[2], TM_ETHERNET.gateway[3]);
+		IP4_ADDR(&ipaddr, ETHERNET.ip_addr[0], ETHERNET.ip_addr[1], ETHERNET.ip_addr[2], ETHERNET.ip_addr[3]);
+		IP4_ADDR(&netmask, ETHERNET.netmask[0], ETHERNET.netmask[1], ETHERNET.netmask[2], ETHERNET.netmask[3]);
+		IP4_ADDR(&gw, ETHERNET.gateway[0], ETHERNET.gateway[1], ETHERNET.gateway[2], ETHERNET.gateway[3]);
 #endif /*ETHERNET_USE_DHCP */
 
 		/* Set address */
@@ -310,7 +310,7 @@ void ETH_link_callback(struct netif *netif) {
 		netif_set_up(&gnetif);    
 
 		/* Call user function */
-		TM_ETHERNET_INT_LinkIsUpCallback();
+		ETHERNET_INT_LinkIsUpCallback();
 
 		EthLinkStatus = 0;
 	} else {
@@ -324,7 +324,7 @@ void ETH_link_callback(struct netif *netif) {
 		netif_set_down(&gnetif);
 
 		/* Call user function */
-		TM_ETHERNET_INT_LinkIsDownCallback();
+		ETHERNET_INT_LinkIsDownCallback();
 	}
 }
 
@@ -414,17 +414,17 @@ void ETH_EXTERN_GetSpeedAndDuplex(uint32_t PHYAddress, ETH_InitTypeDef* ETH_Init
 	}
 /* KSZ8081RNA */
 #else
-	#error "Invalid PHY selected. Open tm_stm32f4_ethernet.h and read manual how to set your PHY from available PHYs!!"
+	#error "Invalid PHY selected. Open stm32f4_ethernet.h and read manual how to set your PHY from available PHYs!!"
 #endif
 	
 	/* Set speed and duplex mode */
-	TM_ETHERNET.speed_100m = 0;
-	TM_ETHERNET.full_duplex = 0;
+	ETHERNET.speed_100m = 0;
+	ETHERNET.full_duplex = 0;
 	if (ETH_InitStruct->ETH_Speed == ETH_Speed_100M) {
-		TM_ETHERNET.speed_100m = 1;
+		ETHERNET.speed_100m = 1;
 	}
 	if (ETH_InitStruct->ETH_Mode == ETH_Mode_FullDuplex) {
-		TM_ETHERNET.full_duplex = 1;
+		ETHERNET.full_duplex = 1;
 	}
 	  
 }

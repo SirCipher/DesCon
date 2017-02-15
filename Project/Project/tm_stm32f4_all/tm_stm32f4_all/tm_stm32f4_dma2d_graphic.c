@@ -16,7 +16,7 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_dma2d_graphic.h"
+#include "stm32f4_dma2d_graphic.h"
 
 /* Absolute number */
 #define ABS(X)	((X) > 0 ? (X) : -(X))    
@@ -34,24 +34,24 @@ typedef struct {
 	uint8_t Initialized;
 	uint8_t Orientation;
 	uint8_t PixelSize;
-} TM_INT_DMA2D_t;
+} INT_DMA2D_t;
 
 /* Private structures */
 static DMA2D_InitTypeDef GRAPHIC_DMA2D_InitStruct;
 //static DMA2D_FG_InitTypeDef GRAPHIC_DMA2D_FG_InitStruct;
-volatile TM_INT_DMA2D_t DIS;
+volatile INT_DMA2D_t DIS;
 
 __STATIC_INLINE void DrawPixel(uint16_t x, uint16_t y, uint32_t color) {
-	TM_DMA2DGRAPHIC_DrawHorizontalLine(x, y, 1, color);
+	DMA2DGRAPHIC_DrawHorizontalLine(x, y, 1, color);
 }
 
 /* Private functions */
-void TM_INT_DMA2DGRAPHIC_InitAndTransfer(void);
-void TM_INT_DMA2DGRAPHIC_SetMemory(uint32_t MemoryAddress, uint32_t Offset, uint32_t NumberOfLine, uint32_t PixelPerLine);
-void TM_INT_DMA2DGRAPHIC_DrawCircleCorner(int16_t x0, int16_t y0, int16_t r, uint8_t corner, uint32_t color);
-void TM_INT_DMA2DGRAPHIC_DrawFilledCircleCorner(int16_t x0, int16_t y0, int16_t r, uint8_t corner, uint32_t color);
+void INT_DMA2DGRAPHIC_InitAndTransfer(void);
+void INT_DMA2DGRAPHIC_SetMemory(uint32_t MemoryAddress, uint32_t Offset, uint32_t NumberOfLine, uint32_t PixelPerLine);
+void INT_DMA2DGRAPHIC_DrawCircleCorner(int16_t x0, int16_t y0, int16_t r, uint8_t corner, uint32_t color);
+void INT_DMA2DGRAPHIC_DrawFilledCircleCorner(int16_t x0, int16_t y0, int16_t r, uint8_t corner, uint32_t color);
 
-void TM_DMA2DGRAPHIC_Init(void) {
+void DMA2DGRAPHIC_Init(void) {
 	/* Internal settings */
 	DIS.StartAddress = DMA2D_GRAPHIC_RAM_ADDR;
 	DIS.Offset = 0;
@@ -71,12 +71,12 @@ void TM_DMA2DGRAPHIC_Init(void) {
 	DIS.Initialized = 1;
 }
 
-void TM_DMA2DGRAPHIC_SetLayer(uint8_t layer_number) {
+void DMA2DGRAPHIC_SetLayer(uint8_t layer_number) {
 	/* Set offset */
 	DIS.Offset = (layer_number - 1) * DIS.LayerOffset;
 }
 
-void TM_DMA2DGRAPHIC_DrawPixel(uint16_t x, uint16_t y, uint32_t color) {
+void DMA2DGRAPHIC_DrawPixel(uint16_t x, uint16_t y, uint32_t color) {
 	if (DIS.Orientation == 1) { /* Normal */
 		*(__IO uint16_t *) (DIS.StartAddress + DIS.Offset + DIS.PixelSize * (y * DIS.Width + x)) = color;
 	} else if (DIS.Orientation == 0) { /* 180 */
@@ -88,7 +88,7 @@ void TM_DMA2DGRAPHIC_DrawPixel(uint16_t x, uint16_t y, uint32_t color) {
 	}
 }
 
-uint32_t TM_DMA2DGRAPHIC_GetPixel(uint16_t x, uint16_t y) {
+uint32_t DMA2DGRAPHIC_GetPixel(uint16_t x, uint16_t y) {
 	if (DIS.Orientation == 1) { /* Normal */
 		return *(__IO uint16_t *) (DIS.StartAddress + DIS.Offset + DIS.PixelSize * (y * DIS.Width + x));
 	} else if (DIS.Orientation == 0) { /* 180 */
@@ -101,7 +101,7 @@ uint32_t TM_DMA2DGRAPHIC_GetPixel(uint16_t x, uint16_t y) {
 	return 0;
 }
 
-void TM_DMA2DGRAPHIC_SetOrientation(uint8_t orientation) {
+void DMA2DGRAPHIC_SetOrientation(uint8_t orientation) {
 	/* Filter */
 	if (orientation > 3) {
 		return;
@@ -122,7 +122,7 @@ void TM_DMA2DGRAPHIC_SetOrientation(uint8_t orientation) {
 	}
 }
 
-void TM_DMA2DGRAPHIC_Fill(uint32_t color) {
+void DMA2DGRAPHIC_Fill(uint32_t color) {
 	/* Set DMA2D settings */
 	GRAPHIC_DMA2D_InitStruct.DMA2D_CMode = DMA2D_RGB565;
 	GRAPHIC_DMA2D_InitStruct.DMA2D_Mode = DMA2D_R2M;
@@ -140,10 +140,10 @@ void TM_DMA2DGRAPHIC_Fill(uint32_t color) {
 	GRAPHIC_DMA2D_InitStruct.DMA2D_PixelPerLine = DIS.Width;
 	
 	/* Start transfer and wait till done */
-	TM_INT_DMA2DGRAPHIC_InitAndTransfer();
+	INT_DMA2DGRAPHIC_InitAndTransfer();
 }
 
-void TM_DMA2DGRAPHIC_DrawFilledRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+void DMA2DGRAPHIC_DrawFilledRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
 	/* Check if initialized */
 	if (DIS.Initialized != 1) {
 		return;
@@ -178,33 +178,33 @@ void TM_DMA2DGRAPHIC_DrawFilledRectangle(uint16_t x, uint16_t y, uint16_t width,
 	
 	/* Set memory settings */
 	if (DIS.Orientation == 1) { /* Normal */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y * DIS.Width + x), DIS.Width - width, height, width);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y * DIS.Width + x), DIS.Width - width, height, width);
 	} 
 	if (DIS.Orientation == 0) { /* 180 */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * ((DIS.Height - height - y) * DIS.Width + DIS.Width - x - width), DIS.Width - width, height, width);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * ((DIS.Height - height - y) * DIS.Width + DIS.Width - x - width), DIS.Width - width, height, width);
 	} 
 	if (DIS.Orientation == 3) { /* 90 */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (DIS.Width - y - height + DIS.Width * x), DIS.Width - height, width, height);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (DIS.Width - y - height + DIS.Width * x), DIS.Width - height, width, height);
 	} 
 	if (DIS.Orientation == 2) { /* 270 */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y + DIS.Width * (DIS.Height - width - x)), DIS.Width - height, width, height);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y + DIS.Width * (DIS.Height - width - x)), DIS.Width - height, width, height);
 	}
 	
 	/* Start transfer and wait till done */
-	TM_INT_DMA2DGRAPHIC_InitAndTransfer();
+	INT_DMA2DGRAPHIC_InitAndTransfer();
 }
 
-void TM_DMA2DGRAPHIC_DrawRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
+void DMA2DGRAPHIC_DrawRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color) {
 	/* Draw 2 vertical lines */
-	TM_DMA2DGRAPHIC_DrawVerticalLine(x, y, height, color);
-	TM_DMA2DGRAPHIC_DrawVerticalLine(x + width - 1, y, height, color);
+	DMA2DGRAPHIC_DrawVerticalLine(x, y, height, color);
+	DMA2DGRAPHIC_DrawVerticalLine(x + width - 1, y, height, color);
 	
 	/* Draw 2 horizontal lines */
-	TM_DMA2DGRAPHIC_DrawHorizontalLine(x, y, width, color);
-	TM_DMA2DGRAPHIC_DrawHorizontalLine(x, y + height, width, color);
+	DMA2DGRAPHIC_DrawHorizontalLine(x, y, width, color);
+	DMA2DGRAPHIC_DrawHorizontalLine(x, y + height, width, color);
 }
 
-void TM_DMA2DGRAPHIC_DrawRoundedRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t r, uint32_t color) {
+void DMA2DGRAPHIC_DrawRoundedRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t r, uint32_t color) {
 	/* Check input parameters */
 	if (width == 0 || height == 0) {
 		return;
@@ -227,27 +227,27 @@ void TM_DMA2DGRAPHIC_DrawRoundedRectangle(uint16_t x, uint16_t y, uint16_t width
 	/* No radius */
 	if (r == 0) {
 		/* Draw normal rectangle */
-		TM_DMA2DGRAPHIC_DrawRectangle(x, y, width, height, color);
+		DMA2DGRAPHIC_DrawRectangle(x, y, width, height, color);
 		
 		/* Return from function */
 		return;
 	}
 	
 	/* Draw lines */
-	TM_DMA2DGRAPHIC_DrawHorizontalLine(x + r, y, width - 2 * r, color); /* Top */
-	TM_DMA2DGRAPHIC_DrawHorizontalLine(x + r, y + height - 1, width - 2 * r, color); /* Bottom */
+	DMA2DGRAPHIC_DrawHorizontalLine(x + r, y, width - 2 * r, color); /* Top */
+	DMA2DGRAPHIC_DrawHorizontalLine(x + r, y + height - 1, width - 2 * r, color); /* Bottom */
 	
-	TM_DMA2DGRAPHIC_DrawVerticalLine(x, y + r, height - 2 * r, color); /* Right */
-	TM_DMA2DGRAPHIC_DrawVerticalLine(x + width - 1, y + r, height - 2 * r, color); /* Left */
+	DMA2DGRAPHIC_DrawVerticalLine(x, y + r, height - 2 * r, color); /* Right */
+	DMA2DGRAPHIC_DrawVerticalLine(x + width - 1, y + r, height - 2 * r, color); /* Left */
 	
 	/* Draw corners */
-	TM_INT_DMA2DGRAPHIC_DrawCircleCorner(x + r, y + r, r, 0x01, color); /* Top left */
-	TM_INT_DMA2DGRAPHIC_DrawCircleCorner(x + width - r - 1, y + r, r, 0x02, color); /* Top right */
-	TM_INT_DMA2DGRAPHIC_DrawCircleCorner(x + width - r - 1, y + height - r - 1, r, 0x04, color); /* Bottom right */
-	TM_INT_DMA2DGRAPHIC_DrawCircleCorner(x + r, y + height - r - 1, r, 0x08, color); /* Bottom left */
+	INT_DMA2DGRAPHIC_DrawCircleCorner(x + r, y + r, r, 0x01, color); /* Top left */
+	INT_DMA2DGRAPHIC_DrawCircleCorner(x + width - r - 1, y + r, r, 0x02, color); /* Top right */
+	INT_DMA2DGRAPHIC_DrawCircleCorner(x + width - r - 1, y + height - r - 1, r, 0x04, color); /* Bottom right */
+	INT_DMA2DGRAPHIC_DrawCircleCorner(x + r, y + height - r - 1, r, 0x08, color); /* Bottom left */
 }
 
-void TM_DMA2DGRAPHIC_DrawFilledRoundedRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t r, uint32_t color) {
+void DMA2DGRAPHIC_DrawFilledRoundedRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t r, uint32_t color) {
 	/* Check input parameters */
 	if (width == 0 || height == 0) {
 		return;
@@ -269,23 +269,23 @@ void TM_DMA2DGRAPHIC_DrawFilledRoundedRectangle(uint16_t x, uint16_t y, uint16_t
 	
 	/* No radius */
 	if (r == 0) {
-		TM_DMA2DGRAPHIC_DrawFilledRectangle(x, y, width, height, color);
+		DMA2DGRAPHIC_DrawFilledRectangle(x, y, width, height, color);
 		return;
 	}
 	
 	/* Draw rectangles */
-	TM_DMA2DGRAPHIC_DrawFilledRectangle(x + r, y, width - 2 * r, height, color);
-	TM_DMA2DGRAPHIC_DrawFilledRectangle(x, y + r, r, height - 2 * r, color);
-	TM_DMA2DGRAPHIC_DrawFilledRectangle(x + width - r, y + r, r, height - 2 * r, color);
+	DMA2DGRAPHIC_DrawFilledRectangle(x + r, y, width - 2 * r, height, color);
+	DMA2DGRAPHIC_DrawFilledRectangle(x, y + r, r, height - 2 * r, color);
+	DMA2DGRAPHIC_DrawFilledRectangle(x + width - r, y + r, r, height - 2 * r, color);
 	
 	/* Draw corners */
-	TM_INT_DMA2DGRAPHIC_DrawFilledCircleCorner(x + r, y + r, r, 0x01, color); /* Top left */
-	TM_INT_DMA2DGRAPHIC_DrawFilledCircleCorner(x + width - r - 1, y + r, r, 0x02, color); /* Top right */
-	TM_INT_DMA2DGRAPHIC_DrawFilledCircleCorner(x + width - r - 1, y + height - r - 1, r, 0x04, color); /* Bottom right */
-	TM_INT_DMA2DGRAPHIC_DrawFilledCircleCorner(x + r, y + height - r - 1, r, 0x08, color); /* Bottom left */
+	INT_DMA2DGRAPHIC_DrawFilledCircleCorner(x + r, y + r, r, 0x01, color); /* Top left */
+	INT_DMA2DGRAPHIC_DrawFilledCircleCorner(x + width - r - 1, y + r, r, 0x02, color); /* Top right */
+	INT_DMA2DGRAPHIC_DrawFilledCircleCorner(x + width - r - 1, y + height - r - 1, r, 0x04, color); /* Bottom right */
+	INT_DMA2DGRAPHIC_DrawFilledCircleCorner(x + r, y + height - r - 1, r, 0x08, color); /* Bottom left */
 }
 
-void TM_DMA2DGRAPHIC_DrawVerticalLine(int16_t x, int16_t y, uint16_t length, uint32_t color) {
+void DMA2DGRAPHIC_DrawVerticalLine(int16_t x, int16_t y, uint16_t length, uint32_t color) {
 	/* Check if initialized */
 	if (DIS.Initialized != 1) {
 		return;
@@ -325,23 +325,23 @@ void TM_DMA2DGRAPHIC_DrawVerticalLine(int16_t x, int16_t y, uint16_t length, uin
 	
 	/* Set memory settings */
 	if (DIS.Orientation == 1) { /* Normal */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y * DIS.Width + x), DIS.Width - 1, length, 1);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y * DIS.Width + x), DIS.Width - 1, length, 1);
 	} 
 	if (DIS.Orientation == 0) { /* 180 */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * ((DIS.Height - length - y) * DIS.Width + DIS.Width - x - 1), DIS.Width - 1, length, 1);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * ((DIS.Height - length - y) * DIS.Width + DIS.Width - x - 1), DIS.Width - 1, length, 1);
 	} 
 	if (DIS.Orientation == 3) { /* 90 */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (DIS.Width - y - length + DIS.Width * x), DIS.Width - length, 1, length);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (DIS.Width - y - length + DIS.Width * x), DIS.Width - length, 1, length);
 	} 
 	if (DIS.Orientation == 2) { /* 270 */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y + DIS.Width * (DIS.Height - 1 - x)), DIS.Width - length, 1, length);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y + DIS.Width * (DIS.Height - 1 - x)), DIS.Width - length, 1, length);
 	}
 	
 	/* Start transfer and wait till done */
-	TM_INT_DMA2DGRAPHIC_InitAndTransfer();
+	INT_DMA2DGRAPHIC_InitAndTransfer();
 }
 
-void TM_DMA2DGRAPHIC_DrawHorizontalLine(int16_t x, int16_t y, uint16_t length, uint32_t color) {
+void DMA2DGRAPHIC_DrawHorizontalLine(int16_t x, int16_t y, uint16_t length, uint32_t color) {
 	/* Check if initialized */
 	if (DIS.Initialized != 1) {
 		return;
@@ -382,23 +382,23 @@ void TM_DMA2DGRAPHIC_DrawHorizontalLine(int16_t x, int16_t y, uint16_t length, u
 	
 	/* Set memory settings */
 	if (DIS.Orientation == 1) { /* Normal */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y * DIS.Width + x), DIS.Width - length, 1, length);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y * DIS.Width + x), DIS.Width - length, 1, length);
 	} 
 	if (DIS.Orientation == 0) { /* 180 */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * ((DIS.Height - 1 - y) * DIS.Width + DIS.Width - x - length), DIS.Width - length, 1, length);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * ((DIS.Height - 1 - y) * DIS.Width + DIS.Width - x - length), DIS.Width - length, 1, length);
 	} 
 	if (DIS.Orientation == 3) { /* 90 */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (DIS.Width - y - 1 + DIS.Width * x), DIS.Width - 1, length, 1);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (DIS.Width - y - 1 + DIS.Width * x), DIS.Width - 1, length, 1);
 	} 
 	if (DIS.Orientation == 2) { /* 270 */
-		TM_INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y + DIS.Width * (DIS.Height - length - x)), DIS.Width - 1, length, 1);
+		INT_DMA2DGRAPHIC_SetMemory(DIS.PixelSize * (y + DIS.Width * (DIS.Height - length - x)), DIS.Width - 1, length, 1);
 	}
 	
 	/* Start transfer and wait till done */
-	TM_INT_DMA2DGRAPHIC_InitAndTransfer();
+	INT_DMA2DGRAPHIC_InitAndTransfer();
 }
 
-void TM_DMA2DGRAPHIC_DrawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t color) {
+void DMA2DGRAPHIC_DrawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t color) {
 	int16_t deltax = 0, deltay = 0, x = 0, y = 0, xinc1 = 0, xinc2 = 0, 
 	yinc1 = 0, yinc2 = 0, den = 0, num = 0, numadd = 0, numpixels = 0, 
 	curpixel = 0;
@@ -453,28 +453,28 @@ void TM_DMA2DGRAPHIC_DrawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, ui
 	}
 }
 
-void TM_DMA2DGRAPHIC_DrawPolyLine(TM_DMA2DRAPHIC_Poly_t* Coordinates, uint16_t count, uint32_t color) {
+void DMA2DGRAPHIC_DrawPolyLine(DMA2DRAPHIC_Poly_t* Coordinates, uint16_t count, uint32_t color) {
 	uint16_t X, Y;
 	
 	while (--count) {
 		X = Coordinates->X;
 		Y = Coordinates->Y;
 		Coordinates++;
-		TM_DMA2DGRAPHIC_DrawLine(X, Y, Coordinates->X, Coordinates->Y, color);
+		DMA2DGRAPHIC_DrawLine(X, Y, Coordinates->X, Coordinates->Y, color);
 	};
 }
 
-void TM_DMA2DGRAPHIC_DrawCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t color) {
+void DMA2DGRAPHIC_DrawCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t color) {
 	int16_t f = 1 - r;
 	int16_t ddF_x = 1;
 	int16_t ddF_y = -2 * r;
 	int16_t x = 0;
 	int16_t y = r;
 
-    TM_DMA2DGRAPHIC_DrawVerticalLine(x0, y0 + r, 1, color);
-    TM_DMA2DGRAPHIC_DrawVerticalLine(x0, y0 - r, 1, color);
-    TM_DMA2DGRAPHIC_DrawVerticalLine(x0 + r, y0, 1, color);
-    TM_DMA2DGRAPHIC_DrawVerticalLine(x0 - r, y0, 1, color);
+    DMA2DGRAPHIC_DrawVerticalLine(x0, y0 + r, 1, color);
+    DMA2DGRAPHIC_DrawVerticalLine(x0, y0 - r, 1, color);
+    DMA2DGRAPHIC_DrawVerticalLine(x0 + r, y0, 1, color);
+    DMA2DGRAPHIC_DrawVerticalLine(x0 - r, y0, 1, color);
 
     while (x < y) {
         if (f >= 0) {
@@ -486,30 +486,30 @@ void TM_DMA2DGRAPHIC_DrawCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t c
         ddF_x += 2;
         f += ddF_x;
 
-        TM_DMA2DGRAPHIC_DrawVerticalLine(x0 + x, y0 + y, 1, color);
-        TM_DMA2DGRAPHIC_DrawVerticalLine(x0 - x, y0 + y, 1, color);
-        TM_DMA2DGRAPHIC_DrawVerticalLine(x0 + x, y0 - y, 1, color);
-        TM_DMA2DGRAPHIC_DrawVerticalLine(x0 - x, y0 - y, 1, color);
+        DMA2DGRAPHIC_DrawVerticalLine(x0 + x, y0 + y, 1, color);
+        DMA2DGRAPHIC_DrawVerticalLine(x0 - x, y0 + y, 1, color);
+        DMA2DGRAPHIC_DrawVerticalLine(x0 + x, y0 - y, 1, color);
+        DMA2DGRAPHIC_DrawVerticalLine(x0 - x, y0 - y, 1, color);
 
-        TM_DMA2DGRAPHIC_DrawVerticalLine(x0 + y, y0 + x, 1, color);
-        TM_DMA2DGRAPHIC_DrawVerticalLine(x0 - y, y0 + x, 1, color);
-        TM_DMA2DGRAPHIC_DrawVerticalLine(x0 + y, y0 - x, 1, color);
-        TM_DMA2DGRAPHIC_DrawVerticalLine(x0 - y, y0 - x, 1, color);
+        DMA2DGRAPHIC_DrawVerticalLine(x0 + y, y0 + x, 1, color);
+        DMA2DGRAPHIC_DrawVerticalLine(x0 - y, y0 + x, 1, color);
+        DMA2DGRAPHIC_DrawVerticalLine(x0 + y, y0 - x, 1, color);
+        DMA2DGRAPHIC_DrawVerticalLine(x0 - y, y0 - x, 1, color);
     }
 }
 
-void TM_DMA2DGRAPHIC_DrawFilledCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t color) {
+void DMA2DGRAPHIC_DrawFilledCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t color) {
 	int16_t f = 1 - r;
 	int16_t ddF_x = 1;
 	int16_t ddF_y = -2 * r;
 	int16_t x = 0;
 	int16_t y = r;
 
-    TM_DMA2DGRAPHIC_DrawVerticalLine(x0, y0 + r, 1, color);
-    TM_DMA2DGRAPHIC_DrawVerticalLine(x0, y0 - r, 1, color);
-    TM_DMA2DGRAPHIC_DrawVerticalLine(x0 + r, y0, 1, color);
-    TM_DMA2DGRAPHIC_DrawVerticalLine(x0 - r, y0, 1, color);
-    TM_DMA2DGRAPHIC_DrawHorizontalLine(x0 - r, y0, 2 * r, color);
+    DMA2DGRAPHIC_DrawVerticalLine(x0, y0 + r, 1, color);
+    DMA2DGRAPHIC_DrawVerticalLine(x0, y0 - r, 1, color);
+    DMA2DGRAPHIC_DrawVerticalLine(x0 + r, y0, 1, color);
+    DMA2DGRAPHIC_DrawVerticalLine(x0 - r, y0, 1, color);
+    DMA2DGRAPHIC_DrawHorizontalLine(x0 - r, y0, 2 * r, color);
 
     while (x < y) {
         if (f >= 0) {
@@ -521,23 +521,23 @@ void TM_DMA2DGRAPHIC_DrawFilledCircle(uint16_t x0, uint16_t y0, uint16_t r, uint
         ddF_x += 2;
         f += ddF_x;
 
-        TM_DMA2DGRAPHIC_DrawHorizontalLine(x0 - x, y0 + y, 2 * x, color);
-		TM_DMA2DGRAPHIC_DrawHorizontalLine(x0 - x, y0 - y, 2 * x, color);
+        DMA2DGRAPHIC_DrawHorizontalLine(x0 - x, y0 + y, 2 * x, color);
+		DMA2DGRAPHIC_DrawHorizontalLine(x0 - x, y0 - y, 2 * x, color);
 
-        TM_DMA2DGRAPHIC_DrawHorizontalLine(x0 - y, y0 + x, 2 * y, color);
-        TM_DMA2DGRAPHIC_DrawHorizontalLine(x0 - y, y0 - x, 2 * y, color);
+        DMA2DGRAPHIC_DrawHorizontalLine(x0 - y, y0 + x, 2 * y, color);
+        DMA2DGRAPHIC_DrawHorizontalLine(x0 - y, y0 - x, 2 * y, color);
     }
 }
 
-void TM_DMA2DGRAPHIC_DrawTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint32_t color) {
+void DMA2DGRAPHIC_DrawTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint32_t color) {
 	/* Draw lines */
-	TM_DMA2DGRAPHIC_DrawLine(x1, y1, x2, y2, color);
-	TM_DMA2DGRAPHIC_DrawLine(x2, y2, x3, y3, color);
-	TM_DMA2DGRAPHIC_DrawLine(x3, y3, x1, y1, color);
+	DMA2DGRAPHIC_DrawLine(x1, y1, x2, y2, color);
+	DMA2DGRAPHIC_DrawLine(x2, y2, x3, y3, color);
+	DMA2DGRAPHIC_DrawLine(x3, y3, x1, y1, color);
 }
 
 
-void TM_DMA2DGRAPHIC_DrawFilledTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint32_t color) {
+void DMA2DGRAPHIC_DrawFilledTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint32_t color) {
 	int16_t deltax = 0, deltay = 0, x = 0, y = 0, xinc1 = 0, xinc2 = 0, 
 	yinc1 = 0, yinc2 = 0, den = 0, num = 0, numadd = 0, numpixels = 0, 
 	curpixel = 0;
@@ -580,7 +580,7 @@ void TM_DMA2DGRAPHIC_DrawFilledTriangle(uint16_t x1, uint16_t y1, uint16_t x2, u
 	}
 
 	for (curpixel = 0; curpixel <= numpixels; curpixel++) {
-		TM_DMA2DGRAPHIC_DrawLine(x, y, x3, y3, color);
+		DMA2DGRAPHIC_DrawLine(x, y, x3, y3, color);
 
 		num += numadd;
 		if (num >= den) {
@@ -593,16 +593,16 @@ void TM_DMA2DGRAPHIC_DrawFilledTriangle(uint16_t x1, uint16_t y1, uint16_t x2, u
 	}
 }
 
-void TM_DMA2DGRAPHIC_CopyBuffer(void* pSrc, void* pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLineSrc, uint32_t OffLineDst) {
+void DMA2DGRAPHIC_CopyBuffer(void* pSrc, void* pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLineSrc, uint32_t OffLineDst) {
 	/* Copy buffer using interrupt */
-	TM_DMA2DGRAPHIC_CopyBufferIT(pSrc, pDst, xSize, ySize, OffLineSrc, OffLineDst);
+	DMA2DGRAPHIC_CopyBufferIT(pSrc, pDst, xSize, ySize, OffLineSrc, OffLineDst);
 
 	/* Wait until transfer is done */
 	DMA2D_WAIT;
 }
 
 
-void TM_DMA2DGRAPHIC_CopyBufferIT(void* pSrc, void* pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLineSrc, uint32_t OffLineDst) {
+void DMA2DGRAPHIC_CopyBufferIT(void* pSrc, void* pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLineSrc, uint32_t OffLineDst) {
 	/* Wait for previous operation to be done */
 	DMA2D_WAIT;
 	
@@ -629,7 +629,7 @@ void TM_DMA2DGRAPHIC_CopyBufferIT(void* pSrc, void* pDst, uint32_t xSize, uint32
 }
 
 /* Private functions */
-void TM_INT_DMA2DGRAPHIC_SetConf(TM_DMA2DGRAPHIC_INT_Conf_t* Conf) {
+void INT_DMA2DGRAPHIC_SetConf(DMA2DGRAPHIC_INT_Conf_t* Conf) {
 	/* Fill settings for DMA2D */
 	DIS.Width = Conf->Width;
 	DIS.Height = Conf->Height;
@@ -640,10 +640,10 @@ void TM_INT_DMA2DGRAPHIC_SetConf(TM_DMA2DGRAPHIC_INT_Conf_t* Conf) {
 	DIS.Orientation = Conf->Orientation;
 	
 	/* Set DMA2D orientation */
-	TM_DMA2DGRAPHIC_SetOrientation(DIS.Orientation);
+	DMA2DGRAPHIC_SetOrientation(DIS.Orientation);
 }
 
-void TM_INT_DMA2DGRAPHIC_InitAndTransfer(void) {
+void INT_DMA2DGRAPHIC_InitAndTransfer(void) {
 	/* Wait until transfer is done first from other calls */
 	DMA2D_WAIT;
 	
@@ -661,7 +661,7 @@ void TM_INT_DMA2DGRAPHIC_InitAndTransfer(void) {
 	DMA2D_WAIT;
 }
 
-void TM_INT_DMA2DGRAPHIC_SetMemory(uint32_t MemoryAddress, uint32_t Offset, uint32_t NumberOfLine, uint32_t PixelPerLine) {	
+void INT_DMA2DGRAPHIC_SetMemory(uint32_t MemoryAddress, uint32_t Offset, uint32_t NumberOfLine, uint32_t PixelPerLine) {	
 	/* Set memory settings */
 	GRAPHIC_DMA2D_InitStruct.DMA2D_OutputMemoryAdd = DIS.StartAddress + DIS.Offset + MemoryAddress;
 	GRAPHIC_DMA2D_InitStruct.DMA2D_OutputOffset = Offset;
@@ -669,7 +669,7 @@ void TM_INT_DMA2DGRAPHIC_SetMemory(uint32_t MemoryAddress, uint32_t Offset, uint
 	GRAPHIC_DMA2D_InitStruct.DMA2D_PixelPerLine = PixelPerLine;
 }
 
-void TM_INT_DMA2DGRAPHIC_DrawCircleCorner(int16_t x0, int16_t y0, int16_t r, uint8_t corner, uint32_t color) {
+void INT_DMA2DGRAPHIC_DrawCircleCorner(int16_t x0, int16_t y0, int16_t r, uint8_t corner, uint32_t color) {
 	int16_t f = 1 - r;
 	int16_t ddF_x = 1;
 	int16_t ddF_y = -2 * r;
@@ -687,28 +687,28 @@ void TM_INT_DMA2DGRAPHIC_DrawCircleCorner(int16_t x0, int16_t y0, int16_t r, uin
         f += ddF_x;
 
         if (corner & 0x01) {/* Top left */	
-			TM_DMA2DGRAPHIC_DrawPixel(x0 - y, y0 - x, color);
-			TM_DMA2DGRAPHIC_DrawPixel(x0 - x, y0 - y, color);
+			DMA2DGRAPHIC_DrawPixel(x0 - y, y0 - x, color);
+			DMA2DGRAPHIC_DrawPixel(x0 - x, y0 - y, color);
 		}
 		
         if (corner & 0x02) {/* Top right */
-			TM_DMA2DGRAPHIC_DrawPixel(x0 + x, y0 - y, color);
-			TM_DMA2DGRAPHIC_DrawPixel(x0 + y, y0 - x, color);
+			DMA2DGRAPHIC_DrawPixel(x0 + x, y0 - y, color);
+			DMA2DGRAPHIC_DrawPixel(x0 + y, y0 - x, color);
 		}
 		
 		if (corner & 0x04) {/* Bottom right */
-			TM_DMA2DGRAPHIC_DrawPixel(x0 + x, y0 + y, color);
-			TM_DMA2DGRAPHIC_DrawPixel(x0 + y, y0 + x, color);
+			DMA2DGRAPHIC_DrawPixel(x0 + x, y0 + y, color);
+			DMA2DGRAPHIC_DrawPixel(x0 + y, y0 + x, color);
 		}
 		
         if (corner & 0x08) {/* Bottom left */	
-			TM_DMA2DGRAPHIC_DrawPixel(x0 - x, y0 + y, color);
-			TM_DMA2DGRAPHIC_DrawPixel(x0 - y, y0 + x, color);
+			DMA2DGRAPHIC_DrawPixel(x0 - x, y0 + y, color);
+			DMA2DGRAPHIC_DrawPixel(x0 - y, y0 + x, color);
 		}
     }
 }
 
-void TM_INT_DMA2DGRAPHIC_DrawFilledCircleCorner(int16_t x0, int16_t y0, int16_t r, uint8_t corner, uint32_t color) {
+void INT_DMA2DGRAPHIC_DrawFilledCircleCorner(int16_t x0, int16_t y0, int16_t r, uint8_t corner, uint32_t color) {
 	int16_t f = 1 - r;
 	int16_t ddF_x = 1;
 	int16_t ddF_y = -2 * r;
@@ -726,23 +726,23 @@ void TM_INT_DMA2DGRAPHIC_DrawFilledCircleCorner(int16_t x0, int16_t y0, int16_t 
         f += ddF_x;
 
         if (corner & 0x01) {/* Top left */
-			TM_DMA2DGRAPHIC_DrawLine(x0, y0 - y, x0 - x, y0 - y, color);
-			TM_DMA2DGRAPHIC_DrawLine(x0, y0 - x, x0 - y, y0 - x, color);
+			DMA2DGRAPHIC_DrawLine(x0, y0 - y, x0 - x, y0 - y, color);
+			DMA2DGRAPHIC_DrawLine(x0, y0 - x, x0 - y, y0 - x, color);
 		}
 		
         if (corner & 0x02) {/* Top right */
-			TM_DMA2DGRAPHIC_DrawLine(x0 + x, y0 - y, x0, y0 - y, color);
-			TM_DMA2DGRAPHIC_DrawLine(x0 + y, y0 - x, x0, y0 - x, color);
+			DMA2DGRAPHIC_DrawLine(x0 + x, y0 - y, x0, y0 - y, color);
+			DMA2DGRAPHIC_DrawLine(x0 + y, y0 - x, x0, y0 - x, color);
 		}
 		
 		if (corner & 0x04) {/* Bottom right */
-			TM_DMA2DGRAPHIC_DrawLine(x0, y0 + y, x0 + x, y0 + y, color);
-			TM_DMA2DGRAPHIC_DrawLine(x0 + y, y0 + x, x0, y0 + x, color);
+			DMA2DGRAPHIC_DrawLine(x0, y0 + y, x0 + x, y0 + y, color);
+			DMA2DGRAPHIC_DrawLine(x0 + y, y0 + x, x0, y0 + x, color);
 		}
 		
         if (corner & 0x08) {/* Bottom left */
-			TM_DMA2DGRAPHIC_DrawLine(x0 - x, y0 + y, x0, y0 + y, color);
-			TM_DMA2DGRAPHIC_DrawLine(x0, y0 + x, x0 - y, y0 + x, color);
+			DMA2DGRAPHIC_DrawLine(x0 - x, y0 + y, x0, y0 + y, color);
+			DMA2DGRAPHIC_DrawLine(x0, y0 + x, x0 - y, y0 + x, color);
 		}
     }
 }

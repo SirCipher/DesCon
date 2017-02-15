@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_DMA2DGRAPHIC_H
-#define TM_DMA2DGRAPHIC_H 100
+#ifndef DMA2DGRAPHIC_H
+#define DMA2DGRAPHIC_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_DMA2D_GRAPHIC
+ * @defgroup DMA2D_GRAPHIC
  * @brief    Graphic library for LCD using DMA2D for transferring graphic data to memory for LCD display - http://stm32f4-discovery.com/2015/01/library-51-chrom-art-accelerator-dma2d-graphic-library-on-stm32f429-discovery
  * @{
  *
@@ -87,7 +87,7 @@ extern "C" {
 #include "defines.h"
 
 /**
- * @defgroup TM_DMA2D_GRAPHIC_Macros
+ * @defgroup DMA2D_GRAPHIC_Macros
  * @brief    Library defines
  * @{
  */
@@ -96,7 +96,7 @@ extern "C" {
  * @brief  Default LCD width in pixels
  */
 #ifndef DMA2D_GRAPHIC_LCD_WIDTH
-	#if defined(DMA2D_GRAPHIC_USE_STM324x9_EVAL) || defined(TM_DISCO_STM324x9_EVAL)
+	#if defined(DMA2D_GRAPHIC_USE_STM324x9_EVAL) || defined(DISCO_STM324x9_EVAL)
 		#define DMA2D_GRAPHIC_LCD_WIDTH     640 /*!< STM32439-Eval board */
 	#else
 		#define DMA2D_GRAPHIC_LCD_WIDTH     240 /*!< STM32F429-Discovery board */
@@ -107,7 +107,7 @@ extern "C" {
  * @brief  Default LCD height in pixels
  */
 #ifndef DMA2D_GRAPHIC_LCD_HEIGHT
-	#if defined(DMA2D_GRAPHIC_USE_STM324x9_EVAL) || defined(TM_DISCO_STM324x9_EVAL)
+	#if defined(DMA2D_GRAPHIC_USE_STM324x9_EVAL) || defined(DISCO_STM324x9_EVAL)
 		#define DMA2D_GRAPHIC_LCD_HEIGHT    480 /*!< STM32439-Eval board */
 	#else
 		#define DMA2D_GRAPHIC_LCD_HEIGHT    320 /*!< STM32F429-Discovery board */
@@ -119,7 +119,7 @@ extern "C" {
  * @note   On STM32F429-Discovery, this is address for SDRAM which operate with LCD and LTDC peripheral
  */
 #ifndef DMA2D_GRAPHIC_RAM_ADDR
-	#if defined(DMA2D_GRAPHIC_USE_STM324x9_EVAL) || defined(TM_DISCO_STM324x9_EVAL)
+	#if defined(DMA2D_GRAPHIC_USE_STM324x9_EVAL) || defined(DISCO_STM324x9_EVAL)
 		#define DMA2D_GRAPHIC_RAM_ADDR      0xC0000000 /*!< STM32439-Eval board */
 	#else
 		#define DMA2D_GRAPHIC_RAM_ADDR      0xD0000000 /*!< STM32F429-Discovery board */
@@ -138,7 +138,7 @@ extern "C" {
 #define DMA2D_GRAPHIC_PIXELS        DMA2D_GRAPHIC_LCD_WIDTH * DMA2D_GRAPHIC_LCD_HEIGHT
 
 /**
- * @defgroup TM_DMA2D_GRAPHIC_COLORS
+ * @defgroup DMA2D_GRAPHIC_COLORS
  * @brief    Colors for DMA2D graphic library in RGB565 format
  *
  * @{
@@ -171,7 +171,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_DMA2D_GRAPHIC_Typedefs
+ * @defgroup DMA2D_GRAPHIC_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -183,7 +183,7 @@ extern "C" {
 typedef struct {
 	uint16_t X; /*!< X coordinate for poly line */
 	uint16_t Y; /*!< Y coordinate for poly line */
-} TM_DMA2DRAPHIC_Poly_t;
+} DMA2DRAPHIC_Poly_t;
 
 /**
  * @brief  Configuration structure
@@ -196,14 +196,14 @@ typedef struct {
 	uint32_t BufferStart;
 	uint32_t BufferOffset;
 	uint8_t Orientation;
-} TM_DMA2DGRAPHIC_INT_Conf_t;
+} DMA2DGRAPHIC_INT_Conf_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_DMA2D_GRAPHIC_Functions
+ * @defgroup DMA2D_GRAPHIC_Functions
  * @brief    Library Functions
  * @{
  */
@@ -214,7 +214,7 @@ typedef struct {
  * @param  None
  * @retval None
  */
-void TM_DMA2DGRAPHIC_Init(void);
+void DMA2DGRAPHIC_Init(void);
 
 /**
  * @brief  Sets layer for DMA2D working memory.
@@ -226,7 +226,7 @@ void TM_DMA2DGRAPHIC_Init(void);
  *            You are limited by your LCD size and available memory size
  * @retval None
  */
-void TM_DMA2DGRAPHIC_SetLayer(uint8_t layer_number);
+void DMA2DGRAPHIC_SetLayer(uint8_t layer_number);
 
 /**
  * @brief  Sets orientation for DMA2D peripheral
@@ -239,14 +239,14 @@ void TM_DMA2DGRAPHIC_SetLayer(uint8_t layer_number);
  *            - 3: 270 Degrees orientation
  * @retval None
  */
-void TM_DMA2DGRAPHIC_SetOrientation(uint8_t orientation);
+void DMA2DGRAPHIC_SetOrientation(uint8_t orientation);
 
 /**
  * @brief  Fills entire LCD memory layer with custom color
  * @param  color: Color in RGB565 format to use for LCD fill
  * @retval None
  */
-void TM_DMA2DGRAPHIC_Fill(uint32_t color);
+void DMA2DGRAPHIC_Fill(uint32_t color);
 
 /**
  * @brief  Draws single pixel on currently active layer
@@ -255,7 +255,7 @@ void TM_DMA2DGRAPHIC_Fill(uint32_t color);
  * @param  color: Pixel color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawPixel(uint16_t x, uint16_t y, uint32_t color);
+void DMA2DGRAPHIC_DrawPixel(uint16_t x, uint16_t y, uint32_t color);
 
 /**
  * @brief  Gets single pixel on currently active layer
@@ -263,7 +263,7 @@ void TM_DMA2DGRAPHIC_DrawPixel(uint16_t x, uint16_t y, uint32_t color);
  * @param  y: Y coordinate on LCD
  * @retval Pixel color in RGB565 format
  */
-uint32_t TM_DMA2DGRAPHIC_GetPixel(uint16_t x, uint16_t y);
+uint32_t DMA2DGRAPHIC_GetPixel(uint16_t x, uint16_t y);
 
 /**
  * @brief  Draws vertical line on currently active layer
@@ -273,7 +273,7 @@ uint32_t TM_DMA2DGRAPHIC_GetPixel(uint16_t x, uint16_t y);
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawVerticalLine(int16_t x, int16_t y, uint16_t length, uint32_t color);
+void DMA2DGRAPHIC_DrawVerticalLine(int16_t x, int16_t y, uint16_t length, uint32_t color);
 
 /**
  * @brief  Draws horizontal line on currently active layer
@@ -283,7 +283,7 @@ void TM_DMA2DGRAPHIC_DrawVerticalLine(int16_t x, int16_t y, uint16_t length, uin
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawHorizontalLine(int16_t x, int16_t y, uint16_t length, uint32_t color);
+void DMA2DGRAPHIC_DrawHorizontalLine(int16_t x, int16_t y, uint16_t length, uint32_t color);
 
 /**
  * @brief  Draws line on currently active layer
@@ -294,16 +294,16 @@ void TM_DMA2DGRAPHIC_DrawHorizontalLine(int16_t x, int16_t y, uint16_t length, u
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t color);
+void DMA2DGRAPHIC_DrawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint32_t color);
 
 /**
  * @brief  Draws polygon line on currently active layer
- * @param  *Coordinates: Pointer to @ref TM_DMA2DRAPHIC_Poly_t array of coordinates
+ * @param  *Coordinates: Pointer to @ref DMA2DRAPHIC_Poly_t array of coordinates
  * @param  count: Number of coordinates
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawPolyLine(TM_DMA2DRAPHIC_Poly_t* Coordinates, uint16_t count, uint32_t color);
+void DMA2DGRAPHIC_DrawPolyLine(DMA2DRAPHIC_Poly_t* Coordinates, uint16_t count, uint32_t color);
 
 /**
  * @brief  Draws rectangle on currently active layer
@@ -314,7 +314,7 @@ void TM_DMA2DGRAPHIC_DrawPolyLine(TM_DMA2DRAPHIC_Poly_t* Coordinates, uint16_t c
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
+void DMA2DGRAPHIC_DrawRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
 
 /**
  * @brief  Draws filled rectangle on currently active layer
@@ -325,7 +325,7 @@ void TM_DMA2DGRAPHIC_DrawRectangle(uint16_t x, uint16_t y, uint16_t width, uint1
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawFilledRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
+void DMA2DGRAPHIC_DrawFilledRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color);
 
 /**
  * @brief  Draws rounded rectangle on currently active layer
@@ -337,7 +337,7 @@ void TM_DMA2DGRAPHIC_DrawFilledRectangle(uint16_t x, uint16_t y, uint16_t width,
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawRoundedRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t r, uint32_t color);
+void DMA2DGRAPHIC_DrawRoundedRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t r, uint32_t color);
 
 /**
  * @brief  Draws filled rounded rectangle on currently active layer
@@ -349,7 +349,7 @@ void TM_DMA2DGRAPHIC_DrawRoundedRectangle(uint16_t x, uint16_t y, uint16_t width
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawFilledRoundedRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t r, uint32_t color);
+void DMA2DGRAPHIC_DrawFilledRoundedRectangle(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t r, uint32_t color);
 
 /**
  * @brief  Draws circle on currently active layer
@@ -359,7 +359,7 @@ void TM_DMA2DGRAPHIC_DrawFilledRoundedRectangle(uint16_t x, uint16_t y, uint16_t
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t color);
+void DMA2DGRAPHIC_DrawCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t color);
 
 /**
  * @brief  Draws filed circle on currently active layer
@@ -369,7 +369,7 @@ void TM_DMA2DGRAPHIC_DrawCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t c
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawFilledCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t color);
+void DMA2DGRAPHIC_DrawFilledCircle(uint16_t x0, uint16_t y0, uint16_t r, uint32_t color);
 
 /**
  * @brief  Draws triangle on currently active layer
@@ -382,7 +382,7 @@ void TM_DMA2DGRAPHIC_DrawFilledCircle(uint16_t x0, uint16_t y0, uint16_t r, uint
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawTriangle(uint16_t x1, uint16_t y1,  uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint32_t color);
+void DMA2DGRAPHIC_DrawTriangle(uint16_t x1, uint16_t y1,  uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint32_t color);
 
 /**
  * @brief  Draws filled triangle on currently active layer
@@ -395,13 +395,13 @@ void TM_DMA2DGRAPHIC_DrawTriangle(uint16_t x1, uint16_t y1,  uint16_t x2, uint16
  * @param  color: Color in RGB565 format
  * @retval None
  */
-void TM_DMA2DGRAPHIC_DrawFilledTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint32_t color);
+void DMA2DGRAPHIC_DrawFilledTriangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint32_t color);
 
-void TM_DMA2DGRAPHIC_CopyBuffer(void* pSrc, void* pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLineSrc, uint32_t OffLineDst);
-void TM_DMA2DGRAPHIC_CopyBufferIT(void* pSrc, void* pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLineSrc, uint32_t OffLineDst);
+void DMA2DGRAPHIC_CopyBuffer(void* pSrc, void* pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLineSrc, uint32_t OffLineDst);
+void DMA2DGRAPHIC_CopyBufferIT(void* pSrc, void* pDst, uint32_t xSize, uint32_t ySize, uint32_t OffLineSrc, uint32_t OffLineDst);
 
 /* Private functions */
-void TM_INT_DMA2DGRAPHIC_SetConf(TM_DMA2DGRAPHIC_INT_Conf_t* Conf);
+void INT_DMA2DGRAPHIC_SetConf(DMA2DGRAPHIC_INT_Conf_t* Conf);
 
 /**
  * @}

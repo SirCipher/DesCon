@@ -19,7 +19,7 @@ only be used in accordance with the following terms:
 The software  has been  licensed to  STMicroelectronics  International
 N.V. whose  registered office  is situated at Plan-les-Ouates, Geneva,
 39 Chemin du Champ des Filles,  Switzerland solely for the purposes of
-creating libraries for  STMicroelectronics  ARM Cortex™-M-based 32-bit
+creating libraries for  STMicroelectronics  ARM Cortexï¿½-M-based 32-bit
 microcontroller    products,    sublicensed    and    distributed   by
 STMicroelectronics  under  the  terms  and  conditions of the End User
 License Agreement supplied with  the software. The use of the software
@@ -56,14 +56,14 @@ Purpose     : Display controller initialization
   */
 
 #include "GUI.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_emwin.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_emwin.h"
 #include "defines.h"
 //
 // Define the available number of bytes available for the GUI
 //
 
-#if TM_EMWIN_ROTATE_LCD == 1
+#if EMWIN_ROTATE_LCD == 1
 	#define GUI_NUMBYTES	(1024 * 128 * 4)
 #else
 	#define GUI_NUMBYTES  	(1024 * 100)    // x KByte
@@ -83,7 +83,7 @@ Purpose     : Display controller initialization
 	U32 HeapMem[1024 * 1024] __attribute__((section(".HeapMemSection")));
 #endif
 
-#if TM_EMWIN_ROTATE_LCD == 1
+#if EMWIN_ROTATE_LCD == 1
 	#if defined ( __CC_ARM   ) 
 		U32 extMem[GUI_NUMBYTES / 4] __attribute__((at(0xD0080000)));
 	#elif defined ( __ICCARM__ ) 
@@ -119,7 +119,7 @@ void GUI_X_Config(void)
 
 GUI_TIMER_TIME GUI_X_GetTime(void) {
 	/* Return current time */
-	return TM_DELAY_Time();
+	return DELAY_Time();
 }
 
 void GUI_X_Delay(int Period) {

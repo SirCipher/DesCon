@@ -27,16 +27,16 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_ILI9341_H
-#define TM_ILI9341_H 130
+#ifndef ILI9341_H
+#define ILI9341_H 130
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_ILI9341
+ * @defgroup ILI9341
  * @brief    ILI9341 library for STM32F4xx with SPI communication, without LTDC hardware - http://stm32f4-discovery.com/2014/04/library-08-ili9341-lcd-on-stm32f429-discovery-board/
  * @{
  *
@@ -63,7 +63,7 @@ VCC          3.3V         Positive power supply
 @verbatim
 //Default SPI used is SPI5. Check my SPI library for other pinouts
 #define ILI9341_SPI           SPI5
-#define ILI9341_SPI_PINS      TM_SPI_PinsPack_1
+#define ILI9341_SPI_PINS      SPI_PinsPack_1
 		
 //Default CS pin. Edit this in your defines.h file
 #define ILI9341_CS_PORT       GPIOC
@@ -101,7 +101,7 @@ VCC          3.3V         Positive power supply
  Version 1.2
   - March 14, 2015
   - Added support for new GPIO system
-  - Added functions TM_ILI9341_DisplayOff() and TM_ILI9341_DisplayOn()
+  - Added functions ILI9341_DisplayOff() and ILI9341_DisplayOn()
  
  Version 1.0
   - First release
@@ -127,14 +127,14 @@ VCC          3.3V         Positive power supply
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_fonts.h"
-#include "tm_stm32f4_gpio.h"
-#include "tm_stm32f4_spi.h"
-#include "tm_stm32f4_dma.h"
-#include "tm_stm32f4_spi_dma.h"
+#include "stm32f4_fonts.h"
+#include "stm32f4_gpio.h"
+#include "stm32f4_spi.h"
+#include "stm32f4_dma.h"
+#include "stm32f4_spi_dma.h"
 
 /**
- * @defgroup TM_ILI9341_Macros
+ * @defgroup ILI9341_Macros
  * @brief    Library defines
  * @{
  */
@@ -144,7 +144,7 @@ VCC          3.3V         Positive power supply
  */
 #ifndef ILI9341_SPI
 #define ILI9341_SPI           SPI5
-#define ILI9341_SPI_PINS      TM_SPI_PinsPack_1
+#define ILI9341_SPI_PINS      SPI_PinsPack_1
 #endif
 
 /**
@@ -199,7 +199,7 @@ VCC          3.3V         Positive power supply
  */
  
 /**
- * @defgroup TM_ILI9341_Typedefs
+ * @defgroup ILI9341_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -209,18 +209,18 @@ VCC          3.3V         Positive power supply
  * @brief  Possible orientations for LCD
  */
 typedef enum {
-	TM_ILI9341_Orientation_Portrait_1,  /*!< Portrait orientation mode 1 */
-	TM_ILI9341_Orientation_Portrait_2,  /*!< Portrait orientation mode 2 */
-	TM_ILI9341_Orientation_Landscape_1, /*!< Landscape orientation mode 1 */
-	TM_ILI9341_Orientation_Landscape_2  /*!< Landscape orientation mode 2 */
-} TM_ILI9341_Orientation_t;
+	ILI9341_Orientation_Portrait_1,  /*!< Portrait orientation mode 1 */
+	ILI9341_Orientation_Portrait_2,  /*!< Portrait orientation mode 2 */
+	ILI9341_Orientation_Landscape_1, /*!< Landscape orientation mode 1 */
+	ILI9341_Orientation_Landscape_2  /*!< Landscape orientation mode 2 */
+} ILI9341_Orientation_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_ILI9341_Functions
+ * @defgroup ILI9341_Functions
  * @brief    Library Functions
  * @{
  */
@@ -231,7 +231,7 @@ typedef enum {
  * @param  None
  * @retval None
  */
-void TM_ILI9341_Init(void);
+void ILI9341_Init(void);
 
 /**
  * @brief  Draws single pixel to LCD
@@ -240,55 +240,55 @@ void TM_ILI9341_Init(void);
  * @param  color: Color of pixel
  * @retval None
  */
-void TM_ILI9341_DrawPixel(uint16_t x, uint16_t y, uint32_t color);
+void ILI9341_DrawPixel(uint16_t x, uint16_t y, uint32_t color);
 
 /**
  * @brief  Fills entire LCD with color
  * @param  color: Color to be used in fill
  * @retval None
  */
-void TM_ILI9341_Fill(uint32_t color);
+void ILI9341_Fill(uint32_t color);
 
 /**
  * @brief  Rotates LCD to specific orientation
- * @param  orientation: LCD orientation. This parameter can be a value of @ref TM_ILI9341_Orientation_t enumeration
+ * @param  orientation: LCD orientation. This parameter can be a value of @ref ILI9341_Orientation_t enumeration
  * @retval None
  */
-void TM_ILI9341_Rotate(TM_ILI9341_Orientation_t orientation);
+void ILI9341_Rotate(ILI9341_Orientation_t orientation);
 
 /**
  * @brief  Puts single character to LCD
  * @param  x: X position of top left corner
  * @param  y: Y position of top left corner
  * @param  c: Character to be displayed
- * @param  *font: Pointer to @ref TM_FontDef_t used font
+ * @param  *font: Pointer to @ref FontDef_t used font
  * @param  foreground: Color for char
  * @param  background: Color for char background
  * @retval None
  */
-void TM_ILI9341_Putc(uint16_t x, uint16_t y, char c, TM_FontDef_t* font, uint32_t foreground, uint32_t background);
+void ILI9341_Putc(uint16_t x, uint16_t y, char c, FontDef_t* font, uint32_t foreground, uint32_t background);
 
 /**
  * @brief  Puts string to LCD
  * @param  x: X position of top left corner of first character in string
  * @param  y: Y position of top left corner of first character in string
  * @param  *str: Pointer to first character
- * @param  *font: Pointer to @ref TM_FontDef_t used font
+ * @param  *font: Pointer to @ref FontDef_t used font
  * @param  foreground: Color for string
  * @param  background: Color for string background
  * @retval None
  */
-void TM_ILI9341_Puts(uint16_t x, uint16_t y, char* str, TM_FontDef_t *font, uint32_t foreground, uint32_t background);
+void ILI9341_Puts(uint16_t x, uint16_t y, char* str, FontDef_t *font, uint32_t foreground, uint32_t background);
 
 /**
  * @brief  Gets width and height of box with text
  * @param  *str: Pointer to first character
- * @param  *font: Pointer to @ref TM_FontDef_t used font
+ * @param  *font: Pointer to @ref FontDef_t used font
  * @param  *width: Pointer to variable to store width
  * @param  *height: Pointer to variable to store height
  * @retval None
  */
-void TM_ILI9341_GetStringSize(char* str, TM_FontDef_t* font, uint16_t* width, uint16_t* height);
+void ILI9341_GetStringSize(char* str, FontDef_t* font, uint16_t* width, uint16_t* height);
 
 /**
  * @brief  Draws line to LCD
@@ -299,7 +299,7 @@ void TM_ILI9341_GetStringSize(char* str, TM_FontDef_t* font, uint16_t* width, ui
  * @param  color: Line color
  * @retval None
  */
-void TM_ILI9341_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color);
+void ILI9341_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color);
 
 /**
  * @brief  Draws rectangle on LCD
@@ -310,7 +310,7 @@ void TM_ILI9341_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uin
  * @param  color: Rectangle color
  * @retval None
  */
-void TM_ILI9341_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color);
+void ILI9341_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color);
 
 /**
  * @brief  Draws filled rectangle on LCD
@@ -321,7 +321,7 @@ void TM_ILI9341_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1
  * @param  color: Rectangle color
  * @retval None
  */
-void TM_ILI9341_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color);
+void ILI9341_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color);
 
 /**
  * @brief  Draws circle on LCD
@@ -331,7 +331,7 @@ void TM_ILI9341_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint1
  * @param  color: Circle color
  * @retval None
  */
-void TM_ILI9341_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color);
+void ILI9341_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color);
 
 /**
  * @brief  Draws filled circle on LCD
@@ -341,7 +341,7 @@ void TM_ILI9341_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color);
  * @param  color: Circle color
  * @retval None
  */
-void TM_ILI9341_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color);
+void ILI9341_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color);
 
 /**
  * @brief   Enables display
@@ -349,14 +349,14 @@ void TM_ILI9341_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint32_t col
  * @param   None
  * @retval  None
  */
-void TM_ILI9341_DisplayOn(void);
+void ILI9341_DisplayOn(void);
 
 /**
  * @brief   Disables display
  * @param   None
  * @retval  None
  */
-void TM_ILI9341_DisplayOff(void);
+void ILI9341_DisplayOff(void);
 
 /**
  * @}

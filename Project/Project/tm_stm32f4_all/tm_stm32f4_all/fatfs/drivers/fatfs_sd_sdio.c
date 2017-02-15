@@ -228,8 +228,8 @@
 #include "fatfs_sd_sdio.h"
 #include <string.h>
 /*
-#include "tm_stm32f4_usart.h"
-#define logf(x)	TM_USART_Puts(USART1, x); TM_USART_Puts(USART1, "\n");
+#include "stm32f4_usart.h"
+#define logf(x)	USART_Puts(USART1, x); USART_Puts(USART1, "\n");
 */
 #define logf(x)
 
@@ -263,29 +263,29 @@ static SD_Error IsCardProgramming (uint8_t *pstatus);
 static SD_Error FindSCR (uint16_t rca, uint32_t *pscr);
 uint8_t convert_from_bytes_to_power_of_two (uint16_t NumberOfBytes);
 
-static volatile DSTATUS TM_FATFS_SD_SDIO_Stat = STA_NOINIT;	/* Physical drive status */
+static volatile DSTATUS FATFS_SD_SDIO_Stat = STA_NOINIT;	/* Physical drive status */
 
 #define BLOCK_SIZE            512
 
-uint8_t TM_FATFS_SDIO_WriteEnabled(void) {
+uint8_t FATFS_SDIO_WriteEnabled(void) {
 #if FATFS_USE_WRITEPROTECT_PIN > 0
-	return !TM_GPIO_GetInputPinValue(FATFS_USE_WRITEPROTECT_PIN_PORT, FATFS_USE_WRITEPROTECT_PIN_PIN);
+	return !GPIO_GetInputPinValue(FATFS_USE_WRITEPROTECT_PIN_PORT, FATFS_USE_WRITEPROTECT_PIN_PIN);
 #else
 	return 1;
 #endif
 }
 
-DSTATUS TM_FATFS_SD_SDIO_disk_initialize(void) {
+DSTATUS FATFS_SD_SDIO_disk_initialize(void) {
 	NVIC_InitTypeDef NVIC_InitStructure;
 	
 	/* Detect pin */
 #if FATFS_USE_DETECT_PIN > 0
-	TM_GPIO_Init(FATFS_USE_DETECT_PIN_PORT, FATFS_USE_DETECT_PIN_PIN, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Low);
+	GPIO_Init(FATFS_USE_DETECT_PIN_PORT, FATFS_USE_DETECT_PIN_PIN, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Low);
 #endif
 
 	/* Write protect pin */
 #if FATFS_USE_WRITEPROTECT_PIN > 0
-	TM_GPIO_Init(FATFS_USE_WRITEPROTECT_PIN_PORT, FATFS_USE_WRITEPROTECT_PIN_PIN, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Low);
+	GPIO_Init(FATFS_USE_WRITEPROTECT_PIN_PORT, FATFS_USE_WRITEPROTECT_PIN_PIN, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Low);
 #endif
 	
 	// Configure the NVIC Preemption Priority Bits 
@@ -304,38 +304,38 @@ DSTATUS TM_FATFS_SD_SDIO_disk_initialize(void) {
 	
 	//Check disk initialized
 	if (SD_Init() == SD_OK) {
-		TM_FATFS_SD_SDIO_Stat &= ~STA_NOINIT;	/* Clear STA_NOINIT flag */
+		FATFS_SD_SDIO_Stat &= ~STA_NOINIT;	/* Clear STA_NOINIT flag */
 	} else {
-		TM_FATFS_SD_SDIO_Stat |= STA_NOINIT;
+		FATFS_SD_SDIO_Stat |= STA_NOINIT;
 	}
 	//Check write protected
-	if (!TM_FATFS_SDIO_WriteEnabled()) {
-		TM_FATFS_SD_SDIO_Stat |= STA_PROTECT;
+	if (!FATFS_SDIO_WriteEnabled()) {
+		FATFS_SD_SDIO_Stat |= STA_PROTECT;
 	} else {
-		TM_FATFS_SD_SDIO_Stat &= ~STA_PROTECT;
+		FATFS_SD_SDIO_Stat &= ~STA_PROTECT;
 	}
 	
-	return TM_FATFS_SD_SDIO_Stat;
+	return FATFS_SD_SDIO_Stat;
 }
 
-DSTATUS TM_FATFS_SD_SDIO_disk_status(void) {
+DSTATUS FATFS_SD_SDIO_disk_status(void) {
 	if (SD_Detect() != SD_PRESENT) {
 		return STA_NOINIT;
 	}
 	
-	if (!TM_FATFS_SDIO_WriteEnabled()) {
-		TM_FATFS_SD_SDIO_Stat |= STA_PROTECT;
+	if (!FATFS_SDIO_WriteEnabled()) {
+		FATFS_SD_SDIO_Stat |= STA_PROTECT;
 	} else {
-		TM_FATFS_SD_SDIO_Stat &= ~STA_PROTECT;
+		FATFS_SD_SDIO_Stat &= ~STA_PROTECT;
 	}
 	
-	return TM_FATFS_SD_SDIO_Stat;
+	return FATFS_SD_SDIO_Stat;
 }
 
-DRESULT TM_FATFS_SD_SDIO_disk_read(BYTE *buff, DWORD sector, UINT count) {
+DRESULT FATFS_SD_SDIO_disk_read(BYTE *buff, DWORD sector, UINT count) {
 	SD_Error Status = SD_OK;
 
-	if ((TM_FATFS_SD_SDIO_Stat & STA_NOINIT)) {
+	if ((FATFS_SD_SDIO_Stat & STA_NOINIT)) {
 		return RES_NOTRDY;
 	}
 	
@@ -344,7 +344,7 @@ DRESULT TM_FATFS_SD_SDIO_disk_read(BYTE *buff, DWORD sector, UINT count) {
 		DWORD scratch[BLOCK_SIZE / 4];
 
 		while (count--) {
-			res = TM_FATFS_SD_SDIO_disk_read((void *)scratch, sector++, 1);
+			res = FATFS_SD_SDIO_disk_read((void *)scratch, sector++, 1);
 
 			if (res != RES_OK) {
 				break;
@@ -377,10 +377,10 @@ DRESULT TM_FATFS_SD_SDIO_disk_read(BYTE *buff, DWORD sector, UINT count) {
 	}
 }
 
-DRESULT TM_FATFS_SD_SDIO_disk_write(const BYTE *buff, DWORD sector, UINT count) {
+DRESULT FATFS_SD_SDIO_disk_write(const BYTE *buff, DWORD sector, UINT count) {
 	SD_Error Status = SD_OK;
 
-	if (!TM_FATFS_SDIO_WriteEnabled()) {
+	if (!FATFS_SDIO_WriteEnabled()) {
 		return RES_WRPRT;
 	}
 
@@ -394,7 +394,7 @@ DRESULT TM_FATFS_SD_SDIO_disk_write(const BYTE *buff, DWORD sector, UINT count) 
 
 		while (count--) {
 			memcpy(scratch, buff, BLOCK_SIZE);
-			res = TM_FATFS_SD_SDIO_disk_write((void *)scratch, sector++, 1);
+			res = FATFS_SD_SDIO_disk_write((void *)scratch, sector++, 1);
 
 			if (res != RES_OK) {
 				break;
@@ -425,7 +425,7 @@ DRESULT TM_FATFS_SD_SDIO_disk_write(const BYTE *buff, DWORD sector, UINT count) 
 	}
 }
 
-DRESULT TM_FATFS_SD_SDIO_disk_ioctl(BYTE cmd, void *buff) {
+DRESULT FATFS_SD_SDIO_disk_ioctl(BYTE cmd, void *buff) {
 	switch (cmd) {
 		case GET_SECTOR_SIZE :     // Get R/W sector size (WORD) 
 			*(WORD *) buff = 512;
@@ -604,7 +604,7 @@ uint8_t SD_Detect(void) {
 	__IO uint8_t status = SD_PRESENT;
 
 	/* Check status */
-	if (!TM_FATFS_CheckCardDetectPin()) {
+	if (!FATFS_CheckCardDetectPin()) {
 		status = SD_NOT_PRESENT;
 	}
 
@@ -2993,15 +2993,15 @@ void SD_LowLevel_DeInit(void) {
 	RCC->APB2ENR &= ~RCC_APB2ENR_SDIOEN;
 
 #if FATFS_SDIO_4BIT == 1
-	TM_GPIO_DeInit(GPIOC, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12);
-	TM_GPIO_SetPullResistor(GPIOC, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12, TM_GPIO_PuPd_DOWN);
+	GPIO_DeInit(GPIOC, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12);
+	GPIO_SetPullResistor(GPIOC, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12, GPIO_PuPd_DOWN);
 #else
-	TM_GPIO_DeInit(GPIOC, GPIO_PIN_8 | GPIO_PIN_12);
-	TM_GPIO_SetPullResistor(GPIOC, GPIO_PIN_8 | GPIO_PIN_12, TM_GPIO_PuPd_DOWN);
+	GPIO_DeInit(GPIOC, GPIO_PIN_8 | GPIO_PIN_12);
+	GPIO_SetPullResistor(GPIOC, GPIO_PIN_8 | GPIO_PIN_12, GPIO_PuPd_DOWN);
 #endif
 	
-	TM_GPIO_DeInit(GPIOD, GPIO_PIN_2);
-	TM_GPIO_SetPullResistor(GPIOD, GPIO_PIN_2, TM_GPIO_PuPd_DOWN);
+	GPIO_DeInit(GPIOD, GPIO_PIN_2);
+	GPIO_SetPullResistor(GPIOD, GPIO_PIN_2, GPIO_PuPd_DOWN);
 }
 
 /**
@@ -3012,12 +3012,12 @@ void SD_LowLevel_DeInit(void) {
  */
 void SD_LowLevel_Init (void) {
 #if FATFS_SDIO_4BIT == 1
-	TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Fast, GPIO_AF_SDIO);
+	GPIO_InitAlternate(GPIOC, GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Fast, GPIO_AF_SDIO);
 #else
-	TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_8 | GPIO_PIN_12, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Fast, GPIO_AF_SDIO);
+	GPIO_InitAlternate(GPIOC, GPIO_PIN_8 | GPIO_PIN_12, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Fast, GPIO_AF_SDIO);
 #endif
 
-	TM_GPIO_InitAlternate(GPIOD, GPIO_PIN_2, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Fast, GPIO_AF_SDIO);
+	GPIO_InitAlternate(GPIOD, GPIO_PIN_2, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Fast, GPIO_AF_SDIO);
 
 	/* Enable the SDIO APB2 Clock */
 	RCC->APB2ENR |= RCC_APB2ENR_SDIOEN;

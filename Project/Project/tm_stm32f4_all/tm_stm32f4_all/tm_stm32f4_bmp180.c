@@ -16,7 +16,7 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_bmp180.h"
+#include "stm32f4_bmp180.h"
 #include <stdio.h>
 
 /* Multiple is faster than divide */
@@ -37,21 +37,21 @@ int32_t X1, X2, X3, B3, B5, B6, T, p;
 uint32_t B4, B7, UP;
 uint8_t lib_initialized = 0;
 
-TM_BMP180_Result_t TM_BMP180_Init(TM_BMP180_t* BMP180_Data) {
+BMP180_Result_t BMP180_Init(BMP180_t* BMP180_Data) {
 	uint8_t data[22];
 	uint8_t i = 0;
 	
 	/* Initialize I2C */
-	TM_I2C_Init(BMP180_I2C, BMP180_I2C_PINSPACK, BMP180_I2C_SPEED);
+	I2C_Init(BMP180_I2C, BMP180_I2C_PINSPACK, BMP180_I2C_SPEED);
 	/* Test if device is connected */
-	if (!TM_I2C_IsDeviceConnected(BMP180_I2C, BMP180_I2C_ADDRESS)) {
+	if (!I2C_IsDeviceConnected(BMP180_I2C, BMP180_I2C_ADDRESS)) {
 		/* Device is not connected */
-		return TM_BMP180_Result_DeviceNotConnected;
+		return BMP180_Result_DeviceNotConnected;
 	}
 	
 	/* Get default values from EEPROM */
 	/* EEPROM starts at 0xAA address, read 22 bytes */
-	TM_I2C_ReadMulti(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_EEPROM, data, 22);
+	I2C_ReadMulti(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_EEPROM, data, 22);
 	
 	/* Set configuration values */
 	AC1 = (int16_t)(data[i] << 8 | data[i + 1]); i += 2;
@@ -70,32 +70,32 @@ TM_BMP180_Result_t TM_BMP180_Init(TM_BMP180_t* BMP180_Data) {
 	lib_initialized = 1;
 	
 	/* Return OK */
-	return TM_BMP180_Result_Ok;
+	return BMP180_Result_Ok;
 }
 
-TM_BMP180_Result_t TM_BMP180_StartTemperature(TM_BMP180_t* BMP180_Data) {
+BMP180_Result_t BMP180_StartTemperature(BMP180_t* BMP180_Data) {
 	/* Check for library initialization */
 	if (!lib_initialized) {
-		return TM_BMP180_Result_LibraryNotInitialized;
+		return BMP180_Result_LibraryNotInitialized;
 	}
 	/* Send to device */
-	TM_I2C_Write(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_CONTROL, BMP180_COMMAND_TEMPERATURE);
+	I2C_Write(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_CONTROL, BMP180_COMMAND_TEMPERATURE);
 	/* Set minimum delay */
 	BMP180_Data->Delay = BMP180_TEMPERATURE_DELAY;
 	/* Return OK */
-	return TM_BMP180_Result_Ok;
+	return BMP180_Result_Ok;
 }
 
-TM_BMP180_Result_t TM_BMP180_ReadTemperature(TM_BMP180_t* BMP180_Data) {
+BMP180_Result_t BMP180_ReadTemperature(BMP180_t* BMP180_Data) {
 	uint8_t data[2];
 	
 	/* Check for library initialization */
 	if (!lib_initialized) {
-		return TM_BMP180_Result_LibraryNotInitialized;
+		return BMP180_Result_LibraryNotInitialized;
 	}
 	
 	/* Read multi bytes from I2C */
-	TM_I2C_ReadMulti(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_RESULT, data, 2);
+	I2C_ReadMulti(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_RESULT, data, 2);
 	
 	/* Get uncompensated temperature */
 	UT = data[0] << 8 | data[1];
@@ -109,31 +109,31 @@ TM_BMP180_Result_t TM_BMP180_ReadTemperature(TM_BMP180_t* BMP180_Data) {
 	BMP180_Data->Temperature = (B5 + 8) / ((float)160);
 	
 	/* Return OK */
-	return TM_BMP180_Result_Ok;
+	return BMP180_Result_Ok;
 }
 
-TM_BMP180_Result_t TM_BMP180_StartPressure(TM_BMP180_t* BMP180_Data, TM_BMP180_Oversampling_t Oversampling) {
+BMP180_Result_t BMP180_StartPressure(BMP180_t* BMP180_Data, BMP180_Oversampling_t Oversampling) {
 	uint8_t command;
 	
 	/* Check for library initialization */
 	if (!lib_initialized) {
-		return TM_BMP180_Result_LibraryNotInitialized;
+		return BMP180_Result_LibraryNotInitialized;
 	}
 	
 	switch (Oversampling) {
-		case TM_BMP180_Oversampling_UltraLowPower :
+		case BMP180_Oversampling_UltraLowPower :
 			command = BMP180_COMMAND_PRESSURE_0;
 			BMP180_Data->Delay = BMP180_PRESSURE_0_DELAY;
 			break;
-		case TM_BMP180_Oversampling_Standard:
+		case BMP180_Oversampling_Standard:
 			command = BMP180_COMMAND_PRESSURE_1;
 			BMP180_Data->Delay = BMP180_PRESSURE_1_DELAY;
 			break;
-		case TM_BMP180_Oversampling_HighResolution:
+		case BMP180_Oversampling_HighResolution:
 			command = BMP180_COMMAND_PRESSURE_2;
 			BMP180_Data->Delay = BMP180_PRESSURE_2_DELAY;
 			break;
-		case TM_BMP180_Oversampling_UltraHighResolution:
+		case BMP180_Oversampling_UltraHighResolution:
 			command = BMP180_COMMAND_PRESSURE_3;
 			BMP180_Data->Delay = BMP180_PRESSURE_3_DELAY;
 			break;
@@ -143,23 +143,23 @@ TM_BMP180_Result_t TM_BMP180_StartPressure(TM_BMP180_t* BMP180_Data, TM_BMP180_O
 			break;
 	}
 	/* Send to device */
-	TM_I2C_Write(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_CONTROL, command);
+	I2C_Write(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_CONTROL, command);
 	/* Save selected oversampling */
 	BMP180_Data->Oversampling = Oversampling;
 	/* Return OK */
-	return TM_BMP180_Result_Ok;
+	return BMP180_Result_Ok;
 }
 
-TM_BMP180_Result_t TM_BMP180_ReadPressure(TM_BMP180_t* BMP180_Data) {
+BMP180_Result_t BMP180_ReadPressure(BMP180_t* BMP180_Data) {
 	uint8_t data[3];
 	
 	/* Check for library initialization */
 	if (!lib_initialized) {
-		return TM_BMP180_Result_LibraryNotInitialized;
+		return BMP180_Result_LibraryNotInitialized;
 	}
 	
 	/* Read multi bytes from I2C */
-	TM_I2C_ReadMulti(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_RESULT, data, 3);
+	I2C_ReadMulti(BMP180_I2C, BMP180_I2C_ADDRESS, BMP180_REGISTER_RESULT, data, 3);
 	
 	/* Get uncompensated pressure */
 	UP = (data[0] << 16 | data[1] << 8 | data[2]) >> (8 - (uint8_t)BMP180_Data->Oversampling);
@@ -192,9 +192,9 @@ TM_BMP180_Result_t TM_BMP180_ReadPressure(TM_BMP180_t* BMP180_Data) {
 	BMP180_Data->Altitude = (float)44330.0 * (float)((float)1.0 - (float)pow((float)p * BMP180_1_101325, 0.19029495));
 	
 	/* Return OK */
-	return TM_BMP180_Result_Ok;
+	return BMP180_Result_Ok;
 }
 
-uint32_t TM_BMP180_GetPressureAtSeaLevel(uint32_t pressure, float altitude) {
+uint32_t BMP180_GetPressureAtSeaLevel(uint32_t pressure, float altitude) {
 	return (uint32_t)((float)pressure / ((float)pow(1 - (float)altitude / (float)44330, 5.255)));
 }

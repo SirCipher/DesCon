@@ -29,7 +29,7 @@
 #include "usbd_usr.h"
 #include "usbd_ioreq.h"
 #include "usb_conf.h"
-#include "tm_stm32f4_usb_hid_device.h"
+#include "stm32f4_usb_hid_device.h"
 #include "defines.h"
 
 USBD_Usr_cb_TypeDef USR_cb = {
@@ -44,7 +44,7 @@ USBD_Usr_cb_TypeDef USR_cb = {
 };
 
 USB_OTG_CORE_HANDLE USB_OTG_dev;
-TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_LibraryNotInitialized;
+USB_HIDDEVICE_Status_t USB_HIDDEVICE_INT_Status = USB_HIDDEVICE_Status_LibraryNotInitialized;
 
 /**
 * @brief  USBD_USR_Init 
@@ -53,7 +53,7 @@ TM_USB_HIDDEVICE_Status_t TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_
 * @retval None
 */
 void USBD_USR_Init(void) {
-	TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_Disconnected;	
+	USB_HIDDEVICE_INT_Status = USB_HIDDEVICE_Status_Disconnected;	
 }
 
 /**
@@ -63,7 +63,7 @@ void USBD_USR_Init(void) {
 * @retval None
 */
 void USBD_USR_DeviceReset(uint8_t speed) {
-	TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_Disconnected;
+	USB_HIDDEVICE_INT_Status = USB_HIDDEVICE_Status_Disconnected;
 }
 
 /**
@@ -73,7 +73,7 @@ void USBD_USR_DeviceReset(uint8_t speed) {
 * @retval Staus
 */
 void USBD_USR_DeviceConfigured(void) {
-	TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_Connected;
+	USB_HIDDEVICE_INT_Status = USB_HIDDEVICE_Status_Connected;
 }
 
 /**
@@ -83,7 +83,7 @@ void USBD_USR_DeviceConfigured(void) {
 * @retval Staus
 */
 void USBD_USR_DeviceConnected(void) {
-	TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_Disconnected;
+	USB_HIDDEVICE_INT_Status = USB_HIDDEVICE_Status_Disconnected;
 }
 
 /**
@@ -93,7 +93,7 @@ void USBD_USR_DeviceConnected(void) {
 * @retval Staus
 */
 void USBD_USR_DeviceDisconnected(void) {
-	TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_Disconnected;
+	USB_HIDDEVICE_INT_Status = USB_HIDDEVICE_Status_Disconnected;
 }
 
 /**
@@ -103,7 +103,7 @@ void USBD_USR_DeviceDisconnected(void) {
 * @retval None
 */
 void USBD_USR_DeviceSuspended(void) {
-	TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_Disconnected;
+	USB_HIDDEVICE_INT_Status = USB_HIDDEVICE_Status_Disconnected;
 }
 
 /**
@@ -113,7 +113,7 @@ void USBD_USR_DeviceSuspended(void) {
 * @retval None
 */
 void USBD_USR_DeviceResumed(void) {
-    TM_USB_HIDDEVICE_INT_Status = TM_USB_HIDDEVICE_Status_Disconnected;
+    USB_HIDDEVICE_INT_Status = USB_HIDDEVICE_Status_Disconnected;
 }
 
 

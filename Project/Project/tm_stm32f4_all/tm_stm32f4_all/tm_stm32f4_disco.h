@@ -28,15 +28,15 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_DISCO_H
-#define TM_DISCO_H 1110
+#ifndef DISCO_H
+#define DISCO_H 1110
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_DISCO
+ * @defgroup DISCO
  * @brief    Leds and buttons for STM32F4 Discovery, Nucleo and eval boards - http://stm32f4-discovery.com/2014/04/stm32f429-discovery-gpio-tutorial-with-onboard-leds-and-button/
  * @{
  *
@@ -44,21 +44,21 @@
  *	
  * \par Supported boards
  *			
- * - STM32F429 Discovery: (STM32F429ZI) - <code>TM_DISCO_STM32F429_DISCOVERY</code>
+ * - STM32F429 Discovery: (STM32F429ZI) - <code>DISCO_STM32F429_DISCOVERY</code>
  *   - Leds:
  *     - LED_GREEN   on PG13
  *     - LED_RED     on PG14
  *   - Button: (HIGH when pressed)
  *     - Blue button on PA0	
- * - NUCLEO-F401: (STM32F401RE) - <code>TM_DISCO_NUCLEO_F401</code>
- * - NUCLEO-F411: (STM32F411RE) - <code>TM_DISCO_NUCLEO_F411</code>
+ * - NUCLEO-F401: (STM32F401RE) - <code>DISCO_NUCLEO_F401</code>
+ * - NUCLEO-F411: (STM32F411RE) - <code>DISCO_NUCLEO_F411</code>
  *   - Led:
  *     - LED_GREEN   on PA5
  *   - Button: (LOW when pressed)
  *     - Blue button on PC13
- * - STM32F401-Discovery: (STM32F401VC) - <code>TM_DISCO_STM32F401_DISCOVERY</code>
- * - STM32F411-Discovery: (STM32F411VE) - <code>TM_DISCO_STM32F411_DISCOVERY</code>
- * - STM32F4-Discovery: (STM32F407VG) - <code>TM_DISCO_STM32F4_DISCOVERY</code>
+ * - STM32F401-Discovery: (STM32F401VC) - <code>DISCO_STM32F401_DISCOVERY</code>
+ * - STM32F411-Discovery: (STM32F411VE) - <code>DISCO_STM32F411_DISCOVERY</code>
+ * - STM32F4-Discovery: (STM32F407VG) - <code>DISCO_STM32F4_DISCOVERY</code>
  *   - Leds:
  *     - LED_GREEN   on PD12
  *     - LED_ORANGE  on PD13
@@ -66,7 +66,7 @@
  *     - LED_BLUE    on PD15
  *   - Button: (HIGH when pressed)
  *     - Blue button on PA0
- * - STM324x9-Eval (STM32F439NI) - <code>TM_DISCO_STM324x9_EVAL</code>
+ * - STM324x9-Eval (STM32F439NI) - <code>DISCO_STM324x9_EVAL</code>
  *   - Leds:
  *     - LED_GREEN   on PG6
  *     - LED_ORANGE  on PG7
@@ -86,12 +86,12 @@
  *
 @verbatim
 //Select STM324x9-Eval for DISCO library
-#define TM_DISCO_STM324x9_EVAL
+#define DISCO_STM324x9_EVAL
 @endverbatim
  * Or if you want STM32F429-Discovery, do this:
 @verbatim
 //Select STM32F429-Discovery for DISCO library
-#define TM_DISCO_STM32F429_DISCOVERY
+#define DISCO_STM32F429_DISCOVERY
 @endverbatim
  *
  * \par Changelog
@@ -124,7 +124,7 @@
  
  Version 1.5
   - November 06, 2014
-  - Added function TM_DISCO_SetLed()
+  - Added function DISCO_SetLed()
  
  Version 1.4
   - Added support for Nucleo F411-RE board
@@ -152,100 +152,100 @@
  */
 #include "stm32f4xx.h"
 #include "defines.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_gpio.h"
 
 /* Recognize correct board */
 /* CooCox support */
 #if defined(STM32F429_439xx) || defined(STM32F429ZI)
 	/* STM32F429 Discovery support */
-	#ifndef TM_DISCO_STM32F429_DISCOVERY
-		#define TM_DISCO_STM32F429_DISCOVERY
+	#ifndef DISCO_STM32F429_DISCOVERY
+		#define DISCO_STM32F429_DISCOVERY
 	#endif 
 #elif defined(STM32F407VG) || defined(STM32F401VC)// || defined(STM32F40_41xxx)
 	/* STM32F4 and STM32F401 Discovery support */
-	#ifndef TM_DISCO_STM32F4_DISCOVERY
-		#define TM_DISCO_STM32F4_DISCOVERY
+	#ifndef DISCO_STM32F4_DISCOVERY
+		#define DISCO_STM32F4_DISCOVERY
 	#endif
 #elif defined (STM32F401xx) || defined(STM32F401RE) || defined(STM32F401RB)
 	/* Nucleo F401RE board support */
-	#ifndef TM_DISCO_NUCLEO_F401
-		#define TM_DISCO_NUCLEO_F401
+	#ifndef DISCO_NUCLEO_F401
+		#define DISCO_NUCLEO_F401
 	#endif
 #elif defined (STM32F411xx) || defined(STM32F411RE) || defined(STM32F411RB)
 	/* Nucleo F411RE board support */
-	#ifndef TM_DISCO_NUCLEO_F411
-		#define TM_DISCO_NUCLEO_F411
+	#ifndef DISCO_NUCLEO_F411
+		#define DISCO_NUCLEO_F411
 	#endif
 #endif
 
 /* STM32F429 Discovery */
-#if defined(TM_DISCO_STM324x9_EVAL)
+#if defined(DISCO_STM324x9_EVAL)
 	#define LED_GREEN					GPIO_PIN_6
 	#define LED_ORANGE					GPIO_PIN_7
 	#define LED_RED						GPIO_PIN_10
 	#define LED_BLUE					GPIO_PIN_12
 	#define LED_ALL						LED_GREEN | LED_RED | LED_ORANGE | LED_BLUE
 	
-	#define TM_DISCO_SWAP_LOGIC
+	#define DISCO_SWAP_LOGIC
 	
-	#define TM_DISCO_LED_PORT			GPIOG
-	#define TM_DISCO_LED_PINS			LED_GREEN | LED_RED | LED_ORANGE | LED_BLUE
+	#define DISCO_LED_PORT			GPIOG
+	#define DISCO_LED_PINS			LED_GREEN | LED_RED | LED_ORANGE | LED_BLUE
 
-	#define TM_DISCO_BUTTON_PORT		GPIOA
-	#define TM_DISCO_BUTTON_PIN			GPIO_PIN_0
-	#define TM_DISCO_BUTTON_PRESSED		1
-	#define TM_DISCO_BUTTON_PULL		TM_GPIO_PuPd_DOWN
-#elif defined(TM_DISCO_STM32F429_DISCOVERY)
+	#define DISCO_BUTTON_PORT		GPIOA
+	#define DISCO_BUTTON_PIN			GPIO_PIN_0
+	#define DISCO_BUTTON_PRESSED		1
+	#define DISCO_BUTTON_PULL		GPIO_PuPd_DOWN
+#elif defined(DISCO_STM32F429_DISCOVERY)
 	#define LED_GREEN					GPIO_PIN_13
 	#define LED_RED						GPIO_PIN_14
 	#define LED_ORANGE					0
 	#define LED_BLUE					0
 	#define LED_ALL						LED_GREEN | LED_RED
 	
-	#define TM_DISCO_LED_PORT			GPIOG
-	#define TM_DISCO_LED_PINS			LED_GREEN | LED_RED
+	#define DISCO_LED_PORT			GPIOG
+	#define DISCO_LED_PINS			LED_GREEN | LED_RED
 
-	#define TM_DISCO_BUTTON_PORT		GPIOA
-	#define TM_DISCO_BUTTON_PIN			GPIO_PIN_0
-	#define TM_DISCO_BUTTON_PRESSED		1
-	#define TM_DISCO_BUTTON_PULL		TM_GPIO_PuPd_DOWN
+	#define DISCO_BUTTON_PORT		GPIOA
+	#define DISCO_BUTTON_PIN			GPIO_PIN_0
+	#define DISCO_BUTTON_PRESSED		1
+	#define DISCO_BUTTON_PULL		GPIO_PuPd_DOWN
 /* STM32F4 & STM32F401 Discovery */
-#elif defined(TM_DISCO_STM32F4_DISCOVERY) || defined(TM_DISCO_STM32F401_DISCOVERY) || defined(TM_DISCO_STM32F411_DISCOVERY)
+#elif defined(DISCO_STM32F4_DISCOVERY) || defined(DISCO_STM32F401_DISCOVERY) || defined(DISCO_STM32F411_DISCOVERY)
 	#define LED_GREEN					GPIO_PIN_12
 	#define LED_ORANGE					GPIO_PIN_13
 	#define LED_RED						GPIO_PIN_14
 	#define LED_BLUE					GPIO_PIN_15
 	#define LED_ALL						LED_GREEN | LED_RED | LED_ORANGE | LED_BLUE
 	
-	#define TM_DISCO_LED_PORT			GPIOD
-	#define TM_DISCO_LED_PINS			LED_GREEN | LED_RED | LED_ORANGE | LED_BLUE
+	#define DISCO_LED_PORT			GPIOD
+	#define DISCO_LED_PINS			LED_GREEN | LED_RED | LED_ORANGE | LED_BLUE
 
-	#define TM_DISCO_BUTTON_PORT		GPIOA
-	#define TM_DISCO_BUTTON_PIN			GPIO_PIN_0
-	#define TM_DISCO_BUTTON_PRESSED		1
-	#define TM_DISCO_BUTTON_PULL		TM_GPIO_PuPd_DOWN
+	#define DISCO_BUTTON_PORT		GPIOA
+	#define DISCO_BUTTON_PIN			GPIO_PIN_0
+	#define DISCO_BUTTON_PRESSED		1
+	#define DISCO_BUTTON_PULL		GPIO_PuPd_DOWN
 /* Nucleo F401-RE & F411-RE */
-#elif defined(TM_DISCO_NUCLEO_F401) || defined(TM_DISCO_NUCLEO_F411)
+#elif defined(DISCO_NUCLEO_F401) || defined(DISCO_NUCLEO_F411)
 	#define LED_GREEN					GPIO_PIN_5
 	#define LED_RED						0
 	#define LED_ORANGE					0
 	#define LED_BLUE					0
 	#define LED_ALL						LED_GREEN
 	
-	#define TM_DISCO_LED_PORT			GPIOA
-	#define TM_DISCO_LED_PINS			LED_GREEN
+	#define DISCO_LED_PORT			GPIOA
+	#define DISCO_LED_PINS			LED_GREEN
 
-	#define TM_DISCO_BUTTON_PORT		GPIOC
-	#define TM_DISCO_BUTTON_PIN			GPIO_PIN_13
-	#define TM_DISCO_BUTTON_PRESSED		0
-	#define TM_DISCO_BUTTON_PULL		TM_GPIO_PuPd_UP
+	#define DISCO_BUTTON_PORT		GPIOC
+	#define DISCO_BUTTON_PIN			GPIO_PIN_13
+	#define DISCO_BUTTON_PRESSED		0
+	#define DISCO_BUTTON_PULL		GPIO_PuPd_UP
 /* STM324x9 EVAL board */
 #else
-	#error "tm_stm32f4_disco.h: Please select your board. Open tm_stm32f4_disco.h and follow instructions!!"
+	#error "stm32f4_disco.h: Please select your board. Open stm32f4_disco.h and follow instructions!!"
 #endif
 
 /**
- * @defgroup TM_DISCO_Functions
+ * @defgroup DISCO_Functions
  * @brief    Library Functions
  * @{
  */
@@ -255,14 +255,14 @@
  * @param  None
  * @retval None
  */
-void TM_DISCO_LedInit(void);
+void DISCO_LedInit(void);
 
 /**
  * @brief  Configures Button pin as input
  * @param  None
  * @retval None
  */
-void TM_DISCO_ButtonInit(void);
+void DISCO_ButtonInit(void);
 
 /**
  * @brief  Turns on LED on board
@@ -275,10 +275,10 @@ void TM_DISCO_ButtonInit(void);
  *            - LED_ALL: All leds
  * @retval None
  */
-#ifndef TM_DISCO_SWAP_LOGIC
-	#define TM_DISCO_LedOn(led)        TM_GPIO_SetPinHigh(TM_DISCO_LED_PORT, (led))
+#ifndef DISCO_SWAP_LOGIC
+	#define DISCO_LedOn(led)        GPIO_SetPinHigh(DISCO_LED_PORT, (led))
 #else
-	#define TM_DISCO_LedOn(led)        TM_GPIO_SetPinLow(TM_DISCO_LED_PORT, (led))
+	#define DISCO_LedOn(led)        GPIO_SetPinLow(DISCO_LED_PORT, (led))
 #endif
 
 /**
@@ -292,10 +292,10 @@ void TM_DISCO_ButtonInit(void);
  *            - LED_ALL: All leds
  * @retval None
  */
-#ifndef TM_DISCO_SWAP_LOGIC
-	#define TM_DISCO_LedOff(led)       TM_GPIO_SetPinLow(TM_DISCO_LED_PORT, (led))
+#ifndef DISCO_SWAP_LOGIC
+	#define DISCO_LedOff(led)       GPIO_SetPinLow(DISCO_LED_PORT, (led))
 #else
-	#define TM_DISCO_LedOff(led)       TM_GPIO_SetPinHigh(TM_DISCO_LED_PORT, (led))
+	#define DISCO_LedOff(led)       GPIO_SetPinHigh(DISCO_LED_PORT, (led))
 #endif
 
 /**
@@ -308,7 +308,7 @@ void TM_DISCO_ButtonInit(void);
  *            - LED_ALL: All leds
  * @retval None
  */
-#define TM_DISCO_LedToggle(led)        TM_GPIO_TogglePinValue(TM_DISCO_LED_PORT, (led))
+#define DISCO_LedToggle(led)        GPIO_TogglePinValue(DISCO_LED_PORT, (led))
 
 /**
  * @brief  Checks if led is on
@@ -321,10 +321,10 @@ void TM_DISCO_ButtonInit(void);
  *            - LED_ALL: All leds
  * @retval 1 if led is on or 0 if not
  */
-#ifndef TM_DISCO_SWAP_LOGIC
-#define TM_DISCO_LedIsOn(led)          TM_GPIO_GetOutputPinValue(TM_DISCO_LED_PORT, (led))
+#ifndef DISCO_SWAP_LOGIC
+#define DISCO_LedIsOn(led)          GPIO_GetOutputPinValue(DISCO_LED_PORT, (led))
 #else
-#define TM_DISCO_LedIsOn(led)          !TM_GPIO_GetOutputPinValue(TM_DISCO_LED_PORT, (led))
+#define DISCO_LedIsOn(led)          !GPIO_GetOutputPinValue(DISCO_LED_PORT, (led))
 #endif
 
 /**
@@ -340,7 +340,7 @@ void TM_DISCO_ButtonInit(void);
  *            - > 0: led is on
  * @retval None
  */
-#define TM_DISCO_SetLed(led, state)    ((state) ? TM_DISCO_LedOn(led): TM_DISCO_LedOff(led))
+#define DISCO_SetLed(led, state)    ((state) ? DISCO_LedOn(led): DISCO_LedOff(led))
 
 /**
  * @brief  Checks if user button is pressed
@@ -349,7 +349,7 @@ void TM_DISCO_ButtonInit(void);
  *            - 0: Button is not pressed
  *            - > 0: Button is pressed
  */
-#define TM_DISCO_ButtonPressed()       ((TM_GPIO_GetInputPinValue(TM_DISCO_BUTTON_PORT, TM_DISCO_BUTTON_PIN) == 0) != TM_DISCO_BUTTON_PRESSED)
+#define DISCO_ButtonPressed()       ((GPIO_GetInputPinValue(DISCO_BUTTON_PORT, DISCO_BUTTON_PIN) == 0) != DISCO_BUTTON_PRESSED)
 
 /**
  * @brief  Checks if button was pressed now, but was not already pressed before
@@ -358,7 +358,7 @@ void TM_DISCO_ButtonInit(void);
  *           - 0: In case that button has been already pressed on last call or was not pressed at all yet
  *           - > 0: Button was pressed, but state before was released
  */
-uint8_t TM_DISCO_ButtonOnPressed(void);
+uint8_t DISCO_ButtonOnPressed(void);
 
 /**
  * @brief  Checks if button was released now, but was already pressed before
@@ -367,7 +367,7 @@ uint8_t TM_DISCO_ButtonOnPressed(void);
  *           - 0: In case that button has been already released on last call or was not released at all yet
  *           - > 0: Button was released, but state before was pressed
  */
-uint8_t TM_DISCO_ButtonOnReleased(void);
+uint8_t DISCO_ButtonOnReleased(void);
 
 /**
  * @}

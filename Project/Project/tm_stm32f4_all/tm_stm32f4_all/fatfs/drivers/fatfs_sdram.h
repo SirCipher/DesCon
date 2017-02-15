@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_FATFS_SDRAM_H
-#define TM_FATFS_SDRAM_H 100
+#ifndef FATFS_SDRAM_H
+#define FATFS_SDRAM_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern C {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_FATFS_SDRAM
+ * @defgroup FATFS_SDRAM
  * @brief    Library description here
  * @{
  *
@@ -63,13 +63,13 @@ extern C {
 
 #include "stm32f4xx.h"
 #include "defines.h"
-#include "tm_stm32f4_sdram.h"
+#include "stm32f4_sdram.h"
 
 /* FATFS functions */
 #include "diskio.h"
 
 /**
- * @defgroup TM_FATFS_SDRAM_Macros
+ * @defgroup FATFS_SDRAM_Macros
  * @brief    Library defines
  * @{
  */
@@ -83,7 +83,7 @@ extern C {
  */
  
 /**
- * @defgroup TM_FATFS_SDRAM_Typedefs
+ * @defgroup FATFS_SDRAM_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -93,16 +93,16 @@ extern C {
  */
 
 /**
- * @defgroup TM_FATFS_SDRAM_Functions
+ * @defgroup FATFS_SDRAM_Functions
  * @brief    Library Functions - Low level functions for FATFS implementation
  * @{
  */
 
-DSTATUS TM_FATFS_SDRAM_disk_initialize(void);
-DSTATUS TM_FATFS_SDRAM_disk_status(void);
-DRESULT TM_FATFS_SDRAM_disk_ioctl(BYTE cmd, void *buff);
-DRESULT TM_FATFS_SDRAM_disk_read(BYTE *buff, DWORD sector, UINT count);
-DRESULT TM_FATFS_SDRAM_disk_write(const BYTE *buff, DWORD sector, UINT count);
+DSTATUS FATFS_SDRAM_disk_initialize(void);
+DSTATUS FATFS_SDRAM_disk_status(void);
+DRESULT FATFS_SDRAM_disk_ioctl(BYTE cmd, void *buff);
+DRESULT FATFS_SDRAM_disk_read(BYTE *buff, DWORD sector, UINT count);
+DRESULT FATFS_SDRAM_disk_write(const BYTE *buff, DWORD sector, UINT count);
 
 /**
  * @}

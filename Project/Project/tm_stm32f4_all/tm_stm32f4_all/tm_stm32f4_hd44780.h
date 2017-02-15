@@ -27,15 +27,15 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_HD44780_H
-#define TM_HD44780_H 120
+#ifndef HD44780_H
+#define HD44780_H 120
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_HD44780
+ * @defgroup HD44780
  * @brief    HD44780 LCD driver library for STM32F4xx - http://stm32f4-discovery.com/2014/06/library-16-interfacing-hd44780-lcd-controller-with-stm32f4/
  * @{
  *
@@ -114,11 +114,11 @@ K		GND				Ground for back light
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_gpio.h"
 
 /**
- * @defgroup TM_HD44780_Macros
+ * @defgroup HD44780_Macros
  * @brief    Library defines
  * @{
  */
@@ -162,7 +162,7 @@ K		GND				Ground for back light
  */
 
 /**
- * @defgroup TM_HD44780_Functions
+ * @defgroup HD44780_Functions
  * @brief    Library Functions
  * @{
  */
@@ -173,28 +173,28 @@ K		GND				Ground for back light
  * @param  rows: height of lcd
  * @retval None
  */
-void TM_HD44780_Init(uint8_t cols, uint8_t rows);
+void HD44780_Init(uint8_t cols, uint8_t rows);
 
 /**
  * @brief  Turn display on
  * @param  None
  * @retval None
  */
-void TM_HD44780_DisplayOn(void);
+void HD44780_DisplayOn(void);
 
 /**
  * @brief  Turn display off
  * @param  None
  * @retval None
  */
-void TM_HD44780_DisplayOff(void);
+void HD44780_DisplayOff(void);
 
 /**
  * @brief  Clears entire LCD
  * @param  None
  * @retval None
  */
-void TM_HD44780_Clear(void);
+void HD44780_Clear(void);
 
 /**
  * @brief  Puts string on lcd
@@ -203,49 +203,49 @@ void TM_HD44780_Clear(void);
  * @param  *str: pointer to string to display
  * @retval None
  */
-void TM_HD44780_Puts(uint8_t x, uint8_t y, char* str);
+void HD44780_Puts(uint8_t x, uint8_t y, char* str);
 
 /**
  * @brief  Enables cursor blink
  * @param  None
  * @retval None
  */
-void TM_HD44780_BlinkOn(void);
+void HD44780_BlinkOn(void);
 
 /**
  * @brief  Disables cursor blink
  * @param  None
  * @retval None
  */
-void TM_HD44780_BlinkOff(void);
+void HD44780_BlinkOff(void);
 
 /**
  * @brief  Shows cursor
  * @param  None
  * @retval None
  */
-void TM_HD44780_CursorOn(void);
+void HD44780_CursorOn(void);
 
 /**
  * @brief  Hides cursor
  * @param  None
  * @retval None
  */
-void TM_HD44780_CursorOff(void);
+void HD44780_CursorOff(void);
 
 /**
  * @brief  Scrolls display to the left
  * @param  None
  * @retval None
  */
-void TM_HD44780_ScrollLeft(void);
+void HD44780_ScrollLeft(void);
 
 /**
  * @brief  Scrolls display to the right
  * @param  None
  * @retval None
  */
-void TM_HD44780_ScrollRight(void);
+void HD44780_ScrollRight(void);
 
 /**
  * @brief  Creates custom character
@@ -253,14 +253,14 @@ void TM_HD44780_ScrollRight(void);
  * @param *data: Pointer to 8-bytes of data for one character
  * @retval None
  */
-void TM_HD44780_CreateChar(uint8_t location, uint8_t* data);
+void HD44780_CreateChar(uint8_t location, uint8_t* data);
 
 /**
  * @brief  Puts custom created character on LCD
  * @param  location: Location on LCD where character is stored, 0 - 7
  * @retval None
  */
-void TM_HD44780_PutCustom(uint8_t x, uint8_t y, uint8_t location);
+void HD44780_PutCustom(uint8_t x, uint8_t y, uint8_t location);
 
 /**
  * @}

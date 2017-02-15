@@ -31,8 +31,8 @@
  * 	- 11x18 pixels
  * 	- 16x26 pixels
  */
-#ifndef TM_GRAPHIC_FONTS_H
-#define TM_GRAPHIC_FONTS_H	100
+#ifndef GRAPHIC_FONTS_H
+#define GRAPHIC_FONTS_H	100
 /**
  * Dependencies
  * - STM32F4xx
@@ -58,24 +58,24 @@ typedef struct {
 	uint8_t FontWidth;
 	uint8_t FontHeight;
 	const uint16_t* data;
-} TM_GraphicFont_t;
+} GraphicFont_t;
 
 /**
  * Fonts used in GRAPHIC library
  * 
- * TM_Font_7x10
+ * Font_7x10
  * 	- Width: 7px
  * 	- Height: 10px
- * TM_Font_11x18
+ * Font_11x18
  * 	- Width: 11px
  * 	- Height: 18px
- * TM_Font_16x26
+ * Font_16x26
  * 	- Width: 16px
  * 	- Height: 26px
  */
-extern TM_GraphicFont_t TM_Font_7x10;
-extern TM_GraphicFont_t TM_Font_11x18;
-extern TM_GraphicFont_t TM_Font_16x26;
+extern GraphicFont_t Font_7x10;
+extern GraphicFont_t Font_11x18;
+extern GraphicFont_t Font_16x26;
 
 #endif
 

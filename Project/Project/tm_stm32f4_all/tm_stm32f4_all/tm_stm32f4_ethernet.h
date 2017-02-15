@@ -28,20 +28,20 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_ETHERNET_H
-#define TM_ETHERNET_H 110
+#ifndef ETHERNET_H
+#define ETHERNET_H 110
 
 /* C++ detection */
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_ETHERNET
+ * @defgroup ETHERNET
  * @brief    Ethernet library for STM32F4xx devices with built in ETH MAC - http://stm32f4-discovery.com/2015/02/library-52-ethernet-peripheral-on-stm32f4xx/
  * @{
  *
@@ -190,8 +190,8 @@ TXD1        |PB13   |PG14
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
 #include "attributes.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_gpio.h"
 
 /* Ethernet based includes */
 #include "stm32f4x7_eth.h"
@@ -207,7 +207,7 @@ TXD1        |PB13   |PG14
 #include "stdio.h"
 
 /**
- * @defgroup TM_ETHERNET_Macros
+ * @defgroup ETHERNET_Macros
  * @brief    Library defines
  * @{
  */
@@ -242,7 +242,7 @@ TXD1        |PB13   |PG14
 /* In case you want to use custom MAC, use parameter in init function */
 /**
  * @brief  Default MAC address for your device
- * @note   This MAC is used in case you set mac_addr param in @ref TM_ETHERNET_Init() function to "NULL"
+ * @note   This MAC is used in case you set mac_addr param in @ref ETHERNET_Init() function to "NULL"
  */
 #ifndef MAC_ADDR0
 #define MAC_ADDR0							0x06
@@ -259,7 +259,7 @@ TXD1        |PB13   |PG14
 /**
  * @brief  Default IP address
  * @note   Used in case DHCP is not used or response failed 
- * @note   In case you want to use custom IP, use parameter in @ref TM_ETHERNET_Init() function
+ * @note   In case you want to use custom IP, use parameter in @ref ETHERNET_Init() function
  */
 #ifndef IP_ADDR0
 #define IP_ADDR0							192
@@ -270,7 +270,7 @@ TXD1        |PB13   |PG14
 
 /**
  * @brief  Netmask address
- * @note   In case you want to use custom netmask, use parameter in @ref TM_ETHERNET_Init() function
+ * @note   In case you want to use custom netmask, use parameter in @ref ETHERNET_Init() function
  */
 #ifndef NETMASK_ADDR0
 #define NETMASK_ADDR0						255
@@ -281,7 +281,7 @@ TXD1        |PB13   |PG14
 
 /**
  * @brief  Gateway address
- * @note   In case you want to use custom gateway, use parameter in @ref TM_ETHERNET_Init() function
+ * @note   In case you want to use custom gateway, use parameter in @ref ETHERNET_Init() function
  */
 #ifndef GW_ADDR0
 #define GW_ADDR0							192
@@ -349,13 +349,13 @@ TXD1        |PB13   |PG14
  */
 
 /**
- * @defgroup TM_ETHERNET_Typedefs
+ * @defgroup ETHERNET_Typedefs
  * @brief    Library Typedefs
  * @{
  */
  
 /**
- * @defgroup TM_ETHERNET_PRIVATE_Typedefs
+ * @defgroup ETHERNET_PRIVATE_Typedefs
  * @brief    Library private Typedefs
  * @{
  */
@@ -381,8 +381,8 @@ typedef struct {
 	uint8_t speed_100m;
 	uint8_t full_duplex;
 	uint8_t timeout_detected;
-} TM_ETHERNET_t;
-extern TM_ETHERNET_t TM_ETHERNET;
+} ETHERNET_t;
+extern ETHERNET_t ETHERNET;
 
 /**
  * @brief  Client protocol states
@@ -403,7 +403,7 @@ typedef enum  {
  * @brief  Client structure, passed as first parameter in all client based callback functions
  */
 typedef struct {
-	char name[ETHERNET_MAX_CONNECTION_NAME]; /*!< Connection name, we choose it when we call @ref TM_ETHERNETCLIENT_Connect function */
+	char name[ETHERNET_MAX_CONNECTION_NAME]; /*!< Connection name, we choose it when we call @ref ETHERNETCLIENT_Connect function */
 	uint8_t active;                          /*!< Connection is active */
 	uint8_t ip_addr[4];                      /*!< IP address for our external connection */
 	uint16_t port;                           /*!< Port for our external connection */
@@ -420,7 +420,7 @@ typedef struct {
 	struct tcp_pcb* pcb;                     /*!< Pointer to currently active PCB */
 	client_states state;                     /*!< client status */
 	struct pbuf *p_tx;                       /*!< Pointer to current active buffer */
-} TM_TCPCLIENT_t;
+} TCPCLIENT_t;
 
 /**
  * @brief  POST request structure
@@ -435,24 +435,24 @@ typedef struct {
 	int content_len;           /*!< Length of content (data) in bytes */
 	char* response_uri;        /*!< Pointer to address (file address, "/index.html" for example) which will be used to show url to user. This parameter must be filled by user */
 	uint16_t response_uri_len; /*!< Length of buffer for response uri */
-} TM_ETHERNETPOST_t;
+} ETHERNETPOST_t;
 
 /**
  * @brief  Result enumeration used in ethernet library.
  */
 typedef enum {
-	TM_ETHERNET_Result_Ok = 0,               /*!< Everything is OK */
-	TM_ETHERNET_Result_Error,                /*!< An error occured */
-	TM_ETHERNET_Result_IPIsNotSetYet,        /*!< We don't have set IP */
-	TM_ETHERNET_Result_LinkIsDown,           /*!< Link is down */
-	TM_ETHERNET_Result_NeedHardReset,        /*!< We need hardware reset */
-	TM_ETHERNET_Result_LibraryNotInitialized /*!< Library is not initialized */
-} TM_ETHERNET_Result_t;
+	ETHERNET_Result_Ok = 0,               /*!< Everything is OK */
+	ETHERNET_Result_Error,                /*!< An error occured */
+	ETHERNET_Result_IPIsNotSetYet,        /*!< We don't have set IP */
+	ETHERNET_Result_LinkIsDown,           /*!< Link is down */
+	ETHERNET_Result_NeedHardReset,        /*!< We need hardware reset */
+	ETHERNET_Result_LibraryNotInitialized /*!< Library is not initialized */
+} ETHERNET_Result_t;
 
 /**
  * @brief  User friendly typedef for SSI tags
  */
-typedef const char * TM_ETHERNET_SSI_t;
+typedef const char * ETHERNET_SSI_t;
 
 /**
  * @brief  Structure for CGI tags 
@@ -463,20 +463,20 @@ typedef const char * TM_ETHERNET_SSI_t;
  *            const char * HandlerFunctionName(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
  * @note   Function must return "URL" which will be displayed to user, for example "/index.html" to show first site
  */
-typedef tCGI TM_ETHERNET_CGI_t;
+typedef tCGI ETHERNET_CGI_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_ETHERNET_Functions
+ * @defgroup ETHERNET_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
- * @defgroup TM_ETHERNET_GLOBAL_Functions
+ * @defgroup ETHERNET_GLOBAL_Functions
  * @brief    Library global Functions
  * @{
  */
@@ -502,33 +502,33 @@ typedef tCGI TM_ETHERNET_CGI_t;
  * @param  *netmask:
  *		      Pointer to 4 bytes long array, if you want to select custom netmask
  *		      Set to NULL for default value
- * @retval Member of @ref TM_ETHERNET_Result_t
+ * @retval Member of @ref ETHERNET_Result_t
  */
-TM_ETHERNET_Result_t TM_ETHERNET_Init(uint8_t* mac_addr, uint8_t* ip_addr, uint8_t* gateway, uint8_t* netmask);
+ETHERNET_Result_t ETHERNET_Init(uint8_t* mac_addr, uint8_t* ip_addr, uint8_t* gateway, uint8_t* netmask);
 
 /**
  * @brief  Updates ethernet LwIP stack
  * @note   This function should be called periodically, as fast as possible
- * @retval Member of @ref TM_ETHERNET_Result_t
+ * @retval Member of @ref ETHERNET_Result_t
  */
-TM_ETHERNET_Result_t TM_ETHERNET_Update(void);
+ETHERNET_Result_t ETHERNET_Update(void);
 
 /**
  * @brief  This function should be called in specific time period for LwIP stack using interrupts
  * @param  millis: Number of milliseconds, that will be added to LwIP stack.
  *             This value should be the same as period of your interrupt (Systick) timer.
- * @retval Member of @ref TM_ETHERNET_Result_t
+ * @retval Member of @ref ETHERNET_Result_t
  */
-TM_ETHERNET_Result_t TM_ETHERNET_TimeUpdate(uint16_t millis);
+ETHERNET_Result_t ETHERNET_TimeUpdate(uint16_t millis);
 
 /**
  * @brief  Tests if ethernet library is prepared to work as client or server
  * @param  None
  * @retval Ethernet status
- *            - TM_ETHERNET_Result_Ok: In case link is up and ip is set (static or DHCP)
- *            - TM_ETHERNET_Result_Error: On other cases
+ *            - ETHERNET_Result_Ok: In case link is up and ip is set (static or DHCP)
+ *            - ETHERNET_Result_Error: On other cases
  */
-TM_ETHERNET_Result_t TM_ETHERNET_TestReady(void);
+ETHERNET_Result_t ETHERNET_TestReady(void);
 
 /**
  * @brief  Checks if device has static IP
@@ -537,7 +537,7 @@ TM_ETHERNET_Result_t TM_ETHERNET_TestReady(void);
  *            - 0: IP assigned via DHCP
  *            - > 0: IP is static
  */
-#define TM_ETHERNET_IsIPStatic()            (TM_ETHERNET.staticip)
+#define ETHERNET_IsIPStatic()            (ETHERNET.staticip)
 
 /**
  * @brief  Checks if device has 100Mbit network connection
@@ -546,7 +546,7 @@ TM_ETHERNET_Result_t TM_ETHERNET_TestReady(void);
  *            - 0: Connection is 10Mbit
  *            - > 0: Connection is 100Mbit
  */
-#define TM_ETHERNET_Is100M()                (TM_ETHERNET.speed_100m)
+#define ETHERNET_Is100M()                (ETHERNET.speed_100m)
 
 /**
  * @brief  Checks if device is in full duplex mode
@@ -555,35 +555,35 @@ TM_ETHERNET_Result_t TM_ETHERNET_TestReady(void);
  *            - 0: Device is in full duplex mode
  *            - > 0: Device is in half dupley mode
  */
-#define TM_ETHERNET_IsFullDuplex()          (TM_ETHERNET.full_duplex)
+#define ETHERNET_IsFullDuplex()          (ETHERNET.full_duplex)
 
 /**
  * @brief  Get local IP address
  * @param  x: IP section, 0 to 3 are allowed. 0 is MSB and 3 is LSB
  * @retval IP address is returned at x location of address
  */
-#define TM_ETHERNET_GetLocalIP(x)			(((x) >= 0 && (x) < 4) ? TM_ETHERNET.ip_addr[(x)] : 0)
+#define ETHERNET_GetLocalIP(x)			(((x) >= 0 && (x) < 4) ? ETHERNET.ip_addr[(x)] : 0)
 
 /**
  * @brief  Get MAC address
  * @param  x: MAC section, 0 to 5 are allowed. 0 is MSB and 5 is LSB
  * @retval MAC address is returned at x location of address
  */
-#define TM_ETHERNET_GetMACAddr(x)			(((x) >= 0 && (x) < 6) ? TM_ETHERNET.mac_addr[(x)] : 0)
+#define ETHERNET_GetMACAddr(x)			(((x) >= 0 && (x) < 6) ? ETHERNET.mac_addr[(x)] : 0)
 
 /**
  * @brief  Get gateway address
  * @param  x: IP section, 0 to 3 are allowed. 0 is MSB and 3 is LSB
  * @retval Gateway address is returned at x location of address
  */
-#define TM_ETHERNET_GetGateway(x)			(((x) >= 0 && (x) < 4) ? TM_ETHERNET.gateway[(x)] : 0)
+#define ETHERNET_GetGateway(x)			(((x) >= 0 && (x) < 4) ? ETHERNET.gateway[(x)] : 0)
 
 /**
  * @brief  Get netmask address
  * @param  x: Netmask section, 0 to 3 are allowed. 0 is MSB and 3 is LSB
  * @retval Netmask address is returned at x location of address
  */
-#define TM_ETHERNET_GetNetmask(x)			(((x) >= 0 && (x) < 4) ? TM_ETHERNET.netmask[(x)] : 0)
+#define ETHERNET_GetNetmask(x)			(((x) >= 0 && (x) < 4) ? ETHERNET.netmask[(x)] : 0)
 
 /**
  * @brief  Sets flag when timeout was detected by your software
@@ -593,34 +593,34 @@ TM_ETHERNET_Result_t TM_ETHERNET_TestReady(void);
  * @param  None
  * @retval None
  */
-#define TM_ETHERNET_SetTimeoutDetected()    (TM_ETHERNET.timeout_detected = 1)
+#define ETHERNET_SetTimeoutDetected()    (ETHERNET.timeout_detected = 1)
 
 /**
  * @}
  */
  
  /**
- * @defgroup TM_ETHERNET_SERVER_Functions
+ * @defgroup ETHERNET_SERVER_Functions
  * @brief    Library server based Functions
  * @{
  */
 
 /**
  * @brief  Enables and prepares LwIP stack for server functionality.
- * @note   Before you can use this function, you have to initialize LwIP stack with @ref TM_ETHERNET_Init function.
+ * @note   Before you can use this function, you have to initialize LwIP stack with @ref ETHERNET_Init function.
  * @param  server_port: Select your port on which you want to operate.
  *            Set this variable to 0 and last used PORT will be selected
  *            If you call this function multiple times, only first time will work this parameter
- * @retval Member of @ref TM_ETHERNET_Result_t
+ * @retval Member of @ref ETHERNET_Result_t
  */
-TM_ETHERNET_Result_t TM_ETHERNETSERVER_Enable(uint16_t server_port);
+ETHERNET_Result_t ETHERNETSERVER_Enable(uint16_t server_port);
 
 /**
  * @brief  Disables and stops LwIP stack from server functionality.
  * @param  None
- * @retval Member of @ref TM_ETHERNET_Result_t is returned
+ * @retval Member of @ref ETHERNET_Result_t is returned
  */
-TM_ETHERNET_Result_t TM_ETHERNETSERVER_Disable(void);
+ETHERNET_Result_t ETHERNETSERVER_Disable(void);
 
 /**
  * @brief  Checks if server mode is enabled.
@@ -629,35 +629,35 @@ TM_ETHERNET_Result_t TM_ETHERNETSERVER_Disable(void);
  *            - 0: Server mode is not active
  *            - > 0: Server mode is active
  */
-#define TM_ETHERNETSERVER_Enabled()				(TM_ETHERNET.server_active)
+#define ETHERNETSERVER_Enabled()				(ETHERNET.server_active)
 
 /**
  * @brief  Gets port number on which server is active
  * @param  None
  * @retval Port number on which server is active
  */
-#define TM_ETHERNETSERVER_GetPortNumber()		(TM_ETHERNET.server_port)
+#define ETHERNETSERVER_GetPortNumber()		(ETHERNET.server_port)
 
 /**
  * @brief  Gets number of all sent bytes from server to client
  * @param  None
  * @retval Number of sent bytes from server to client
  */
-#define TM_ETHERNETSERVER_GetTXBytes()			(TM_ETHERNET.Server_TX_Bytes)
+#define ETHERNETSERVER_GetTXBytes()			(ETHERNET.Server_TX_Bytes)
 
 /**
  * @brief  Gets number of all received bytes from client to server
  * @param  None
  * @retval Number of received bytes from client to server
  */
-#define TM_ETHERNETSERVER_GetRXBytes()			(TM_ETHERNET.Server_RX_Bytes)
+#define ETHERNETSERVER_GetRXBytes()			(ETHERNET.Server_RX_Bytes)
 
 /**
  * @brief  Gets number of all connections that have been made to server
  * @param  None
  * @retval Number of connections made to server
  */
-#define TM_ETHERNETSERVER_GetConnectionsCount()	(TM_ETHERNET.Server_Connections)
+#define ETHERNETSERVER_GetConnectionsCount()	(ETHERNET.Server_Connections)
 
 /**
  * @brief  Set SSI tags, which will be used in your HTML files for displaying variables on website.
@@ -670,9 +670,9 @@ TM_ETHERNET_Result_t TM_ETHERNETSERVER_Disable(void);
  *         This function can be called only once, future calls will be denied!
  * @param  *tags: Pointer to array of pointers for tags that are used in your html files
  * @param  number_of_tags: Number of tags in your array
- * @retval Member of @ref TM_ETHERNET_Result_t
+ * @retval Member of @ref ETHERNET_Result_t
  */
-TM_ETHERNET_Result_t TM_ETHERNETSERVER_SetSSITags(TM_ETHERNET_SSI_t* tags, uint16_t number_of_tags);
+ETHERNET_Result_t ETHERNETSERVER_SetSSITags(ETHERNET_SSI_t* tags, uint16_t number_of_tags);
 
 /**
  * @brief  Set GCI handlers which will be used when you want to control something over ethernet configured as server, for example, turn on/off leds.
@@ -684,18 +684,18 @@ TM_ETHERNET_Result_t TM_ETHERNETSERVER_SetSSITags(TM_ETHERNET_SSI_t* tags, uint1
  *
  *         This function can be called only once, future calls will be denied!
  *
- * @param  *cgis: Pointer to TM_ETHERNET_CGI_t structure with link/function pair combination. It can be array of structures
+ * @param  *cgis: Pointer to ETHERNET_CGI_t structure with link/function pair combination. It can be array of structures
  * @param  number_of_handlers: Number of pairs for .cgi and handler combination
- * @retval Member of @ref TM_ETHERNET_Result_t
+ * @retval Member of @ref ETHERNET_Result_t
  */
-TM_ETHERNET_Result_t TM_ETHERNETSERVER_SetCGIHandlers(const TM_ETHERNET_CGI_t* cgis, uint16_t number_of_handlers);
+ETHERNET_Result_t ETHERNETSERVER_SetCGIHandlers(const ETHERNET_CGI_t* cgis, uint16_t number_of_handlers);
 
 /**
  * @}
  */
  
  /**
- * @defgroup TM_ETHERNET_CLIENT_Functions
+ * @defgroup ETHERNET_CLIENT_Functions
  * @brief    Library client based Functions
  * @{
  */
@@ -710,46 +710,46 @@ TM_ETHERNET_Result_t TM_ETHERNETSERVER_SetCGIHandlers(const TM_ETHERNET_CGI_t* c
  * @param  ip4: IP address. ip1 is MSB, ip4 is LSB
  * @param  port: Port to which we want connect to server
  * @param  *user_parameters: Pointer to user data to be passed to this function.
- *            This data will be used in all client based callbacks inside TM_TCPCLIENT_t pointer variable
+ *            This data will be used in all client based callbacks inside TCPCLIENT_t pointer variable
  *            Use NULL in case you don't want to pass any data.
- * @retval Member of @ref TM_ETHERNET_Result_t
+ * @retval Member of @ref ETHERNET_Result_t
  */
-TM_ETHERNET_Result_t TM_ETHERNETCLIENT_Connect(char* conn_name, uint8_t ip1, uint8_t ip2, uint8_t ip3, uint8_t ip4, uint16_t port, void* user_parameters);
+ETHERNET_Result_t ETHERNETCLIENT_Connect(char* conn_name, uint8_t ip1, uint8_t ip2, uint8_t ip3, uint8_t ip4, uint16_t port, void* user_parameters);
 
 /**
  * @brief  Gets total number of sent bytes when you are client
  * @param  None
  * @retval Number of transmitted bytes as a client
  */
-#define TM_ETHERNETCLIENT_GetTXBytes()						(TM_ETHERNET.Client_TX_Bytes)
+#define ETHERNETCLIENT_GetTXBytes()						(ETHERNET.Client_TX_Bytes)
 
 /**
  * @brief  Gets total number of received bytes when you are client
  * @param  None
  * @retval Number of received bytes as a client
  */
-#define TM_ETHERNETCLIENT_GetRXBytes()						(TM_ETHERNET.Client_RX_Bytes)
+#define ETHERNETCLIENT_GetRXBytes()						(ETHERNET.Client_RX_Bytes)
 
 /**
  * @brief  Gets number of all connections done as a client
  * @param  None
  * @retval Number of all connections done as a client
  */
-#define TM_ETHERNETCLIENT_GetConnectionsCount()				(TM_ETHERNET.ClientConnections)
+#define ETHERNETCLIENT_GetConnectionsCount()				(ETHERNET.ClientConnections)
 
 /**
  * @brief  Get number of all successfull connections done as a client
  * @param  None
  * @retval All successfull connections done as a client
  */
-#define TM_ETHERNETCLIENT_GetSuccessfullConnectionsCount()	(TM_ETHERNET.ClientSuccessfullConnections)
+#define ETHERNETCLIENT_GetSuccessfullConnectionsCount()	(ETHERNET.ClientSuccessfullConnections)
 
 /**
  * @}
  */
  
  /**
- * @defgroup TM_ETHERNET_DNS_Functions
+ * @defgroup ETHERNET_DNS_Functions
  * @brief    Library DNS based Functions
  * @{
  */
@@ -759,16 +759,16 @@ TM_ETHERNET_Result_t TM_ETHERNETCLIENT_Connect(char* conn_name, uint8_t ip1, uin
  * @note   This function can be used to get IP address by passing it's domain name to it.
  * @note   Different DNS callback functions will be called, depending on what will happen with DNS.
  * @param  *host_name: Domain name for which you need IP address.
- * @retval Member of @ref TM_ETHERNET_Result_t
+ * @retval Member of @ref ETHERNET_Result_t
  */
-TM_ETHERNET_Result_t TM_ETHERNETDNS_GetHostByName(char* host_name);
+ETHERNET_Result_t ETHERNETDNS_GetHostByName(char* host_name);
 
 /**
  * @}
  */
  
  /**
- * @defgroup TM_ETHERNET_CALLBACK_Functions
+ * @defgroup ETHERNET_CALLBACK_Functions
  * @brief    Library callback Functions
  * @{
  */
@@ -785,7 +785,7 @@ TM_ETHERNET_Result_t TM_ETHERNETDNS_GetHostByName(char* host_name);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNET_IPIsSetCallback(uint8_t ip_addr1, uint8_t ip_addr2, uint8_t ip_addr3, uint8_t ip_addr4, uint8_t dhcp);
+void ETHERNET_IPIsSetCallback(uint8_t ip_addr1, uint8_t ip_addr2, uint8_t ip_addr3, uint8_t ip_addr4, uint8_t dhcp);
 
 /**
  * @brief  DHCP started callback
@@ -793,7 +793,7 @@ void TM_ETHERNET_IPIsSetCallback(uint8_t ip_addr1, uint8_t ip_addr2, uint8_t ip_
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNET_DHCPStartCallback(void);
+void ETHERNET_DHCPStartCallback(void);
 
 /**
  * @brief  Link is down callback
@@ -802,7 +802,7 @@ void TM_ETHERNET_DHCPStartCallback(void);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNET_LinkIsDownCallback(void);
+void ETHERNET_LinkIsDownCallback(void);
 
 /**
  * @brief  Link is up callback
@@ -811,7 +811,7 @@ void TM_ETHERNET_LinkIsDownCallback(void);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNET_LinkIsUpCallback(void);
+void ETHERNET_LinkIsUpCallback(void);
 
 /**
  * @brief  System reset callback
@@ -824,7 +824,7 @@ void TM_ETHERNET_LinkIsUpCallback(void);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNET_SystemResetCallback(void);
+void ETHERNET_SystemResetCallback(void);
 
 /**
  * @brief  Create headers callback
@@ -837,21 +837,21 @@ void TM_ETHERNET_SystemResetCallback(void);
  *
 @verbatim
 GET / HTTP/1.1\r\n
-Host: TM_ETHERNETClient\r\n
+Host: ETHERNETClient\r\n
 Connection: close\r\n
 \r\n
 @endverbatim
  *
  * @note   Buffer length can't be larger than @ref ETHERNET_MAX_HEADER_SIZE define.
  *
- * @param  *connection: Pointer to @ref TM_TCPCLIENT_t which contains current connection specifications.
+ * @param  *connection: Pointer to @ref TCPCLIENT_t which contains current connection specifications.
  * @param  *buffer: Char memory buffer where to store your header data
  * @param  buffer_length: Maximal memory length for your header data
  * @retval Number of characters written in buffer.
  *         If you return 0 (zero) then connection will be closed.
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-uint16_t TM_ETHERNETCLIENT_CreateHeadersCallback(TM_TCPCLIENT_t* connection, char* buffer, uint16_t buffer_length);
+uint16_t ETHERNETCLIENT_CreateHeadersCallback(TCPCLIENT_t* connection, char* buffer, uint16_t buffer_length);
 
 /**
  * @brief  Receive data callback
@@ -859,24 +859,24 @@ uint16_t TM_ETHERNETCLIENT_CreateHeadersCallback(TM_TCPCLIENT_t* connection, cha
  *         This function is called when we have data available to be received.
  *
  * @note   It might happen that it will be called multiple times for one request, depends on server's response and length of data.
- * @param  *connection: Pointer to @ref TM_TCPCLIENT_t which contains current connection specifications.
+ * @param  *connection: Pointer to @ref TCPCLIENT_t which contains current connection specifications.
  * @param  buffer: Memory buffer with data
  * @param  buffer_length: Number of characters in buffer
  * @param  Number of unread data. If this value is the same as buffer_length, then no remaining data is available in packet
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETCLIENT_ReceiveDataCallback(TM_TCPCLIENT_t* connection, uint8_t* buffer, uint16_t buffer_length, uint16_t total_length);
+void ETHERNETCLIENT_ReceiveDataCallback(TCPCLIENT_t* connection, uint8_t* buffer, uint16_t buffer_length, uint16_t total_length);
 
 /**
  * @brief  Connected callback
  *
  *         This function is called when device is connected to specific server.
- * @param  *connection: Pointer to @ref TM_TCPCLIENT_t which contains current connection's specifications.
+ * @param  *connection: Pointer to @ref TCPCLIENT_t which contains current connection's specifications.
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETCLIENT_ConnectedCallback(TM_TCPCLIENT_t* connection);
+void ETHERNETCLIENT_ConnectedCallback(TCPCLIENT_t* connection);
 
 /**
  * @brief  Client Connection closed callback
@@ -884,12 +884,12 @@ void TM_ETHERNETCLIENT_ConnectedCallback(TM_TCPCLIENT_t* connection);
  *         This function is called when connection is closed and you are ready to make a new one.
  *
  *         You can also detect, if connection was closed after success or error.
- * @param  *connection: Pointer to @ref TM_TCPCLIENT_t which contains current connection specifications.
+ * @param  *connection: Pointer to @ref TCPCLIENT_t which contains current connection specifications.
  * @param  success: It is set to 1 if connection was closed after successfull transmission or 0 if because of failure
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETCLIENT_ConnectionClosedCallback(TM_TCPCLIENT_t* connection, uint8_t success);
+void ETHERNETCLIENT_ConnectionClosedCallback(TCPCLIENT_t* connection, uint8_t success);
 
 /**
  * @brief  Client Error callback
@@ -897,21 +897,21 @@ void TM_ETHERNETCLIENT_ConnectionClosedCallback(TM_TCPCLIENT_t* connection, uint
  *         This function is called when an error occured.
  *
  *         It will be called in case when IP address is not available
- * @param  *connection: Pointer to @ref TM_TCPCLIENT_t which contains current connection specifications.
+ * @param  *connection: Pointer to @ref TCPCLIENT_t which contains current connection specifications.
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETCLIENT_ErrorCallback(TM_TCPCLIENT_t* connection);
+void ETHERNETCLIENT_ErrorCallback(TCPCLIENT_t* connection);
 
 /**
  * @brief  Connection started callback
  *
  *         This function will be called when connection to server has started
- * @param  *connection: Pointer to @ref TM_TCPCLIENT_t which contains current connection specifications.
+ * @param  *connection: Pointer to @ref TCPCLIENT_t which contains current connection specifications.
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETCLIENT_ConnectionStartedCallback(TM_TCPCLIENT_t* connection);
+void ETHERNETCLIENT_ConnectionStartedCallback(TCPCLIENT_t* connection);
 
 /**
  * @brief  DNS Found callback
@@ -927,7 +927,7 @@ void TM_ETHERNETCLIENT_ConnectionStartedCallback(TM_TCPCLIENT_t* connection);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETDNS_FoundCallback(char* host_name, uint8_t ip_addr1, uint8_t ip_addr2, uint8_t ip_addr3, uint8_t ip_addr4);
+void ETHERNETDNS_FoundCallback(char* host_name, uint8_t ip_addr1, uint8_t ip_addr2, uint8_t ip_addr3, uint8_t ip_addr4);
 
 /**
  * @brief  DNS error callback
@@ -942,19 +942,19 @@ void TM_ETHERNETDNS_FoundCallback(char* host_name, uint8_t ip_addr1, uint8_t ip_
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETDNS_ErrorCallback(char* host_name);
+void ETHERNETDNS_ErrorCallback(char* host_name);
 
 /**
  * @brief  SSI callback for ethernet server
  *
- *         This function is called, when ethernet server wants to serve tag you pass in TM_ETHERNETSERVER_SetSSITags() function.
- * @param  iIndex: Tag index number. They are specified in order you pass to TM_ETHERNETSERVER_SetSSITags function
+ *         This function is called, when ethernet server wants to serve tag you pass in ETHERNETSERVER_SetSSITags() function.
+ * @param  iIndex: Tag index number. They are specified in order you pass to ETHERNETSERVER_SetSSITags function
  * @param  *pcInsert: Pointer where you should set your content that will be displayed where your tag is specified in files
  * @param  iInsertLen: Max string length
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-uint16_t TM_ETHERNETSERVER_SSICallback(int iIndex, char *pcInsert, int iInsertLen);
+uint16_t ETHERNETSERVER_SSICallback(int iIndex, char *pcInsert, int iInsertLen);
 
 /**
  * @brief  Client connected callback
@@ -974,7 +974,7 @@ remote_ip = pcb->remote_ip.addr;
  *            - 1: COnnection to server is allowed
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-uint8_t TM_ETHERNETSERVER_ClientConnectedCallback(struct tcp_pcb *pcb);
+uint8_t ETHERNETSERVER_ClientConnectedCallback(struct tcp_pcb *pcb);
 
 /**
  * @brief  Client disconnected from server
@@ -983,7 +983,7 @@ uint8_t TM_ETHERNETSERVER_ClientConnectedCallback(struct tcp_pcb *pcb);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETSERVER_ClientDisconnectedCallback(void);
+void ETHERNETSERVER_ClientDisconnectedCallback(void);
 
 /**
  * @brief  Open file callback
@@ -1004,7 +1004,7 @@ void TM_ETHERNETSERVER_ClientDisconnectedCallback(void);
  * @retval 0 in case you can't/don't want to open file, or 1 if file is successfully opened and prepared for reading
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-int TM_ETHERNETSERVER_OpenFileCallback(struct fs_file* file, const char *name);
+int ETHERNETSERVER_OpenFileCallback(struct fs_file* file, const char *name);
 
 /**
  * @brief  Close file callback
@@ -1016,7 +1016,7 @@ int TM_ETHERNETSERVER_OpenFileCallback(struct fs_file* file, const char *name);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETSERVER_CloseFileCallback(struct fs_file* file);
+void ETHERNETSERVER_CloseFileCallback(struct fs_file* file);
 
 /**
  * @brief  Read file callback
@@ -1030,7 +1030,7 @@ void TM_ETHERNETSERVER_CloseFileCallback(struct fs_file* file);
  * @retval Number of read bytes or -1 in case we are at the end of file.
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-int TM_ETHERNETSERVER_ReadFileCallback(struct fs_file* file, char* buffer, int count);
+int ETHERNETSERVER_ReadFileCallback(struct fs_file* file, char* buffer, int count);
 
 /**
  * @brief  Post request begin callback
@@ -1046,14 +1046,14 @@ int TM_ETHERNETSERVER_ReadFileCallback(struct fs_file* file, char* buffer, int c
 strcpy(params->response_uri, "/yourfile.html");
 @endverbatim
  *
- * @note   In this structure are also other variables, which one, you should look at @ref TM_ETHERNETPOST_t struct declaration.
- * @param  *params: Pointer to @ref TM_ETHERNETPOST_t structure which contains everything about POST connection.
+ * @note   In this structure are also other variables, which one, you should look at @ref ETHERNETPOST_t struct declaration.
+ * @param  *params: Pointer to @ref ETHERNETPOST_t structure which contains everything about POST connection.
  * @retval Accept or deny POST request
  *            - 0: Deny POST request
  *            - > 0: Allow POST request
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-uint8_t TM_ETHERNETSERVER_PostRequestBeginCallback(TM_ETHERNETPOST_t* params);
+uint8_t ETHERNETSERVER_PostRequestBeginCallback(ETHERNETPOST_t* params);
 
 /**
  * @brief  Post request receive data available callback
@@ -1067,14 +1067,14 @@ uint8_t TM_ETHERNETSERVER_PostRequestBeginCallback(TM_ETHERNETPOST_t* params);
  * @note   In pbuf struct is also length of this packet, so you have a little control about that.
  *
  * @note   To know when you have last time called this function, you can make a compare of params variables.
- * @param  *params: Pointer to @ref TM_ETHERNETPOST_t structure which contains everything about POST connection.
+ * @param  *params: Pointer to @ref ETHERNETPOST_t structure which contains everything about POST connection.
  * @param  *p: Pointer to pbuf structure where data are stored.
  * @retval Receive more data
  *            - 0: STOP receiving POST data
  *            - > 0: Continue with receiveing more POST data from current connection
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-uint8_t TM_ETHERNETSERVER_PostRequestReceiveDataCallback(TM_ETHERNETPOST_t* params, struct pbuf* p);
+uint8_t ETHERNETSERVER_PostRequestReceiveDataCallback(ETHERNETPOST_t* params, struct pbuf* p);
 
 /**
  * @brief  Post request end callback
@@ -1089,7 +1089,7 @@ uint8_t TM_ETHERNETSERVER_PostRequestReceiveDataCallback(TM_ETHERNETPOST_t* para
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETSERVER_PostRequestEndCallback(void* connection, char* response_uri, u16_t response_uri_len);
+void ETHERNETSERVER_PostRequestEndCallback(void* connection, char* response_uri, u16_t response_uri_len);
 
 /**
  * @brief  PHY low layer custom options callback
@@ -1105,7 +1105,7 @@ void TM_ETHERNETSERVER_PostRequestEndCallback(void* connection, char* response_u
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_ETHERNETPHY_CustomOptions(uint32_t PHYAddress);
+void ETHERNETPHY_CustomOptions(uint32_t PHYAddress);
 
 /**
  * @brief  Called on ethernet GPIO initialization
@@ -1117,7 +1117,7 @@ void TM_ETHERNETPHY_CustomOptions(uint32_t PHYAddress);
  *            - > 0: We made custom pinout
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-uint8_t TM_ETHERNET_InitPinsCallback(void);
+uint8_t ETHERNET_InitPinsCallback(void);
 
 /**
  * @}
@@ -1136,10 +1136,10 @@ uint8_t TM_ETHERNET_InitPinsCallback(void);
  */
 
 /* Private functions which should not be called from user */
-void TM_ETHERNET_INT_CustomOptions(uint32_t PHYAddress);
-void TM_ETHERNET_INT_SetIPAddress(uint8_t ip_addr1, uint8_t ip_addr2, uint8_t ip_addr3, uint8_t ip_addr4, uint8_t dhcp);
-void TM_ETHERNET_INT_LinkIsDownCallback(void);
-void TM_ETHERNET_INT_LinkIsUpCallback(void);
+void ETHERNET_INT_CustomOptions(uint32_t PHYAddress);
+void ETHERNET_INT_SetIPAddress(uint8_t ip_addr1, uint8_t ip_addr2, uint8_t ip_addr3, uint8_t ip_addr4, uint8_t dhcp);
+void ETHERNET_INT_LinkIsDownCallback(void);
+void ETHERNET_INT_LinkIsUpCallback(void);
 
 /* C++ detection */
 #ifdef __cplusplus

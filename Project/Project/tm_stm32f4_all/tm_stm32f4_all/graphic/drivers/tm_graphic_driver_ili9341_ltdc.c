@@ -16,11 +16,11 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
- #include "tm_graphic_driver_ili9341_ltdc.h"
+ #include "graphic_driver_ili9341_ltdc.h"
 
-TM_ILI931_LTDC_Options_t ILI9341_LTDC_Opts;
+ILI931_LTDC_Options_t ILI9341_LTDC_Opts;
 
-void TM_GRAPHIC_ILI9341_InitPins(void) {
+void GRAPHIC_ILI9341_InitPins(void) {
 	GPIO_InitTypeDef GPIO_InitStruct;
 	//Enable clock
 	RCC_AHB1PeriphClockCmd(ILI9341_WRX_CLK | ILI9341_CS_CLK | RCC_AHB1Periph_GPIOA | RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOF | RCC_AHB1Periph_GPIOG, ENABLE);
@@ -92,125 +92,125 @@ void TM_GRAPHIC_ILI9341_InitPins(void) {
 	GPIO_Init(GPIOG, &GPIO_InitStruct);
 }
 
-void TM_GRAPHIC_ILI9341_InitLCD(void) {	
-	TM_GRAPHIC_ILI9341_SendCommand(0xCA);
-	TM_GRAPHIC_ILI9341_SendData(0xC3);
-	TM_GRAPHIC_ILI9341_SendData(0x08);
-	TM_GRAPHIC_ILI9341_SendData(0x50);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_POWERB);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0xC1);
-	TM_GRAPHIC_ILI9341_SendData(0x30);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_POWER_SEQ);
-	TM_GRAPHIC_ILI9341_SendData(0x64);
-	TM_GRAPHIC_ILI9341_SendData(0x03);
-	TM_GRAPHIC_ILI9341_SendData(0x12);
-	TM_GRAPHIC_ILI9341_SendData(0x81);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_DTCA);
-	TM_GRAPHIC_ILI9341_SendData(0x85);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x78);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_POWERA);
-	TM_GRAPHIC_ILI9341_SendData(0x39);
-	TM_GRAPHIC_ILI9341_SendData(0x2C);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x34);
-	TM_GRAPHIC_ILI9341_SendData(0x02);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_PRC);
-	TM_GRAPHIC_ILI9341_SendData(0x20);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_DTCB);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_FRC);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x1B);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_DFC);
-	TM_GRAPHIC_ILI9341_SendData(0x0A);
-	TM_GRAPHIC_ILI9341_SendData(0xA2);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_POWER1);
-	TM_GRAPHIC_ILI9341_SendData(0x10);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_POWER2);
-	TM_GRAPHIC_ILI9341_SendData(0x10);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_VCOM1);
-	TM_GRAPHIC_ILI9341_SendData(0x45);
-	TM_GRAPHIC_ILI9341_SendData(0x15);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_VCOM2);
-	TM_GRAPHIC_ILI9341_SendData(0x90);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_MAC);
-	TM_GRAPHIC_ILI9341_SendData(0xC8);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_3GAMMA_EN);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_RGB_INTERFACE);
-	TM_GRAPHIC_ILI9341_SendData(0xC2);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_DFC);
-	TM_GRAPHIC_ILI9341_SendData(0x0A);
-	TM_GRAPHIC_ILI9341_SendData(0xA7);
-	TM_GRAPHIC_ILI9341_SendData(0x27);
-	TM_GRAPHIC_ILI9341_SendData(0x04);
+void GRAPHIC_ILI9341_InitLCD(void) {	
+	GRAPHIC_ILI9341_SendCommand(0xCA);
+	GRAPHIC_ILI9341_SendData(0xC3);
+	GRAPHIC_ILI9341_SendData(0x08);
+	GRAPHIC_ILI9341_SendData(0x50);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_POWERB);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0xC1);
+	GRAPHIC_ILI9341_SendData(0x30);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_POWER_SEQ);
+	GRAPHIC_ILI9341_SendData(0x64);
+	GRAPHIC_ILI9341_SendData(0x03);
+	GRAPHIC_ILI9341_SendData(0x12);
+	GRAPHIC_ILI9341_SendData(0x81);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_DTCA);
+	GRAPHIC_ILI9341_SendData(0x85);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x78);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_POWERA);
+	GRAPHIC_ILI9341_SendData(0x39);
+	GRAPHIC_ILI9341_SendData(0x2C);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x34);
+	GRAPHIC_ILI9341_SendData(0x02);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_PRC);
+	GRAPHIC_ILI9341_SendData(0x20);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_DTCB);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_FRC);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x1B);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_DFC);
+	GRAPHIC_ILI9341_SendData(0x0A);
+	GRAPHIC_ILI9341_SendData(0xA2);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_POWER1);
+	GRAPHIC_ILI9341_SendData(0x10);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_POWER2);
+	GRAPHIC_ILI9341_SendData(0x10);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_VCOM1);
+	GRAPHIC_ILI9341_SendData(0x45);
+	GRAPHIC_ILI9341_SendData(0x15);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_VCOM2);
+	GRAPHIC_ILI9341_SendData(0x90);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_MAC);
+	GRAPHIC_ILI9341_SendData(0xC8);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_3GAMMA_EN);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_RGB_INTERFACE);
+	GRAPHIC_ILI9341_SendData(0xC2);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_DFC);
+	GRAPHIC_ILI9341_SendData(0x0A);
+	GRAPHIC_ILI9341_SendData(0xA7);
+	GRAPHIC_ILI9341_SendData(0x27);
+	GRAPHIC_ILI9341_SendData(0x04);
 
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_COLUMN_ADDR);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0xEF);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_COLUMN_ADDR);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0xEF);
 
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_PAGE_ADDR);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x01);
-	TM_GRAPHIC_ILI9341_SendData(0x3F);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_INTERFACE);
-	TM_GRAPHIC_ILI9341_SendData(0x01);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x06);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_PAGE_ADDR);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x01);
+	GRAPHIC_ILI9341_SendData(0x3F);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_INTERFACE);
+	GRAPHIC_ILI9341_SendData(0x01);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x06);
 
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_GRAM);
-	TM_GRAPHIC_ILI9341_Delay(1000000);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_GRAM);
+	GRAPHIC_ILI9341_Delay(1000000);
 
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_GAMMA);
-	TM_GRAPHIC_ILI9341_SendData(0x01);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_GAMMA);
+	GRAPHIC_ILI9341_SendData(0x01);
 
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_PGAMMA);
-	TM_GRAPHIC_ILI9341_SendData(0x0F);
-	TM_GRAPHIC_ILI9341_SendData(0x29);
-	TM_GRAPHIC_ILI9341_SendData(0x24);
-	TM_GRAPHIC_ILI9341_SendData(0x0C);
-	TM_GRAPHIC_ILI9341_SendData(0x0E);
-	TM_GRAPHIC_ILI9341_SendData(0x09);
-	TM_GRAPHIC_ILI9341_SendData(0x4E);
-	TM_GRAPHIC_ILI9341_SendData(0x78);
-	TM_GRAPHIC_ILI9341_SendData(0x3C);
-	TM_GRAPHIC_ILI9341_SendData(0x09);
-	TM_GRAPHIC_ILI9341_SendData(0x13);
-	TM_GRAPHIC_ILI9341_SendData(0x05);
-	TM_GRAPHIC_ILI9341_SendData(0x17);
-	TM_GRAPHIC_ILI9341_SendData(0x11);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_NGAMMA);
-	TM_GRAPHIC_ILI9341_SendData(0x00);
-	TM_GRAPHIC_ILI9341_SendData(0x16);
-	TM_GRAPHIC_ILI9341_SendData(0x1B);
-	TM_GRAPHIC_ILI9341_SendData(0x04);
-	TM_GRAPHIC_ILI9341_SendData(0x11);
-	TM_GRAPHIC_ILI9341_SendData(0x07);
-	TM_GRAPHIC_ILI9341_SendData(0x31);
-	TM_GRAPHIC_ILI9341_SendData(0x33);
-	TM_GRAPHIC_ILI9341_SendData(0x42);
-	TM_GRAPHIC_ILI9341_SendData(0x05);
-	TM_GRAPHIC_ILI9341_SendData(0x0C);
-	TM_GRAPHIC_ILI9341_SendData(0x0A);
-	TM_GRAPHIC_ILI9341_SendData(0x28);
-	TM_GRAPHIC_ILI9341_SendData(0x2F);
-	TM_GRAPHIC_ILI9341_SendData(0x0F);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_PGAMMA);
+	GRAPHIC_ILI9341_SendData(0x0F);
+	GRAPHIC_ILI9341_SendData(0x29);
+	GRAPHIC_ILI9341_SendData(0x24);
+	GRAPHIC_ILI9341_SendData(0x0C);
+	GRAPHIC_ILI9341_SendData(0x0E);
+	GRAPHIC_ILI9341_SendData(0x09);
+	GRAPHIC_ILI9341_SendData(0x4E);
+	GRAPHIC_ILI9341_SendData(0x78);
+	GRAPHIC_ILI9341_SendData(0x3C);
+	GRAPHIC_ILI9341_SendData(0x09);
+	GRAPHIC_ILI9341_SendData(0x13);
+	GRAPHIC_ILI9341_SendData(0x05);
+	GRAPHIC_ILI9341_SendData(0x17);
+	GRAPHIC_ILI9341_SendData(0x11);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_NGAMMA);
+	GRAPHIC_ILI9341_SendData(0x00);
+	GRAPHIC_ILI9341_SendData(0x16);
+	GRAPHIC_ILI9341_SendData(0x1B);
+	GRAPHIC_ILI9341_SendData(0x04);
+	GRAPHIC_ILI9341_SendData(0x11);
+	GRAPHIC_ILI9341_SendData(0x07);
+	GRAPHIC_ILI9341_SendData(0x31);
+	GRAPHIC_ILI9341_SendData(0x33);
+	GRAPHIC_ILI9341_SendData(0x42);
+	GRAPHIC_ILI9341_SendData(0x05);
+	GRAPHIC_ILI9341_SendData(0x0C);
+	GRAPHIC_ILI9341_SendData(0x0A);
+	GRAPHIC_ILI9341_SendData(0x28);
+	GRAPHIC_ILI9341_SendData(0x2F);
+	GRAPHIC_ILI9341_SendData(0x0F);
 
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_SLEEP_OUT);
-	TM_GRAPHIC_ILI9341_Delay(1000000);
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_DISPLAY_ON);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_SLEEP_OUT);
+	GRAPHIC_ILI9341_Delay(1000000);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_DISPLAY_ON);
 
-	TM_GRAPHIC_ILI9341_SendCommand(ILI9341_GRAM);
+	GRAPHIC_ILI9341_SendCommand(ILI9341_GRAM);
 }
 
-void TM_LCD9341_InitLTDC(void) {
+void LCD9341_InitLTDC(void) {
 	LTDC_InitTypeDef LTDC_InitStruct;
 	
 	/* Enable the LTDC Clock */
@@ -271,7 +271,7 @@ void TM_LCD9341_InitLTDC(void) {
 	LTDC_Init(&LTDC_InitStruct);
 }
 
-void TM_GRAPHIC_ILI9341_InitLayers(void) {
+void GRAPHIC_ILI9341_InitLayers(void) {
 	LTDC_Layer_InitTypeDef LTDC_Layer_InitStruct;
 
 	/* 	Windowing configuration */
@@ -346,71 +346,71 @@ void TM_GRAPHIC_ILI9341_InitLayers(void) {
 	LTDC_ReloadConfig(LTDC_IMReload);
 }
 
-void TM_GRAPHIC_ILI9341_SendCommand(uint8_t data) {
+void GRAPHIC_ILI9341_SendCommand(uint8_t data) {
 	ILI9341_WRX_RESET;
 	ILI9341_CS_RESET;
-	TM_SPI_Send(ILI9341_SPI, data);
+	SPI_Send(ILI9341_SPI, data);
 	ILI9341_CS_SET;
 }
 
-void TM_GRAPHIC_ILI9341_SendData(uint8_t data) {
+void GRAPHIC_ILI9341_SendData(uint8_t data) {
 	ILI9341_WRX_SET;
 	ILI9341_CS_RESET;
-	TM_SPI_Send(ILI9341_SPI, data);
+	SPI_Send(ILI9341_SPI, data);
 	ILI9341_CS_SET;
 }
 
-void TM_GRAPHIC_ILI9341_Delay(volatile unsigned int delay) {
+void GRAPHIC_ILI9341_Delay(volatile unsigned int delay) {
 	for (; delay != 0; delay--); 
 }
 
-void TM_GRAPHIC_ILI9341_SetLayer1(void) {
+void GRAPHIC_ILI9341_SetLayer1(void) {
 	ILI9341_LTDC_Opts.CurrentLayerOffset = 0;
 	ILI9341_LTDC_Opts.CurrentLayer = 0;
 }
 
-void TM_GRAPHIC_ILI9341_SetLayer2(void) {
+void GRAPHIC_ILI9341_SetLayer2(void) {
 	ILI9341_LTDC_Opts.CurrentLayerOffset = ILI9341_FRAME_OFFSET;
 	ILI9341_LTDC_Opts.CurrentLayer = 1;
 }
 
-void TM_GRAPHIC_ILI9341_SetLayer1Opacity(uint8_t opacity) {
+void GRAPHIC_ILI9341_SetLayer1Opacity(uint8_t opacity) {
 	ILI9341_LTDC_Opts.Layer1Opacity = opacity;
-	TM_GRAPHIC_ILI9341_UpdateLayerOpacity();
+	GRAPHIC_ILI9341_UpdateLayerOpacity();
 }
 
-void TM_GRAPHIC_ILI9341_SetLayer2Opacity(uint8_t opacity) {
+void GRAPHIC_ILI9341_SetLayer2Opacity(uint8_t opacity) {
 	ILI9341_LTDC_Opts.Layer2Opacity = opacity;
-	TM_GRAPHIC_ILI9341_UpdateLayerOpacity();
+	GRAPHIC_ILI9341_UpdateLayerOpacity();
 }
 
-void TM_GRAPHIC_ILI9341_UpdateLayerOpacity(void) {
+void GRAPHIC_ILI9341_UpdateLayerOpacity(void) {
 	LTDC_LayerAlpha(LTDC_Layer1, ILI9341_LTDC_Opts.Layer1Opacity);
 	LTDC_LayerAlpha(LTDC_Layer2, ILI9341_LTDC_Opts.Layer2Opacity);
 
 	LTDC_ReloadConfig(LTDC_IMReload);
 }
 
-void TM_GRAPHIC_ILI9341_ChangeLayers(void) {
+void GRAPHIC_ILI9341_ChangeLayers(void) {
 	if (ILI9341_LTDC_Opts.CurrentLayer == 0) {
-		TM_GRAPHIC_ILI9341_SetLayer2();
-		TM_GRAPHIC_ILI9341_SetLayer1Opacity(0);
-		TM_GRAPHIC_ILI9341_SetLayer2Opacity(255);
+		GRAPHIC_ILI9341_SetLayer2();
+		GRAPHIC_ILI9341_SetLayer1Opacity(0);
+		GRAPHIC_ILI9341_SetLayer2Opacity(255);
 	} else {
-		TM_GRAPHIC_ILI9341_SetLayer1();
-		TM_GRAPHIC_ILI9341_SetLayer1Opacity(255);
-		TM_GRAPHIC_ILI9341_SetLayer2Opacity(0);
+		GRAPHIC_ILI9341_SetLayer1();
+		GRAPHIC_ILI9341_SetLayer1Opacity(255);
+		GRAPHIC_ILI9341_SetLayer2Opacity(0);
 	}
 }
 
-void TM_GRAPHIC_ILI9341_Layer2To1(void) {
+void GRAPHIC_ILI9341_Layer2To1(void) {
 	uint32_t i;
 	for (i = 0; i < ILI9341_PIXEL; i++) {
 		*(uint16_t *) (ILI9341_FRAME_BUFFER + 2 * i) = *(uint16_t *) (ILI9341_FRAME_BUFFER + ILI9341_FRAME_OFFSET + 2 * i);
 	}
 }
 
-void TM_GRAPHIC_ILI9341_Layer1To2(void) {
+void GRAPHIC_ILI9341_Layer1To2(void) {
 	uint32_t i;
 	for (i = 0; i < ILI9341_PIXEL; i++) {
 		*(uint16_t *) (ILI9341_FRAME_BUFFER + ILI9341_FRAME_OFFSET + 2 * i) = *(uint16_t *) (ILI9341_FRAME_BUFFER + 2 * i);
@@ -421,21 +421,21 @@ void TM_GRAPHIC_ILI9341_Layer1To2(void) {
      GRAPHIC LIBRARY FUNCTIONS
 ------------------------------------
 */
-TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Init(TM_GRAPHIC_Options_t* LCD_Options) {
+GRAPHIC_Result GRAPHICLCDDriver_Init(GRAPHIC_Options_t* LCD_Options) {
 	//Initialize pins used
-	TM_GRAPHIC_ILI9341_InitPins();
+	GRAPHIC_ILI9341_InitPins();
 	//SPI chip select high
 	ILI9341_CS_SET;
 	//Init SPI
-	TM_SPI_Init(ILI9341_SPI, ILI9341_SPI_PINS);
+	SPI_Init(ILI9341_SPI, ILI9341_SPI_PINS);
 	//SDram Init
-	TM_SDRAM_Init();
+	SDRAM_Init();
 	//Initialize LCD for LTDC
-	TM_GRAPHIC_ILI9341_InitLCD();
+	GRAPHIC_ILI9341_InitLCD();
 	//Initialize LTDC
-	TM_LCD9341_InitLTDC();
+	LCD9341_InitLTDC();
 	//Initialize LTDC layers
-	TM_GRAPHIC_ILI9341_InitLayers();
+	GRAPHIC_ILI9341_InitLayers();
 	
 	//Set options for GRAPHIC library
 	LCD_Options->DefaultWidth = ILI9341_WIDTH;
@@ -452,35 +452,35 @@ TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Init(TM_GRAPHIC_Options_t* LCD_Options) {
 	ILI9341_LTDC_Opts.Layer2Opacity = 0;
 	
 	//Set layer 1
-	TM_GRAPHIC_ILI9341_SetLayer1();
+	GRAPHIC_ILI9341_SetLayer1();
 	//Fill layer 1 with white color
-	TM_GRAPHICLCDDriver_Fill(LCD_Options, GRAPHIC_COLOR_WHITE);
+	GRAPHICLCDDriver_Fill(LCD_Options, GRAPHIC_COLOR_WHITE);
 	//Set layer 2
-	TM_GRAPHIC_ILI9341_SetLayer2();
+	GRAPHIC_ILI9341_SetLayer2();
 	//Fill layer 2 with white color
-	TM_GRAPHICLCDDriver_Fill(LCD_Options, GRAPHIC_COLOR_WHITE);
+	GRAPHICLCDDriver_Fill(LCD_Options, GRAPHIC_COLOR_WHITE);
 	//Set back to layer 1
-	TM_GRAPHIC_ILI9341_SetLayer1();
+	GRAPHIC_ILI9341_SetLayer1();
 	
 	/* Return OK */
-	return TM_GRAPHIC_OK;
+	return GRAPHIC_OK;
 }
 
-TM_GRAPHIC_Result TM_GRAPHICLCDDriver_DrawPixel(TM_GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color) {
+GRAPHIC_Result GRAPHICLCDDriver_DrawPixel(GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color) {
 	uint16_t tmp;
 	if (x >= LCD_Options->Width) {
-		return TM_GRAPHIC_ERROR;
+		return GRAPHIC_ERROR;
 	}
 	if (y >= LCD_Options->Height) {
-		return TM_GRAPHIC_ERROR;
+		return GRAPHIC_ERROR;
 	}
-	if (LCD_Options->Orientation == TM_GRAPHIC_Orientation_Portrait_1) {
+	if (LCD_Options->Orientation == GRAPHIC_Orientation_Portrait_1) {
 		//180 Degrees
 		*(uint16_t *) (ILI9341_FRAME_BUFFER + ILI9341_LTDC_Opts.CurrentLayerOffset + 2 * (ILI9341_PIXEL - x - LCD_Options->Width * y)) = color;
-	} else if (LCD_Options->Orientation == TM_GRAPHIC_Orientation_Portrait_2) {
+	} else if (LCD_Options->Orientation == GRAPHIC_Orientation_Portrait_2) {
 		//0 Degrees
 		*(uint16_t *) (ILI9341_FRAME_BUFFER + ILI9341_LTDC_Opts.CurrentLayerOffset + 2 * (x + LCD_Options->Width * y)) = color;
-	} else if (LCD_Options->Orientation == TM_GRAPHIC_Orientation_Landscape_1) {
+	} else if (LCD_Options->Orientation == GRAPHIC_Orientation_Landscape_1) {
 		//90 Degrees
 		tmp = y;
 		y = x;
@@ -496,24 +496,24 @@ TM_GRAPHIC_Result TM_GRAPHICLCDDriver_DrawPixel(TM_GRAPHIC_Options_t* LCD_Option
 	}
 	
 	/* Return OK */
-	return TM_GRAPHIC_OK;
+	return GRAPHIC_OK;
 }
 
-TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Fill(TM_GRAPHIC_Options_t* LCD_Options, uint32_t color) {
+GRAPHIC_Result GRAPHICLCDDriver_Fill(GRAPHIC_Options_t* LCD_Options, uint32_t color) {
 	uint32_t i;
 	for (i = 0; i < ILI9341_PIXEL; i++) {
 		*(uint16_t *) (ILI9341_FRAME_BUFFER + ILI9341_LTDC_Opts.CurrentLayerOffset + 2 * i) = color;
 	}
 	
 	/* Return OK */
-	return TM_GRAPHIC_OK;
+	return GRAPHIC_OK;
 }
 
-TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Rotate(TM_GRAPHIC_Options_t* LCD_Options, TM_GRAPHIC_Orientation_t orientation) {
+GRAPHIC_Result GRAPHICLCDDriver_Rotate(GRAPHIC_Options_t* LCD_Options, GRAPHIC_Orientation_t orientation) {
 	//Do nothing here
 	//Everything is performed in DrawPixel function
 	
 	/* Return OK */
-	return TM_GRAPHIC_OK;
+	return GRAPHIC_OK;
 }
 

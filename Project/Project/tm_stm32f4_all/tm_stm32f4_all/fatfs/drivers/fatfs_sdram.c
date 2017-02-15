@@ -21,9 +21,9 @@
 /* Status for SDRAM */
 static volatile DSTATUS SDRAM_Status = STA_NOINIT;
 
-DSTATUS TM_FATFS_SDRAM_disk_initialize(void) {
+DSTATUS FATFS_SDRAM_disk_initialize(void) {
 	/* Init SDRAM */
-	if (!TM_SDRAM_Init()) {
+	if (!SDRAM_Init()) {
 		/* Set NOINIT flag */
 		SDRAM_Status |= STA_NOINIT;
 		
@@ -38,12 +38,12 @@ DSTATUS TM_FATFS_SDRAM_disk_initialize(void) {
 	return SDRAM_Status;
 }
 
-DSTATUS TM_FATFS_SDRAM_disk_status(void) {
+DSTATUS FATFS_SDRAM_disk_status(void) {
 	/* Return disk status */
 	return SDRAM_Status;
 }
 
-DRESULT TM_FATFS_SDRAM_disk_ioctl(BYTE cmd, void* buff) {
+DRESULT FATFS_SDRAM_disk_ioctl(BYTE cmd, void* buff) {
 	/* Get command */
 	switch (cmd) {
 		case GET_SECTOR_COUNT:	/* Get drive capacity in unit of sector (DWORD) */
@@ -63,7 +63,7 @@ DRESULT TM_FATFS_SDRAM_disk_ioctl(BYTE cmd, void* buff) {
 	return RES_OK;
 }
 
-DRESULT TM_FATFS_SDRAM_disk_read(BYTE *buff, DWORD sector, UINT count) {
+DRESULT FATFS_SDRAM_disk_read(BYTE *buff, DWORD sector, UINT count) {
 	DWORD start, cnt;
 	
 	/* If not initialized */
@@ -84,7 +84,7 @@ DRESULT TM_FATFS_SDRAM_disk_read(BYTE *buff, DWORD sector, UINT count) {
 	return RES_OK;
 }
 
-DRESULT TM_FATFS_SDRAM_disk_write(const BYTE *buff, DWORD sector, UINT count) {
+DRESULT FATFS_SDRAM_disk_write(const BYTE *buff, DWORD sector, UINT count) {
 	DWORD start, cnt;
 	
 	/* If not initialized */

@@ -16,7 +16,7 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_button.h"
+#include "stm32f4_button.h"
 
 /* Button states */
 #define BUTTON_STATE_START        0
@@ -25,20 +25,20 @@
 
 /* Internal structure */
 typedef struct {
-	TM_BUTTON_t* Buttons[BUTTON_MAX_BUTTONS];
+	BUTTON_t* Buttons[BUTTON_MAX_BUTTONS];
 	uint16_t ButtonsCount;
-} TM_BUTTON_INT_t;
-static TM_BUTTON_INT_t Buttons;
+} BUTTON_INT_t;
+static BUTTON_INT_t Buttons;
 
 /* Internal functions */
-void TM_BUTTON_INT_CheckButton(TM_BUTTON_t* ButtonStruct);
+void BUTTON_INT_CheckButton(BUTTON_t* ButtonStruct);
 
-TM_BUTTON_t* TM_BUTTON_Init(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint8_t ButtonState, void (*ButtonHandler)(TM_BUTTON_PressType_t)) {
-	TM_BUTTON_t* ButtonStruct;
-	TM_GPIO_PuPd_t P;
+BUTTON_t* BUTTON_Init(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint8_t ButtonState, void (*ButtonHandler)(BUTTON_PressType_t)) {
+	BUTTON_t* ButtonStruct;
+	GPIO_PuPd_t P;
 	
 	/* Init delay function */
-	TM_DELAY_Init();
+	DELAY_Init();
 	
 	/* Check if available */
 	if (Buttons.ButtonsCount >= BUTTON_MAX_BUTTONS) {
@@ -46,7 +46,7 @@ TM_BUTTON_t* TM_BUTTON_Init(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint8_t Butt
 	}
 	
 	/* Allocate memory for button */
-	ButtonStruct = (TM_BUTTON_t *) malloc(sizeof(TM_BUTTON_t));
+	ButtonStruct = (BUTTON_t *) malloc(sizeof(BUTTON_t));
 	
 	/* Check if allocated */
 	if (ButtonStruct == NULL) {
@@ -67,14 +67,14 @@ TM_BUTTON_t* TM_BUTTON_Init(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint8_t Butt
 	/* Init pin with pull resistor */
 	if (ButtonStruct->GPIO_State) {
 		/* Pulldown */
-		P = TM_GPIO_PuPd_DOWN;
+		P = GPIO_PuPd_DOWN;
 	} else {
 		/* Pullup */
-		P = TM_GPIO_PuPd_UP;
+		P = GPIO_PuPd_UP;
 	}
 	
 	/* Init GPIO pin as input with proper pull resistor */
-	TM_GPIO_Init(GPIOx, GPIO_Pin, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, P, TM_GPIO_Speed_Low);
+	GPIO_Init(GPIOx, GPIO_Pin, GPIO_Mode_IN, GPIO_OType_PP, P, GPIO_Speed_Low);
 	
 	/* Save button */
 	Buttons.Buttons[Buttons.ButtonsCount++] = ButtonStruct;
@@ -83,7 +83,7 @@ TM_BUTTON_t* TM_BUTTON_Init(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint8_t Butt
 	return ButtonStruct;
 }
 
-TM_BUTTON_t* TM_BUTTON_SetPressTime(TM_BUTTON_t* ButtonStruct, uint16_t Normal, uint16_t Long) {
+BUTTON_t* BUTTON_SetPressTime(BUTTON_t* ButtonStruct, uint16_t Normal, uint16_t Long) {
 	/* Set values */
 	ButtonStruct->PressNormalTime = Normal;
 	ButtonStruct->PressLongTime = Long;
@@ -92,19 +92,19 @@ TM_BUTTON_t* TM_BUTTON_SetPressTime(TM_BUTTON_t* ButtonStruct, uint16_t Normal, 
 	return ButtonStruct;
 }
 
-void TM_BUTTON_Update(void) {
+void BUTTON_Update(void) {
 	uint16_t i;
 	
 	/* Go through all buttons */
 	for (i = 0; i < Buttons.ButtonsCount; i++) {
-		TM_BUTTON_INT_CheckButton(Buttons.Buttons[i]);
+		BUTTON_INT_CheckButton(Buttons.Buttons[i]);
 	}
 }
 
 /* Internal functions */
-void TM_BUTTON_INT_CheckButton(TM_BUTTON_t* ButtonStruct) {
-	uint8_t status = TM_GPIO_GetInputPinValue(ButtonStruct->GPIOx, ButtonStruct->GPIO_Pin);
-	uint32_t now = TM_DELAY_Time();
+void BUTTON_INT_CheckButton(BUTTON_t* ButtonStruct) {
+	uint8_t status = GPIO_GetInputPinValue(ButtonStruct->GPIOx, ButtonStruct->GPIO_Pin);
+	uint32_t now = DELAY_Time();
 	
 	/* First stage */
 	if (ButtonStruct->State == BUTTON_STATE_START) {
@@ -119,7 +119,7 @@ void TM_BUTTON_INT_CheckButton(TM_BUTTON_t* ButtonStruct) {
 			/* Button pressed OK, call function */
 			if (ButtonStruct->ButtonHandler) {
 				/* Call function callback */
-				ButtonStruct->ButtonHandler(TM_BUTTON_PressType_OnPressed);
+				ButtonStruct->ButtonHandler(BUTTON_PressType_OnPressed);
 			}
 		}
 	}
@@ -132,7 +132,7 @@ void TM_BUTTON_INT_CheckButton(TM_BUTTON_t* ButtonStruct) {
 				/* Button pressed OK, call function */
 				if (ButtonStruct->ButtonHandler) {
 					/* Call function callback */
-					ButtonStruct->ButtonHandler(TM_BUTTON_PressType_Long);
+					ButtonStruct->ButtonHandler(BUTTON_PressType_Long);
 				}
 				
 				/* Go to stage BUTTON_STATE_WAITRELEASE */
@@ -144,7 +144,7 @@ void TM_BUTTON_INT_CheckButton(TM_BUTTON_t* ButtonStruct) {
 				/* Button pressed OK, call function */
 				if (ButtonStruct->ButtonHandler) {
 					/* Call function callback */
-					ButtonStruct->ButtonHandler(TM_BUTTON_PressType_Normal);
+					ButtonStruct->ButtonHandler(BUTTON_PressType_Normal);
 				}
 				
 				/* Go to stage BUTTON_STATE_WAITRELEASE */

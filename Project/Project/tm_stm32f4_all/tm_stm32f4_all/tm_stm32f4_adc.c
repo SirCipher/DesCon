@@ -16,68 +16,68 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_adc.h"
+#include "stm32f4_adc.h"
 
 /* Private functions */
-void TM_ADC_INT_Channel_0_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_1_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_2_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_3_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_4_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_5_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_6_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_7_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_8_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_9_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_10_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_11_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_12_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_13_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_14_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_Channel_15_Init(ADC_TypeDef* ADCx);
-void TM_ADC_INT_InitPin(GPIO_TypeDef* GPIOx, uint16_t PinX);
+void ADC_INT_Channel_0_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_1_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_2_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_3_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_4_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_5_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_6_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_7_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_8_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_9_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_10_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_11_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_12_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_13_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_14_Init(ADC_TypeDef* ADCx);
+void ADC_INT_Channel_15_Init(ADC_TypeDef* ADCx);
+void ADC_INT_InitPin(GPIO_TypeDef* GPIOx, uint16_t PinX);
 
-void TM_ADC_Init(ADC_TypeDef* ADCx, uint8_t channel) {
-	TM_ADC_Channel_t ch = (TM_ADC_Channel_t) channel;
-	if (ch == TM_ADC_Channel_0) {
-		TM_ADC_INT_Channel_0_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_1) {
-		TM_ADC_INT_Channel_1_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_2) {
-		TM_ADC_INT_Channel_2_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_3) {
-		TM_ADC_INT_Channel_3_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_4) {
-		TM_ADC_INT_Channel_4_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_5) {
-		TM_ADC_INT_Channel_5_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_6) {
-		TM_ADC_INT_Channel_6_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_7) {
-		TM_ADC_INT_Channel_7_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_8) {
-		TM_ADC_INT_Channel_8_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_9) {
-		TM_ADC_INT_Channel_9_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_10) {
-		TM_ADC_INT_Channel_10_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_11) {
-		TM_ADC_INT_Channel_11_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_12) {
-		TM_ADC_INT_Channel_12_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_13) {
-		TM_ADC_INT_Channel_13_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_14) {
-		TM_ADC_INT_Channel_14_Init(ADCx);
-	} else if (ch == TM_ADC_Channel_15) {
-		TM_ADC_INT_Channel_15_Init(ADCx);
+void ADC_Init(ADC_TypeDef* ADCx, uint8_t channel) {
+	ADC_Channel_t ch = (ADC_Channel_t) channel;
+	if (ch == ADC_Channel_0) {
+		ADC_INT_Channel_0_Init(ADCx);
+	} else if (ch == ADC_Channel_1) {
+		ADC_INT_Channel_1_Init(ADCx);
+	} else if (ch == ADC_Channel_2) {
+		ADC_INT_Channel_2_Init(ADCx);
+	} else if (ch == ADC_Channel_3) {
+		ADC_INT_Channel_3_Init(ADCx);
+	} else if (ch == ADC_Channel_4) {
+		ADC_INT_Channel_4_Init(ADCx);
+	} else if (ch == ADC_Channel_5) {
+		ADC_INT_Channel_5_Init(ADCx);
+	} else if (ch == ADC_Channel_6) {
+		ADC_INT_Channel_6_Init(ADCx);
+	} else if (ch == ADC_Channel_7) {
+		ADC_INT_Channel_7_Init(ADCx);
+	} else if (ch == ADC_Channel_8) {
+		ADC_INT_Channel_8_Init(ADCx);
+	} else if (ch == ADC_Channel_9) {
+		ADC_INT_Channel_9_Init(ADCx);
+	} else if (ch == ADC_Channel_10) {
+		ADC_INT_Channel_10_Init(ADCx);
+	} else if (ch == ADC_Channel_11) {
+		ADC_INT_Channel_11_Init(ADCx);
+	} else if (ch == ADC_Channel_12) {
+		ADC_INT_Channel_12_Init(ADCx);
+	} else if (ch == ADC_Channel_13) {
+		ADC_INT_Channel_13_Init(ADCx);
+	} else if (ch == ADC_Channel_14) {
+		ADC_INT_Channel_14_Init(ADCx);
+	} else if (ch == ADC_Channel_15) {
+		ADC_INT_Channel_15_Init(ADCx);
 	}
 	
 	/* Init ADC */
-	TM_ADC_InitADC(ADCx);
+	ADC_InitADC(ADCx);
 }
 
-void TM_ADC_InitADC(ADC_TypeDef* ADCx) {
+void ADC_InitADC(ADC_TypeDef* ADCx) {
 	ADC_InitTypeDef ADC_InitStruct;
 	ADC_CommonInitTypeDef ADC_CommonInitStruct;
 
@@ -95,19 +95,19 @@ void TM_ADC_InitADC(ADC_TypeDef* ADCx) {
 		RCC->APB2ENR |= RCC_APB2ENR_ADC1EN;
 		
 		/* Set resolution */
-		ADC_InitStruct.ADC_Resolution = TM_ADC1_RESOLUTION;
+		ADC_InitStruct.ADC_Resolution = ADC1_RESOLUTION;
 	} else if (ADCx == ADC2) {
 		/* Enable ADC clock */
 		RCC->APB2ENR |= RCC_APB2ENR_ADC2EN;
 		
 		/* Set resolution */
-		ADC_InitStruct.ADC_Resolution = TM_ADC2_RESOLUTION;
+		ADC_InitStruct.ADC_Resolution = ADC2_RESOLUTION;
 	} else if (ADCx == ADC3) {
 		/* Enable ADC clock */
 		RCC->APB2ENR |= RCC_APB2ENR_ADC3EN;
 		
 		/* Set resolution */
-		ADC_InitStruct.ADC_Resolution = TM_ADC3_RESOLUTION;
+		ADC_InitStruct.ADC_Resolution = ADC3_RESOLUTION;
 	}
 
 	/* Set common ADC settings */
@@ -124,7 +124,7 @@ void TM_ADC_InitADC(ADC_TypeDef* ADCx) {
 	ADCx->CR2 |= ADC_CR2_ADON;
 }
 
-uint16_t TM_ADC_Read(ADC_TypeDef* ADCx, uint8_t channel) {
+uint16_t ADC_Read(ADC_TypeDef* ADCx, uint8_t channel) {
 	uint32_t timeout = 0xFFF;
 	
 	ADC_RegularChannelConfig(ADCx, channel, 1, ADC_SampleTime_15Cycles);
@@ -143,17 +143,17 @@ uint16_t TM_ADC_Read(ADC_TypeDef* ADCx, uint8_t channel) {
 	return ADCx->DR;
 }
 
-void TM_ADC_EnableVbat(void) {
+void ADC_EnableVbat(void) {
 	/* Enable VBAT */
 	ADC->CCR |= ADC_CCR_VBATE;
 }
 
-void TM_ADC_DisableVbat(void) {
+void ADC_DisableVbat(void) {
 	/* Disable VBAT */
 	ADC->CCR &= ~ADC_CCR_VBATE;
 }
 
-uint16_t TM_ADC_ReadVbat(ADC_TypeDef* ADCx) {
+uint16_t ADC_ReadVbat(ADC_TypeDef* ADCx) {
 	uint32_t result;
 	/* Read battery voltage data */
 	/* Start conversion */
@@ -176,111 +176,111 @@ uint16_t TM_ADC_ReadVbat(ADC_TypeDef* ADCx) {
 }
 
 /* Private functions */
-void TM_ADC_INT_Channel_0_Init(ADC_TypeDef* ADCx) {
-	TM_ADC_INT_InitPin(GPIOA, GPIO_PIN_0);
+void ADC_INT_Channel_0_Init(ADC_TypeDef* ADCx) {
+	ADC_INT_InitPin(GPIOA, GPIO_PIN_0);
 }
-void TM_ADC_INT_Channel_1_Init(ADC_TypeDef* ADCx) {
-	TM_ADC_INT_InitPin(GPIOA, GPIO_PIN_1);
+void ADC_INT_Channel_1_Init(ADC_TypeDef* ADCx) {
+	ADC_INT_InitPin(GPIOA, GPIO_PIN_1);
 }
-void TM_ADC_INT_Channel_2_Init(ADC_TypeDef* ADCx) {
-	TM_ADC_INT_InitPin(GPIOA, GPIO_PIN_2);
+void ADC_INT_Channel_2_Init(ADC_TypeDef* ADCx) {
+	ADC_INT_InitPin(GPIOA, GPIO_PIN_2);
 }
-void TM_ADC_INT_Channel_3_Init(ADC_TypeDef* ADCx) {
-	TM_ADC_INT_InitPin(GPIOA, GPIO_PIN_3);
+void ADC_INT_Channel_3_Init(ADC_TypeDef* ADCx) {
+	ADC_INT_InitPin(GPIOA, GPIO_PIN_3);
 }
-void TM_ADC_INT_Channel_4_Init(ADC_TypeDef* ADCx) {
+void ADC_INT_Channel_4_Init(ADC_TypeDef* ADCx) {
 	if (ADCx == ADC1 || ADCx == ADC2) {
-		TM_ADC_INT_InitPin(GPIOA, GPIO_PIN_4);
+		ADC_INT_InitPin(GPIOA, GPIO_PIN_4);
 	} 
 	if (ADCx == ADC3) {
 #if defined(GPIOF)
-		TM_ADC_INT_InitPin(GPIOF, GPIO_PIN_6);
+		ADC_INT_InitPin(GPIOF, GPIO_PIN_6);
 #endif
 	}
 }
-void TM_ADC_INT_Channel_5_Init(ADC_TypeDef* ADCx) {
+void ADC_INT_Channel_5_Init(ADC_TypeDef* ADCx) {
 	if (ADCx == ADC1 || ADCx == ADC2) {
-		TM_ADC_INT_InitPin(GPIOA, GPIO_PIN_5);
+		ADC_INT_InitPin(GPIOA, GPIO_PIN_5);
 	} 
 	if (ADCx == ADC3) {
 #if defined(GPIOF)
-		TM_ADC_INT_InitPin(GPIOF, GPIO_PIN_7);
+		ADC_INT_InitPin(GPIOF, GPIO_PIN_7);
 #endif
 	}
 }
-void TM_ADC_INT_Channel_6_Init(ADC_TypeDef* ADCx) {
+void ADC_INT_Channel_6_Init(ADC_TypeDef* ADCx) {
 	if (ADCx == ADC1 || ADCx == ADC2) {
-		TM_ADC_INT_InitPin(GPIOA, GPIO_PIN_6);
+		ADC_INT_InitPin(GPIOA, GPIO_PIN_6);
 	} 
 	if (ADCx == ADC3) {
 #if defined(GPIOF)
-		TM_ADC_INT_InitPin(GPIOF, GPIO_PIN_8);
+		ADC_INT_InitPin(GPIOF, GPIO_PIN_8);
 #endif
 	}
 }
-void TM_ADC_INT_Channel_7_Init(ADC_TypeDef* ADCx) {
+void ADC_INT_Channel_7_Init(ADC_TypeDef* ADCx) {
 	if (ADCx == ADC1 || ADCx == ADC2) {
-		TM_ADC_INT_InitPin(GPIOA, GPIO_PIN_7);
+		ADC_INT_InitPin(GPIOA, GPIO_PIN_7);
 	} 
 	if (ADCx == ADC3) {
 #if defined(GPIOF)
-		TM_ADC_INT_InitPin(GPIOF, GPIO_PIN_9);
+		ADC_INT_InitPin(GPIOF, GPIO_PIN_9);
 #endif
 	}
 }
-void TM_ADC_INT_Channel_8_Init(ADC_TypeDef* ADCx) {
+void ADC_INT_Channel_8_Init(ADC_TypeDef* ADCx) {
 	if (ADCx == ADC1 || ADCx == ADC2) {
-		TM_ADC_INT_InitPin(GPIOB, GPIO_PIN_0);
+		ADC_INT_InitPin(GPIOB, GPIO_PIN_0);
 	} 
 	if (ADCx == ADC3) {
 #if defined(GPIOF)
-		TM_ADC_INT_InitPin(GPIOF, GPIO_PIN_10);
+		ADC_INT_InitPin(GPIOF, GPIO_PIN_10);
 #endif
 	}
 }
-void TM_ADC_INT_Channel_9_Init(ADC_TypeDef* ADCx) {
+void ADC_INT_Channel_9_Init(ADC_TypeDef* ADCx) {
 	if (ADCx == ADC1 || ADCx == ADC2) {
-		TM_ADC_INT_InitPin(GPIOB, GPIO_PIN_1);
+		ADC_INT_InitPin(GPIOB, GPIO_PIN_1);
 	} 
 	if (ADCx == ADC3) {
 #if defined(GPIOF)
-		TM_ADC_INT_InitPin(GPIOF, GPIO_PIN_3);
+		ADC_INT_InitPin(GPIOF, GPIO_PIN_3);
 #endif
 	}
 }
-void TM_ADC_INT_Channel_10_Init(ADC_TypeDef* ADCx) {
-	TM_ADC_INT_InitPin(GPIOC, GPIO_PIN_0);
+void ADC_INT_Channel_10_Init(ADC_TypeDef* ADCx) {
+	ADC_INT_InitPin(GPIOC, GPIO_PIN_0);
 }
-void TM_ADC_INT_Channel_11_Init(ADC_TypeDef* ADCx) {
-	TM_ADC_INT_InitPin(GPIOC, GPIO_PIN_1);
+void ADC_INT_Channel_11_Init(ADC_TypeDef* ADCx) {
+	ADC_INT_InitPin(GPIOC, GPIO_PIN_1);
 }
-void TM_ADC_INT_Channel_12_Init(ADC_TypeDef* ADCx) {
-	TM_ADC_INT_InitPin(GPIOC, GPIO_PIN_2);
+void ADC_INT_Channel_12_Init(ADC_TypeDef* ADCx) {
+	ADC_INT_InitPin(GPIOC, GPIO_PIN_2);
 }
-void TM_ADC_INT_Channel_13_Init(ADC_TypeDef* ADCx) {
-	TM_ADC_INT_InitPin(GPIOC, GPIO_PIN_3);
+void ADC_INT_Channel_13_Init(ADC_TypeDef* ADCx) {
+	ADC_INT_InitPin(GPIOC, GPIO_PIN_3);
 }
-void TM_ADC_INT_Channel_14_Init(ADC_TypeDef* ADCx) {
+void ADC_INT_Channel_14_Init(ADC_TypeDef* ADCx) {
 	if (ADCx == ADC1 || ADCx == ADC2) {
-		TM_ADC_INT_InitPin(GPIOC, GPIO_PIN_4);
+		ADC_INT_InitPin(GPIOC, GPIO_PIN_4);
 	} 
 	if (ADCx == ADC3) {
 #if defined(GPIOF)
-		TM_ADC_INT_InitPin(GPIOF, GPIO_PIN_4);
+		ADC_INT_InitPin(GPIOF, GPIO_PIN_4);
 #endif
 	}
 }
-void TM_ADC_INT_Channel_15_Init(ADC_TypeDef* ADCx) {
+void ADC_INT_Channel_15_Init(ADC_TypeDef* ADCx) {
 	if (ADCx == ADC1 || ADCx == ADC2) {
-		TM_ADC_INT_InitPin(GPIOC, GPIO_PIN_5);
+		ADC_INT_InitPin(GPIOC, GPIO_PIN_5);
 	} else if (ADCx == ADC3) {
 #if defined(GPIOF)
-		TM_ADC_INT_InitPin(GPIOF, GPIO_PIN_5);
+		ADC_INT_InitPin(GPIOF, GPIO_PIN_5);
 #endif
 	}
 }
 
-void TM_ADC_INT_InitPin(GPIO_TypeDef* GPIOx, uint16_t PinX) {
+void ADC_INT_InitPin(GPIO_TypeDef* GPIOx, uint16_t PinX) {
 	/* Enable GPIO */
-	TM_GPIO_Init(GPIOx, PinX, TM_GPIO_Mode_AN, TM_GPIO_OType_PP, TM_GPIO_PuPd_DOWN, TM_GPIO_Speed_Medium);
+	GPIO_Init(GPIOx, PinX, GPIO_Mode_AN, GPIO_OType_PP, GPIO_PuPd_DOWN, GPIO_Speed_Medium);
 }

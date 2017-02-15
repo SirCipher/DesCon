@@ -37,7 +37,7 @@
 #include "netconf.h"
 #include <stdio.h>
 
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_ethernet.h"
 
 /* Private typedef -----------------------------------------------------------*/
 #define MAX_DHCP_TRIES        4
@@ -90,9 +90,9 @@ void LwIP_Init(void) {
 	netmask.addr = 0;
 	gw.addr = 0;
 #else
-	IP4_ADDR(&ipaddr, TM_ETHERNET.ip_addr[0], TM_ETHERNET.ip_addr[1], TM_ETHERNET.ip_addr[2], TM_ETHERNET.ip_addr[3]);
-	IP4_ADDR(&netmask, TM_ETHERNET.netmask[0], TM_ETHERNET.netmask[1], TM_ETHERNET.netmask[2], TM_ETHERNET.netmask[3]);
-	IP4_ADDR(&gw, TM_ETHERNET.gateway[0], TM_ETHERNET.gateway[1], TM_ETHERNET.gateway[2], TM_ETHERNET.gateway[3]);
+	IP4_ADDR(&ipaddr, ETHERNET.ip_addr[0], ETHERNET.ip_addr[1], ETHERNET.ip_addr[2], ETHERNET.ip_addr[3]);
+	IP4_ADDR(&netmask, ETHERNET.netmask[0], ETHERNET.netmask[1], ETHERNET.netmask[2], ETHERNET.netmask[3]);
+	IP4_ADDR(&gw, ETHERNET.gateway[0], ETHERNET.gateway[1], ETHERNET.gateway[2], ETHERNET.gateway[3]);
 #endif  
 
 	/* - netif_add(struct netif *netif, struct ip_addr *ipaddr,
@@ -122,13 +122,13 @@ void LwIP_Init(void) {
 #ifdef ETHERNET_USE_DHCP
 		DHCP_state = DHCP_START;
 #else
-		iptab[0] = TM_ETHERNET.ip_addr[0];
-		iptab[1] = TM_ETHERNET.ip_addr[1];
-		iptab[2] = TM_ETHERNET.ip_addr[2];
-		iptab[3] = TM_ETHERNET.ip_addr[3];
+		iptab[0] = ETHERNET.ip_addr[0];
+		iptab[1] = ETHERNET.ip_addr[1];
+		iptab[2] = ETHERNET.ip_addr[2];
+		iptab[3] = ETHERNET.ip_addr[3];
 
 		/* Set private function */
-		TM_ETHERNET_INT_SetIPAddress(iptab[0], iptab[1], iptab[2], iptab[3], 0);
+		ETHERNET_INT_SetIPAddress(iptab[0], iptab[1], iptab[2], iptab[3], 0);
 #endif /*ETHERNET_USE_DHCP */
 	} else {
 		/* When the netif link is down this function must be called */
@@ -139,7 +139,7 @@ void LwIP_Init(void) {
 #endif /*ETHERNET_USE_DHCP */
 
 		/* Call user function */
-		TM_ETHERNET_INT_LinkIsDownCallback();
+		ETHERNET_INT_LinkIsDownCallback();
 	}
 
 	/* Set the link callback function, this function is called on change of link status */
@@ -230,7 +230,7 @@ void LwIP_DHCP_Process_Handle(void) {
 			IPaddress = 0;
 			
 			/* Call user function */
-			TM_ETHERNET_DHCPStartCallback();
+			ETHERNET_DHCPStartCallback();
 		}
 		break;
 
@@ -251,7 +251,7 @@ void LwIP_DHCP_Process_Handle(void) {
 				iptab[3] = (uint8_t)(IPaddress);
 				
 				/* Set private function */
-				TM_ETHERNET_INT_SetIPAddress(iptab[3], iptab[2], iptab[1], iptab[0], 1);
+				ETHERNET_INT_SetIPAddress(iptab[3], iptab[2], iptab[1], iptab[0], 1);
 			} else {
 				/* DHCP timeout */
 				if (gnetif.dhcp->tries > MAX_DHCP_TRIES) {
@@ -261,15 +261,15 @@ void LwIP_DHCP_Process_Handle(void) {
 					dhcp_stop(&gnetif);
 
 					/* Static address used */
-					IP4_ADDR(&ipaddr, TM_ETHERNET.ip_addr[0], TM_ETHERNET.ip_addr[1], TM_ETHERNET.ip_addr[2], TM_ETHERNET.ip_addr[3]);
-					IP4_ADDR(&netmask, TM_ETHERNET.netmask[0], TM_ETHERNET.netmask[1], TM_ETHERNET.netmask[2], TM_ETHERNET.netmask[3]);
-					IP4_ADDR(&gw, TM_ETHERNET.gateway[0], TM_ETHERNET.gateway[1], TM_ETHERNET.gateway[2], TM_ETHERNET.gateway[3]);
+					IP4_ADDR(&ipaddr, ETHERNET.ip_addr[0], ETHERNET.ip_addr[1], ETHERNET.ip_addr[2], ETHERNET.ip_addr[3]);
+					IP4_ADDR(&netmask, ETHERNET.netmask[0], ETHERNET.netmask[1], ETHERNET.netmask[2], ETHERNET.netmask[3]);
+					IP4_ADDR(&gw, ETHERNET.gateway[0], ETHERNET.gateway[1], ETHERNET.gateway[2], ETHERNET.gateway[3]);
 					
 					/* Set values */
 					netif_set_addr(&gnetif, &ipaddr , &netmask, &gw);
 					
 					/* Call private callback function */
-					TM_ETHERNET_INT_SetIPAddress(TM_ETHERNET.ip_addr[0], TM_ETHERNET.ip_addr[1], TM_ETHERNET.ip_addr[2], TM_ETHERNET.ip_addr[3], 0);		
+					ETHERNET_INT_SetIPAddress(ETHERNET.ip_addr[0], ETHERNET.ip_addr[1], ETHERNET.ip_addr[2], ETHERNET.ip_addr[3], 0);		
 				}
 			}
 		}

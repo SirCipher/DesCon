@@ -16,13 +16,13 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_string.h"
+#include "stm32f4_string.h"
 
-TM_STRING_t* TM_STRING_Create(uint16_t size) {
-	TM_STRING_t* String;
+STRING_t* STRING_Create(uint16_t size) {
+	STRING_t* String;
 
 	/* Allocate memory */
-	String = (TM_STRING_t *) LIB_ALLOC_FUNC(sizeof(TM_STRING_t));
+	String = (STRING_t *) LIB_ALLOC_FUNC(sizeof(STRING_t));
 	
 	/* Check if allocated */
 	if (String == NULL) {
@@ -45,8 +45,8 @@ TM_STRING_t* TM_STRING_Create(uint16_t size) {
 	return String;
 }
 
-uint16_t TM_STRING_AddString(TM_STRING_t* String, char* str) {
-	TM_STRING_t* ptr;
+uint16_t STRING_AddString(STRING_t* String, char* str) {
+	STRING_t* ptr;
 	char** tmp1;
 	uint16_t i;
 	
@@ -58,7 +58,7 @@ uint16_t TM_STRING_AddString(TM_STRING_t* String, char* str) {
 	/* Check if memory available */
 	if (String->Count >= String->Size) {
 		/* Create new string with more memory */
-		ptr = TM_STRING_Create(String->Size + 1);
+		ptr = STRING_Create(String->Size + 1);
 		tmp1 = (char **) LIB_ALLOC_FUNC((String->Size + 1) * sizeof(char *));
 		
 		/* Check if allocated */
@@ -90,7 +90,7 @@ uint16_t TM_STRING_AddString(TM_STRING_t* String, char* str) {
 		free(tmp1);
 		
 		/* Free tmp structure */
-		TM_STRING_Free(ptr);
+		STRING_Free(ptr);
 	}
 	
 	/* Allocate memory for string */
@@ -106,7 +106,7 @@ uint16_t TM_STRING_AddString(TM_STRING_t* String, char* str) {
 	return (String->Count - 1);
 }
 
-TM_STRING_t* TM_STRING_ReplaceString(TM_STRING_t* String, uint16_t pos, char* str) {
+STRING_t* STRING_ReplaceString(STRING_t* String, uint16_t pos, char* str) {
 	char *tmp, *tmp1;
 	
 	/* Check input pointer */
@@ -117,7 +117,7 @@ TM_STRING_t* TM_STRING_ReplaceString(TM_STRING_t* String, uint16_t pos, char* st
 	/* Add string if necessary */
 	if (pos >= String->Count) {
 		/* Add to string */
-		TM_STRING_AddString(String, str);
+		STRING_AddString(String, str);
 		
 		/* Return string pointer */
 		return String;
@@ -153,7 +153,7 @@ TM_STRING_t* TM_STRING_ReplaceString(TM_STRING_t* String, uint16_t pos, char* st
 	return String;
 }
 
-TM_STRING_t* TM_STRING_DeleteString(TM_STRING_t* String, uint16_t pos) {
+STRING_t* STRING_DeleteString(STRING_t* String, uint16_t pos) {
 	uint16_t i;
 	char* tmp;
 	
@@ -186,7 +186,7 @@ TM_STRING_t* TM_STRING_DeleteString(TM_STRING_t* String, uint16_t pos) {
 	return String;
 }
 
-char* TM_STRING_GetString(TM_STRING_t* String, uint16_t pos) {
+char* STRING_GetString(STRING_t* String, uint16_t pos) {
 	/* Check input pointer */
 	if (String == NULL) {
 		return NULL;
@@ -202,7 +202,7 @@ char* TM_STRING_GetString(TM_STRING_t* String, uint16_t pos) {
 	return NULL;
 }
 
-void TM_STRING_Free(TM_STRING_t* String) {
+void STRING_Free(STRING_t* String) {
 	/* Check input pointer */
 	if (String == NULL) {
 		return;
@@ -215,7 +215,7 @@ void TM_STRING_Free(TM_STRING_t* String) {
 	LIB_FREE_FUNC(String);
 }
 
-void TM_STRING_FreeAll(TM_STRING_t* String) {
+void STRING_FreeAll(STRING_t* String) {
 	uint16_t i;
 	
 	/* Check input pointer */
@@ -230,6 +230,6 @@ void TM_STRING_FreeAll(TM_STRING_t* String) {
 	}
 	
 	/* Deallocate the rest */
-	TM_STRING_Free(String);
+	STRING_Free(String);
 }
 

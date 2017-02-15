@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_CPU_LOAD_H
-#define TM_CPU_LOAD_H 100
+#ifndef CPU_LOAD_H
+#define CPU_LOAD_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_CPULOAD
+ * @defgroup CPULOAD
  * @brief    CPU load monitoring for STM32F4xx - http://stm32f4-discovery.com/2015/05/library-60-cpu-load-monitor-for-stm32f4xx-devices
  * @{
  *
@@ -68,11 +68,11 @@ extern "C" {
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_pwr.h"
 #include "defines.h"
-#include "tm_stm32f4_low_power.h"
-#include "tm_stm32f4_general.h"
+#include "stm32f4_low_power.h"
+#include "stm32f4_general.h"
 
 /**
- * @defgroup TM_CPULOAD_Macros
+ * @defgroup CPULOAD_Macros
  * @brief    Library defines
  * @{
  */
@@ -82,7 +82,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_CPULOAD_Typedefs
+ * @defgroup CPULOAD_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -95,39 +95,39 @@ typedef struct {
 	uint32_t SCNT;   /*!< Number of sleeping cycles in one period */
 	float Load;      /*!< CPU load percentage */
 	uint8_t Updated; /*!< Set to 1 when new CPU load is calculated */
-} TM_CPULOAD_t;
+} CPULOAD_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_CPULOAD_Functions
+ * @defgroup CPULOAD_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Initializes DWT functionality for sleep counter and prepares everything for CPU LOAD measurement
- * @param  *CPU_Load: Pointer to empty @ref TM_CPULOAD_t structure
+ * @param  *CPU_Load: Pointer to empty @ref CPULOAD_t structure
  * @retval Returns DWT counter status:
  *           - 0: DWT counter has not started, measurement will fail
  *           - > 0: DWT counter has started, everything OK
  */
-uint8_t TM_CPULOAD_Init(TM_CPULOAD_t* CPU_Load);
+uint8_t CPULOAD_Init(CPULOAD_t* CPU_Load);
 
 /** 
  * @brief  Goes to low power mode and measures sleeping time and working time using DWT cycle counter
  * @note   You need wake up source, otherwise you might stay forever inside low power mode
- * @param  *CPU_Load: Pointer to @ref TM_CPULOAD_t structure 
+ * @param  *CPU_Load: Pointer to @ref CPULOAD_t structure 
  * @param  PowerMode: Select power mode you want to use for measure CPU load. Valid parameters are:
- *            - TM_LOWPOWERMODE_SleepUntilInterrupt: Go to sleep mode with __WFI() instruction
- *            - TM_LOWPOWERMODE_SleepUntilEvent: Go to sleep mode with __WFE() instruction
+ *            - LOWPOWERMODE_SleepUntilInterrupt: Go to sleep mode with __WFI() instruction
+ *            - LOWPOWERMODE_SleepUntilEvent: Go to sleep mode with __WFE() instruction
  * @retval CPU load value updated status.
  *           - 0: CPU load value is not updated, still old results
  *           - > 0: CPU load value is updated
  */
-uint8_t TM_CPULOAD_GoToSleepMode(TM_CPULOAD_t* CPU_Load, TM_LOWPOWERMODE_t PowerMode);
+uint8_t CPULOAD_GoToSleepMode(CPULOAD_t* CPU_Load, LOWPOWERMODE_t PowerMode);
 
 /**
  * @}

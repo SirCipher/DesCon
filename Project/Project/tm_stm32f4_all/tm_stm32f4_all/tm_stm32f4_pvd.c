@@ -16,21 +16,21 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_pvd.h"
+#include "stm32f4_pvd.h"
 
 /* Bit for PVD in EXTI registers */
 #define PVD_EXTI_LINE         0x00010000
 
-void TM_PVD_Enable(TM_PVD_Level_t Level, TM_PVD_Trigger_t Trigger) {
+void PVD_Enable(PVD_Level_t Level, PVD_Trigger_t Trigger) {
 	NVIC_InitTypeDef NVIC_InitStruct;
 	
 	/* Enable PWR clock */
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN;
 	
 	/* Select EXTI values */
-	if (Trigger == TM_PVD_Trigger_Rising) {
+	if (Trigger == PVD_Trigger_Rising) {
 		EXTI->RTSR |= PVD_EXTI_LINE;
-	} else if (Trigger == TM_PVD_Trigger_Falling) {
+	} else if (Trigger == PVD_Trigger_Falling) {
 		EXTI->FTSR |= PVD_EXTI_LINE;
 	} else {
 		EXTI->RTSR |= PVD_EXTI_LINE;
@@ -57,7 +57,7 @@ void TM_PVD_Enable(TM_PVD_Level_t Level, TM_PVD_Trigger_t Trigger) {
 	PWR->CR |= PWR_CR_PVDE;
 }
 
-void TM_PVD_Disable(void) {
+void PVD_Disable(void) {
 	/* Disable PVD */
 	PWR->CR &= ~PWR_CR_PVDE;
 	
@@ -71,9 +71,9 @@ void TM_PVD_Disable(void) {
 /*****************************************************************/
 /*                 PVD INTERRUPT USER CALLBACK                   */
 /*****************************************************************/
-__weak void TM_PVD_Handler(uint8_t status) {
+__weak void PVD_Handler(uint8_t status) {
 	/* NOTE: This function should not be modified, when the callback is needed,
-            the TM_PVD_Handler could be implemented in the user file
+            the PVD_Handler could be implemented in the user file
 	*/
 }
 
@@ -87,6 +87,6 @@ void PVD_IRQHandler(void) {
 		EXTI->PR = PVD_EXTI_LINE;
 		
 		/* Call user function with status */
-		TM_PVD_Handler(PWR->CSR & PWR_CSR_PVDO);
+		PVD_Handler(PWR->CSR & PWR_CSR_PVDO);
 	}
 }

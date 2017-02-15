@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_DMA_H
-#define TM_DMA_H 110
+#ifndef DMA_H
+#define DMA_H 110
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_DMA
+ * @defgroup DMA
  * @brief    DMA library for STM32F4xx for several purposes - http://stm32f4-discovery.com/2015/06/library-63-dma-for-stm32f4xx
  * @{
  *
@@ -97,12 +97,12 @@ extern "C" {
  */
 
 #include "stm32f4xx.h"
-#include "tm_stm32f4_dma.h"
+#include "stm32f4_dma.h"
 #include "defines.h"
 #include "attributes.h"
 
 /**
- * @defgroup TM_DMA_Macros
+ * @defgroup DMA_Macros
  * @brief    Library defines
  * @{
  */
@@ -132,7 +132,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_DMA_Typedefs
+ * @defgroup DMA_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -142,7 +142,7 @@ extern "C" {
  */
 
 /**
- * @defgroup TM_DMA_Functions
+ * @defgroup DMA_Functions
  * @brief    Library Functions
  * @{
  */
@@ -152,7 +152,7 @@ extern "C" {
  * @param  *DMA_Stream: Pointer to @ref DMA_Stream_TypeDef DMA stream where you want to clear flags 
  * @retval None
  */
-void TM_DMA_ClearFlags(DMA_Stream_TypeDef* DMA_Stream);
+void DMA_ClearFlags(DMA_Stream_TypeDef* DMA_Stream);
 
 /** 
  * @brief  Clears selected DMA interrupt flag
@@ -166,7 +166,7 @@ void TM_DMA_ClearFlags(DMA_Stream_TypeDef* DMA_Stream);
  *           - DMA_FLAG_ALL: All flags
  * @retval None
  */
-void TM_DMA_ClearFlag(DMA_Stream_TypeDef* DMA_Stream, uint32_t flags);
+void DMA_ClearFlag(DMA_Stream_TypeDef* DMA_Stream, uint32_t flags);
 
 /**
  * @brief  Enables interrupts for DMA stream
@@ -174,7 +174,7 @@ void TM_DMA_ClearFlag(DMA_Stream_TypeDef* DMA_Stream, uint32_t flags);
  * @param  *DMA_Stream: Pointer to DMA stream where to enable interrupts
  * @retval None
  */
-void TM_DMA_EnableInterrupts(DMA_Stream_TypeDef* DMA_Stream);
+void DMA_EnableInterrupts(DMA_Stream_TypeDef* DMA_Stream);
 
 /**
  * @brief  Disables interrupts for DMA stream
@@ -182,7 +182,7 @@ void TM_DMA_EnableInterrupts(DMA_Stream_TypeDef* DMA_Stream);
  * @param  *DMA_Stream: Pointer to DMA stream where to disable interrupts
  * @retval None
  */
-void TM_DMA_DisableInterrupts(DMA_Stream_TypeDef* DMA_Stream);
+void DMA_DisableInterrupts(DMA_Stream_TypeDef* DMA_Stream);
 
 /**
  * @brief  Transfer complete callback
@@ -191,7 +191,7 @@ void TM_DMA_DisableInterrupts(DMA_Stream_TypeDef* DMA_Stream);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_DMA_TransferCompleteHandler(DMA_Stream_TypeDef* DMA_Stream);
+void DMA_TransferCompleteHandler(DMA_Stream_TypeDef* DMA_Stream);
 
 /**
  * @brief  Half transfer complete callback
@@ -200,7 +200,7 @@ void TM_DMA_TransferCompleteHandler(DMA_Stream_TypeDef* DMA_Stream);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_DMA_HalfTransferCompleteHandler(DMA_Stream_TypeDef* DMA_Stream);
+void DMA_HalfTransferCompleteHandler(DMA_Stream_TypeDef* DMA_Stream);
 
 /**
  * @brief  Transfer error callback
@@ -209,7 +209,7 @@ void TM_DMA_HalfTransferCompleteHandler(DMA_Stream_TypeDef* DMA_Stream);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_DMA_TransferErrorHandler(DMA_Stream_TypeDef* DMA_Stream);
+void DMA_TransferErrorHandler(DMA_Stream_TypeDef* DMA_Stream);
 
 /**
  * @brief  Direct mode error callback
@@ -218,7 +218,7 @@ void TM_DMA_TransferErrorHandler(DMA_Stream_TypeDef* DMA_Stream);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_DMA_DirectModeErrorHandler(DMA_Stream_TypeDef* DMA_Stream);
+void DMA_DirectModeErrorHandler(DMA_Stream_TypeDef* DMA_Stream);
 
 /**
  * @brief  FIFO error error callback
@@ -227,7 +227,7 @@ void TM_DMA_DirectModeErrorHandler(DMA_Stream_TypeDef* DMA_Stream);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_DMA_FIFOErrorHandler(DMA_Stream_TypeDef* DMA_Stream);
+void DMA_FIFOErrorHandler(DMA_Stream_TypeDef* DMA_Stream);
 
 /**
  * @}

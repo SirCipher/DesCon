@@ -27,20 +27,20 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_OTP_H
-#define TM_OTP_H 100
+#ifndef OTP_H
+#define OTP_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_OTP
+ * @defgroup OTP
  * @brief    OTP (One-Time Programmable) flash section library for STM32F4xx - http://stm32f4-discovery.com/2015/01/library-49-one-time-programmable-otp-bytes-on-stm32f4xx
  * @{
  *
@@ -66,7 +66,7 @@ extern "C" {
 #include "defines.h"
 
 /**
- * @defgroup TM_OTP_Macros
+ * @defgroup OTP_Macros
  * @brief    Library defines
  * @{
  */
@@ -101,7 +101,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_OTP_Typedefs
+ * @defgroup OTP_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -110,18 +110,18 @@ extern "C" {
  * @brief  Result enumeration
  */
 typedef enum {
-    TM_OTP_Result_Ok = 0,  /*!< Everything OK */
-    TM_OTP_Result_Error    /*!< An error occurred.
+    OTP_Result_Ok = 0,  /*!< Everything OK */
+    OTP_Result_Error    /*!< An error occurred.
 	                            This is returned when you try to write data to location which does not exists,
                                 or if you try to write data to locked block */
-} TM_OTP_Result_t;
+} OTP_Result_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_OTP_Functions
+ * @defgroup OTP_Functions
  * @brief    Library Functions
  * @{
  */
@@ -132,9 +132,9 @@ typedef enum {
  * @param  block: OTP block number, 0 to 15 is allowed
  * @param  byte: OTP byte inside one block, 0 to 31 is allowed
  * @param  data: Data to be written to OTP memory
- * @retval Member of @ref TM_OTP_Result_t enumeration 
+ * @retval Member of @ref OTP_Result_t enumeration 
  */
-TM_OTP_Result_t TM_OTP_Write(uint8_t block, uint8_t byte, uint8_t data);
+OTP_Result_t OTP_Write(uint8_t block, uint8_t byte, uint8_t data);
 
 /**
  * @brief  Reads data from specific block and specific byte in this block
@@ -143,16 +143,16 @@ TM_OTP_Result_t TM_OTP_Write(uint8_t block, uint8_t byte, uint8_t data);
  * @param  byte: OTP byte inside one block, 0 to 31 is allowed
  * @retval Value at specific block and byte location, or 0 if location is invalid
  */
-uint8_t TM_OTP_Read(uint8_t block, uint8_t byte);
+uint8_t OTP_Read(uint8_t block, uint8_t byte);
 
 /**
  * @brief  Locks entire block to prevent future programming inside
  * @note   When you lock your block, then you are not able to program it anymore.
  * 	       Even, if it is totally empty. You can't unlock it back!
  * @param  block: OTP block number, 0 to 15 is allowed
- * @retval Member of @ref TM_OTP_Result_t enumeration
+ * @retval Member of @ref OTP_Result_t enumeration
  */
-TM_OTP_Result_t TM_OTP_BlockLock(uint8_t block);
+OTP_Result_t OTP_BlockLock(uint8_t block);
 
 /**
  * @brief  Checks if block is locked or not
@@ -161,7 +161,7 @@ TM_OTP_Result_t TM_OTP_BlockLock(uint8_t block);
  *            - 0: Block is not locked
  *            - > 0: Block locked
  */
-#define TM_OTP_BlockLocked(block)	((*(__IO uint8_t *) (OTP_LOCK_ADDR + block)) == 0x00 ? 1 : 0)
+#define OTP_BlockLocked(block)	((*(__IO uint8_t *) (OTP_LOCK_ADDR + block)) == 0x00 ? 1 : 0)
 
 /**
  * @}

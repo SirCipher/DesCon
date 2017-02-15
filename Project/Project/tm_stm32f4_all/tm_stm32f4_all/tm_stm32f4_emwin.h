@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_EMWIN_H
-#define TM_EMWIN_H 100
+#ifndef EMWIN_H
+#define EMWIN_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_EMWIN
+ * @defgroup EMWIN
  * @brief    STemWin implementation for STM32F429-Discovery - http://stm32f4-discovery.com/2015/01/library-50-stemwin-stm32f429-discovery/
  * @{
  *
@@ -78,13 +78,13 @@ extern "C" {
 #include "stm32f4xx.h"
 #include "stm32f4xx_rcc.h"
 #include "defines.h"
-#include "tm_stm32f4_sdram.h"
-#include "tm_stm32f4_ili9341_ltdc.h"
-#include "tm_stm32f4_stmpe811.h"
+#include "stm32f4_sdram.h"
+#include "stm32f4_ili9341_ltdc.h"
+#include "stm32f4_stmpe811.h"
 #include "GUI.h"
 
 /**
- * @defgroup TM_EMWIN_Macros
+ * @defgroup EMWIN_Macros
  * @brief    Library defines
  * @{
  */
@@ -92,8 +92,8 @@ extern "C" {
 /**
  * @brief If you want to rotate feature for LCD, set this define to 1
  */
-#ifndef TM_EMWIN_ROTATE_LCD
-#define TM_EMWIN_ROTATE_LCD				0
+#ifndef EMWIN_ROTATE_LCD
+#define EMWIN_ROTATE_LCD				0
 #endif
 
 /**
@@ -108,7 +108,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_EMWIN_Typedefs
+ * @defgroup EMWIN_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -117,28 +117,28 @@ extern "C" {
  * @brief  EMWIN Result enumeration	
  */
 typedef enum {
-	TM_EMWIN_Result_Ok = 0,     /*!< Everything OK */
-	TM_EMWIN_Result_Error,      /*!< An error occurred */
-	TM_EMWIN_Result_TouchError, /*!< Error with touch controller */
-	TM_EMWIN_Result_GUIError    /*!< Error with emWin GUI */
-} TM_EMWIN_Result_t;
+	EMWIN_Result_Ok = 0,     /*!< Everything OK */
+	EMWIN_Result_Error,      /*!< An error occurred */
+	EMWIN_Result_TouchError, /*!< Error with touch controller */
+	EMWIN_Result_GUIError    /*!< Error with emWin GUI */
+} EMWIN_Result_t;
 
 /**
  * @brief  EMWIN Rotation enumeration
  */
 typedef enum {
-	TM_EMWIN_Rotate_0 = 0, /*!< Rotate LCD for 0 degrees, default state*/
-	TM_EMWIN_Rotate_90,    /*!< Rotate LCD 90 degrees */
-	TM_EMWIN_Rotate_180,   /*!< Rotate LCD 180 degrees */
-	TM_EMWIN_Rotate_270,   /*!< Rotate LCD 170 degrees */
-} TM_EMWIN_Rotate_t;
+	EMWIN_Rotate_0 = 0, /*!< Rotate LCD for 0 degrees, default state*/
+	EMWIN_Rotate_90,    /*!< Rotate LCD 90 degrees */
+	EMWIN_Rotate_180,   /*!< Rotate LCD 180 degrees */
+	EMWIN_Rotate_270,   /*!< Rotate LCD 170 degrees */
+} EMWIN_Rotate_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_EMWIN_Functions
+ * @defgroup EMWIN_Functions
  * @brief    Library Functions
  * @{
  */
@@ -146,47 +146,47 @@ typedef enum {
 /**
  * @brief  Initializes emWin peripheral
  * @note   This function initialize LCD, SDRAM, STMPE811 touch and GUI for STM32F429-Discovery board
- * @retval Member of @ref TM_EMWIN_Result_t
+ * @retval Member of @ref EMWIN_Result_t
  */
-TM_EMWIN_Result_t TM_EMWIN_Init(void);
+EMWIN_Result_t EMWIN_Init(void);
 
 /**
  * @brief  Rotates LCD
- * @note   It does not have any sense, if you have disabled define TM_EMWIN_ROTATE_LCD.
+ * @note   It does not have any sense, if you have disabled define EMWIN_ROTATE_LCD.
  * 
  * By default, rotation is disabled for memory purpose.
  *
  * To rotate LCD you need additional RAM, but it is available on F429-Discovery board
- * @param  rotation: Rotate direction. This parameter can be a value of @ref TM_EMWIN_Result_t enumeration
- * @retval Member of @ref TM_EMWIN_Result_t
+ * @param  rotation: Rotate direction. This parameter can be a value of @ref EMWIN_Result_t enumeration
+ * @retval Member of @ref EMWIN_Result_t
  */
-TM_EMWIN_Result_t TM_EMWIN_Rotate(TM_EMWIN_Rotate_t rotation);
+EMWIN_Result_t EMWIN_Rotate(EMWIN_Rotate_t rotation);
 
 /**
  * @brief  Enables memory feature for EMWIN
  * @note   When you enable memory, then all drawings for EMWIN are stored on LCD layer 1,
- *            but layer 2 is shown to user. You have to use @ref TM_EMWIN_Exec() to update data from LCD layer 1 to layer 2
+ *            but layer 2 is shown to user. You have to use @ref EMWIN_Exec() to update data from LCD layer 1 to layer 2
  *         This is used to avoid flickering system when doing a lot of redrawing, for example updating a big graph very fast 
  * @param  None
  * @retval None
  */
-void TM_EMWIN_MemoryEnable(void);
+void EMWIN_MemoryEnable(void);
 
 /**
  * @brief  Disables memory feature for EMWIN
  * @param  None
  * @retval None
  */
-void TM_EMWIN_MemoryDisable(void);
+void EMWIN_MemoryDisable(void);
 
 /**
  * @brief  Execute EMWIN pending tasks 
- * @note   This function was designed to be used in case memory is enabled using @ref TM_EMWIN_MemoryEnable function.
+ * @note   This function was designed to be used in case memory is enabled using @ref EMWIN_MemoryEnable function.
  *            You can also use it (and it is recommended) in case you don't have memory enabled
  * @param  None
  * @retval Return values of GUI_Exec() function from EMWIN
  */
-uint32_t TM_EMWIN_Exec(void);
+uint32_t EMWIN_Exec(void);
 
 /**
  * @brief  Updates touch
@@ -194,9 +194,9 @@ uint32_t TM_EMWIN_Exec(void);
  *
  * It makes touch controller check every number of ms as defined in EMWIN_UPDATE_TOUCH_MILLIS define
  * @param None
- * @retval Member of @ref TM_EMWIN_Result_t
+ * @retval Member of @ref EMWIN_Result_t
  */
-TM_EMWIN_Result_t TM_EMWIN_UpdateTouch(void);
+EMWIN_Result_t EMWIN_UpdateTouch(void);
 
 /**
  * @}

@@ -16,10 +16,10 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_otp.h"
-#include "tm_stm32f4_disco.h"
+#include "stm32f4_otp.h"
+#include "stm32f4_disco.h"
 
-TM_OTP_Result_t TM_OTP_Write(uint8_t block, uint8_t byte, uint8_t data) {
+OTP_Result_t OTP_Write(uint8_t block, uint8_t byte, uint8_t data) {
 	FLASH_Status status;
 	
 	/* Check input parameters */
@@ -30,7 +30,7 @@ TM_OTP_Result_t TM_OTP_Write(uint8_t block, uint8_t byte, uint8_t data) {
 		/* Invalid parameters */
 		
 		/* Return error */
-		return TM_OTP_Result_Error;
+		return OTP_Result_Error;
 	}
 	
 	/* Unlock FLASH */
@@ -49,7 +49,7 @@ TM_OTP_Result_t TM_OTP_Write(uint8_t block, uint8_t byte, uint8_t data) {
 		FLASH_Lock();
 		
 		/* Return error */
-		return TM_OTP_Result_Error;
+		return OTP_Result_Error;
 	}
 	
 	/* Write byte */
@@ -61,14 +61,14 @@ TM_OTP_Result_t TM_OTP_Write(uint8_t block, uint8_t byte, uint8_t data) {
 	/* Check status */
 	if (status == FLASH_COMPLETE) {
 		/* Return OK */
-		return TM_OTP_Result_Ok;
+		return OTP_Result_Ok;
 	} else {
 		/* Return error */
-		return TM_OTP_Result_Error;
+		return OTP_Result_Error;
 	}
 }
 
-uint8_t TM_OTP_Read(uint8_t block, uint8_t byte) {
+uint8_t OTP_Read(uint8_t block, uint8_t byte) {
 	uint8_t data;
 	
 	/* Check input parameters */
@@ -87,7 +87,7 @@ uint8_t TM_OTP_Read(uint8_t block, uint8_t byte) {
 	return data;
 }
 
-TM_OTP_Result_t TM_OTP_BlockLock(uint8_t block) {
+OTP_Result_t OTP_BlockLock(uint8_t block) {
 	FLASH_Status status;
 	
 	/* Check input parameters */
@@ -95,7 +95,7 @@ TM_OTP_Result_t TM_OTP_BlockLock(uint8_t block) {
 		/* Invalid parameters */
 		
 		/* Return error */
-		return TM_OTP_Result_Error;
+		return OTP_Result_Error;
 	}
 	
 	/* Unlock FLASH */
@@ -114,7 +114,7 @@ TM_OTP_Result_t TM_OTP_BlockLock(uint8_t block) {
 		FLASH_Lock();
 		
 		/* Return error */
-		return TM_OTP_Result_Error;
+		return OTP_Result_Error;
 	}
 	
 	/* Write byte */
@@ -126,10 +126,10 @@ TM_OTP_Result_t TM_OTP_BlockLock(uint8_t block) {
 	/* Check status */
 	if (status == FLASH_COMPLETE) {
 		/* Return OK */
-		return TM_OTP_Result_Ok;
+		return OTP_Result_Ok;
 	}
 	
 	/* Return error */
-	return TM_OTP_Result_Error;
+	return OTP_Result_Error;
 }
 

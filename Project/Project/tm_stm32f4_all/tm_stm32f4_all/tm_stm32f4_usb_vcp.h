@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_USB_VCP_H
-#define TM_USB_VCP_H   120
+#ifndef USB_VCP_H
+#define USB_VCP_H   120
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_USB_VCP
+ * @defgroup USB_VCP
  * @brief    USB Virtual COM Port for STM32F4xx devices - http://stm32f4-discovery.com/2014/08/library-24-virtual-com-port-vcp-stm32f4xx/
  * @{
  *
@@ -137,7 +137,7 @@ Data -		PB14
 #include "usbd_cdc_vcp.h"
 
 /**
- * @defgroup TM_USB_VCP_Macros
+ * @defgroup USB_VCP_Macros
  * @brief    Library defines
  * @{
  */
@@ -155,7 +155,7 @@ Data -		PB14
  */
  
 /**
- * @defgroup TM_USB_VCP_Typedefs
+ * @defgroup USB_VCP_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -164,16 +164,16 @@ Data -		PB14
  * @brief VCP Result Enumerations
  */
 typedef enum {
-	TM_USB_VCP_OK,                  /*!< Everything ok */
-	TM_USB_VCP_ERROR,               /*!< An error occurred */
-	TM_USB_VCP_RECEIVE_BUFFER_FULL, /*!< Receive buffer is full */
-	TM_USB_VCP_DATA_OK,             /*!< Data OK */
-	TM_USB_VCP_DATA_EMPTY,          /*!< Data empty */
-	TM_USB_VCP_NOT_CONNECTED,       /*!< Not connected to PC */
-	TM_USB_VCP_CONNECTED,           /*!< Connected to PC */
-	TM_USB_VCP_DEVICE_SUSPENDED,    /*!< Device is suspended */
-	TM_USB_VCP_DEVICE_RESUMED       /*!< Device is resumed */
-} TM_USB_VCP_Result;
+	USB_VCP_OK,                  /*!< Everything ok */
+	USB_VCP_ERROR,               /*!< An error occurred */
+	USB_VCP_RECEIVE_BUFFER_FULL, /*!< Receive buffer is full */
+	USB_VCP_DATA_OK,             /*!< Data OK */
+	USB_VCP_DATA_EMPTY,          /*!< Data empty */
+	USB_VCP_NOT_CONNECTED,       /*!< Not connected to PC */
+	USB_VCP_CONNECTED,           /*!< Connected to PC */
+	USB_VCP_DEVICE_SUSPENDED,    /*!< Device is suspended */
+	USB_VCP_DEVICE_RESUMED       /*!< Device is resumed */
+} USB_VCP_Result;
 
 /**
  * @brief  Structure for USART if you are working USB/UART converter with STM32F4xx
@@ -203,14 +203,14 @@ typedef struct {
 	uint8_t Changed;   /*!< When you check for settings in my function, 
 	                        this will be set to 1 if user has changed parameters,
                             so you can reinitialize USART peripheral if you need to. */
-} TM_USB_VCP_Settings_t;
+} USB_VCP_Settings_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_USB_VCP_Functions
+ * @defgroup USB_VCP_Functions
  * @brief    Library Functions
  * @{
  */
@@ -218,33 +218,33 @@ typedef struct {
 /**
  * @brief  Initializes USB VCP
  * @param  None
- * @retval TM_USB_VCP_OK
+ * @retval USB_VCP_OK
  */
-TM_USB_VCP_Result TM_USB_VCP_Init(void);
+USB_VCP_Result USB_VCP_Init(void);
 
 /**
  * @brief  Reads settings from user
  * @note   These settings are set in terminal on PC
- * @param  *Settings: Pointer to TM_USB_VCP_Settings_t structure where to save data
- * @retval TM_USB_VCP_OK
+ * @param  *Settings: Pointer to USB_VCP_Settings_t structure where to save data
+ * @retval USB_VCP_OK
  */
-TM_USB_VCP_Result TM_USB_VCP_GetSettings(TM_USB_VCP_Settings_t* Settings);
+USB_VCP_Result USB_VCP_GetSettings(USB_VCP_Settings_t* Settings);
 
 /**
  * @brief  Gets received character from internal buffer
  * @param  *c: pointer to store new character to
  * @retval Character status:
- *            - TM_USB_VCP_DATA_OK: Character is valid inside *c_str
- *            - TM_USB_VCP_DATA_EMPTY: No character in *c
+ *            - USB_VCP_DATA_OK: Character is valid inside *c_str
+ *            - USB_VCP_DATA_EMPTY: No character in *c
  */
-TM_USB_VCP_Result TM_USB_VCP_Getc(uint8_t* c);
+USB_VCP_Result USB_VCP_Getc(uint8_t* c);
 
 /**
  * @brief  Puts character to USB VCP
  * @param  c: character to send over USB
- * @retval TM_USB_VCP_OK
+ * @retval USB_VCP_OK
  */
-TM_USB_VCP_Result TM_USB_VCP_Putc(volatile char c);
+USB_VCP_Result USB_VCP_Putc(volatile char c);
 
 /**
  * @brief  Gets string from VCP port
@@ -257,14 +257,14 @@ TM_USB_VCP_Result TM_USB_VCP_Putc(volatile char c);
  *            - 0: String not valid
  *            - > 0: String valid, number of characters inside string
  */
-uint16_t TM_USB_VCP_Gets(char* buffer, uint16_t bufsize);
+uint16_t USB_VCP_Gets(char* buffer, uint16_t bufsize);
 
 /**
  * @brief  Puts string to USB VCP
  * @param  *str: Pointer to string variable
- * @retval TM_USB_VCP_OK
+ * @retval USB_VCP_OK
  */
-TM_USB_VCP_Result TM_USB_VCP_Puts(char* str);
+USB_VCP_Result USB_VCP_Puts(char* str);
 
 /**
  * @brief  Sends array of data to USB VCP
@@ -272,16 +272,16 @@ TM_USB_VCP_Result TM_USB_VCP_Puts(char* str);
  * @param  Length: Number of elements to sent in units of bytes
  * @retval Sending status
  */
-TM_USB_VCP_Result TM_USB_VCP_Send(uint8_t* DataArray, uint32_t Length);
+USB_VCP_Result USB_VCP_Send(uint8_t* DataArray, uint32_t Length);
 
 /**
  * @brief  Gets VCP status
  * @param  None
  * @retval Device status:
- *            - TM_USB_VCP_CONNECTED: Connected to computer
+ *            - USB_VCP_CONNECTED: Connected to computer
  *            - other: Not connected and not ready to communicate
  */
-TM_USB_VCP_Result TM_USB_VCP_GetStatus(void);
+USB_VCP_Result USB_VCP_GetStatus(void);
 
 /**
  * @brief  Checks if receive buffer is empty
@@ -290,7 +290,7 @@ TM_USB_VCP_Result TM_USB_VCP_GetStatus(void);
  *            - 0: Buffer is not empty
  *            - > 0: Buffer is empty
  */
-uint8_t TM_USB_VCP_BufferEmpty(void);
+uint8_t USB_VCP_BufferEmpty(void);
 
 /**
  * @brief  Checks if receive buffer is fukk
@@ -299,7 +299,7 @@ uint8_t TM_USB_VCP_BufferEmpty(void);
  *            - 0: Buffer is not full
  *            - > 0: Buffer is full
  */
-uint8_t TM_USB_VCP_BufferFull(void);
+uint8_t USB_VCP_BufferFull(void);
 
 /**
  * @brief  Checks if character is in buffer
@@ -308,10 +308,10 @@ uint8_t TM_USB_VCP_BufferFull(void);
  *            - 0: Character is not in buffer
  *            - > 0: Character is in buffer
  */
-uint8_t TM_USB_VCP_FindCharacter(volatile char c);
+uint8_t USB_VCP_FindCharacter(volatile char c);
 
 /* Internal functions */
-extern TM_USB_VCP_Result TM_INT_USB_VCP_AddReceived(uint8_t c);
+extern USB_VCP_Result INT_USB_VCP_AddReceived(uint8_t c);
 
 /**
  * @}

@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_CRC_H
-#define TM_CRC_H 110
+#ifndef CRC_H
+#define CRC_H 110
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_CRC
+ * @defgroup CRC
  * @brief    CRC library for STM32F4xx devices - http://stm32f4-discovery.com/2015/01/library-47-crc-module-on-stm32f4
  * @{
  *
@@ -69,7 +69,7 @@ extern "C" {
 #include "defines.h"
 
 /**
- * @defgroup TM_CRC_Functions
+ * @defgroup CRC_Functions
  * @brief    Library Functions
  * @{
  */
@@ -79,14 +79,14 @@ extern "C" {
  * @param  None
  * @retval None
  */
-void TM_CRC_Init(void);
+void CRC_Init(void);
 
 /** 
  * @brief  De initializes and disable CRC peripheral
  * @param  None
  * @retval None
  */
-void TM_CRC_DeInit(void);
+void CRC_DeInit(void);
 
 /**
  * @brief  Calculates 32-bit CRC value from 8-bit input array
@@ -97,7 +97,7 @@ void TM_CRC_DeInit(void);
  *            - > 0: CRC unit is set to 0 before first calculation
  * @retval 32-bit CRC calculated number
  */
-uint32_t TM_CRC_Calculate8(uint8_t* arr, uint32_t count, uint8_t reset);
+uint32_t CRC_Calculate8(uint8_t* arr, uint32_t count, uint8_t reset);
 
 /**
  * @brief  Calculates 32-bit CRC value from 16-bit input array
@@ -108,7 +108,7 @@ uint32_t TM_CRC_Calculate8(uint8_t* arr, uint32_t count, uint8_t reset);
  *            - > 0: CRC unit is set to 0 before first calculation
  * @retval 32-bit CRC calculated number
  */
-uint32_t TM_CRC_Calculate16(uint16_t* arr, uint32_t count, uint8_t reset);
+uint32_t CRC_Calculate16(uint16_t* arr, uint32_t count, uint8_t reset);
 
 /**
  * @brief  Calculates 32-bit CRC value from 32-bit input array
@@ -119,7 +119,7 @@ uint32_t TM_CRC_Calculate16(uint16_t* arr, uint32_t count, uint8_t reset);
  *            - > 0: CRC unit is set to 0 before first calculation
  * @retval 32-bit CRC calculated number
  */
-uint32_t TM_CRC_Calculate32(uint32_t* arr, uint32_t count, uint8_t reset);
+uint32_t CRC_Calculate32(uint32_t* arr, uint32_t count, uint8_t reset);
 
 /**
  * @}

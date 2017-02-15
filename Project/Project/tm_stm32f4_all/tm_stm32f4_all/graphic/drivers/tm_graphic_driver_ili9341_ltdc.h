@@ -65,8 +65,8 @@
  *		WRX			PD13			Data/Command selection
  *
  */
-#ifndef TM_GRAPHIC_ILI9341_H
-#define TM_GRAPHIC_ILI9341_H 	100
+#ifndef GRAPHIC_ILI9341_H
+#define GRAPHIC_ILI9341_H 	100
 /**
  * Library dependencies
  * - STM32F4xx
@@ -75,7 +75,7 @@
  * - defines.h
  * - TM SPI
  * - TM SDRAM
- * - TM_GRAPHIC
+ * - GRAPHIC
  */
 /**
  * Includes
@@ -84,15 +84,15 @@
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_spi.h"
-#include "tm_stm32f4_sdram.h"
-#include "tm_stm32f4_graphic.h"
+#include "stm32f4_spi.h"
+#include "stm32f4_sdram.h"
+#include "stm32f4_graphic.h"
 
 //SPI used
 //This SPI pins are used on STM32F429 Discovery board
 #ifndef ILI9341_SPI
 #define ILI9341_SPI 				SPI5
-#define ILI9341_SPI_PINS			TM_SPI_PinsPack_1
+#define ILI9341_SPI_PINS			SPI_PinsPack_1
 #endif
 
 #ifndef ILI9341_CS_PIN
@@ -187,7 +187,7 @@ typedef struct {
 	uint32_t 	CurrentLayerOffset;
 	uint8_t 	Layer1Opacity;
 	uint8_t 	Layer2Opacity;
-} TM_ILI931_LTDC_Options_t;
+} ILI931_LTDC_Options_t;
 
 
 /**
@@ -202,42 +202,42 @@ typedef struct {
  * Also, LCD should be in portrait mode by default, so width is smaller than height.
  * 
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		pointer to TM_GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		pointer to GRAPHIC_Options_t struct
  * 		
- * This function should return TM_GRAPHIC_OK or TM_GRAPHIC_ERROR
+ * This function should return GRAPHIC_OK or GRAPHIC_ERROR
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Init(TM_GRAPHIC_Options_t* LCD_Options);
+extern GRAPHIC_Result GRAPHICLCDDriver_Init(GRAPHIC_Options_t* LCD_Options);
 
 /**
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		Pointer to TM_GRAPHIC_Options_t struct
- * 	- TM_GRAPHIC_Orientation_t orientation
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		Pointer to GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Orientation_t orientation
  * 		Orientation you should set to LCD
  * 	
- * This function should return TM_GRAPHIC_OK on success or TM_GRAPHIC_ERROR on failure
+ * This function should return GRAPHIC_OK on success or GRAPHIC_ERROR on failure
  * 		
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Rotate(TM_GRAPHIC_Options_t* LCD_Options, TM_GRAPHIC_Orientation_t orientation);
+extern GRAPHIC_Result GRAPHICLCDDriver_Rotate(GRAPHIC_Options_t* LCD_Options, GRAPHIC_Orientation_t orientation);
 
 /**
  * Fill entire LCD with specific color
  * 
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		Pointer to TM_GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		Pointer to GRAPHIC_Options_t struct
  * 	- uint32_t color
  * 		Specific color to fill entire LCD
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Fill(TM_GRAPHIC_Options_t* LCD_Options, uint32_t color);
+extern GRAPHIC_Result GRAPHICLCDDriver_Fill(GRAPHIC_Options_t* LCD_Options, uint32_t color);
 
 /**
  * Draw pixel on specific X and Y location on Graphic LCD
  * 
  * Parameters:
- * 	- TM_GRAPHIC_Options_t* LCD_Options
- * 		Pointer to TM_GRAPHIC_Options_t struct
+ * 	- GRAPHIC_Options_t* LCD_Options
+ * 		Pointer to GRAPHIC_Options_t struct
  * 	- uint16_t x
  * 		X position on LCD
  * 	- uint16_t y
@@ -245,32 +245,32 @@ extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_Fill(TM_GRAPHIC_Options_t* LCD_Opti
  * 	- uint32_t color
  * 		Pixel color
  */
-extern TM_GRAPHIC_Result TM_GRAPHICLCDDriver_DrawPixel(TM_GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color);
+extern GRAPHIC_Result GRAPHICLCDDriver_DrawPixel(GRAPHIC_Options_t* LCD_Options, uint16_t x, uint16_t y, uint32_t color);
 
 /**
  * Initialize all use LCD pins
  *
  */
-extern void TM_GRAPHIC_ILI9341_InitPins(void);
+extern void GRAPHIC_ILI9341_InitPins(void);
 
 /**
  * Initialize LTDC peripheral
  *
  */
-extern void TM_LCD9341_InitLTDC(void);
+extern void LCD9341_InitLTDC(void);
 
 /**
  * Initialize Layers for LTDC
  *
  */
-extern void TM_GRAPHIC_ILI9341_InitLayers(void);
+extern void GRAPHIC_ILI9341_InitLayers(void);
 
 /**
  * Init LCD pins
  *
  * Called private
  */
-extern void TM_GRAPHIC_ILI9341_InitLCD(void);
+extern void GRAPHIC_ILI9341_InitLCD(void);
 
 /**
  * Send data to LCD via SPI
@@ -280,7 +280,7 @@ extern void TM_GRAPHIC_ILI9341_InitLCD(void);
  * Parameters:
  * 	- uint8_t data: data to be sent
  */
-extern void TM_GRAPHIC_ILI9341_SendData(uint8_t data);
+extern void GRAPHIC_ILI9341_SendData(uint8_t data);
 
 /**
  * Send command to LCD via SPI
@@ -290,7 +290,7 @@ extern void TM_GRAPHIC_ILI9341_SendData(uint8_t data);
  * Parameters:
  * 	- uint8_t data: data to be sent
  */
-extern void TM_GRAPHIC_ILI9341_SendCommand(uint8_t data);
+extern void GRAPHIC_ILI9341_SendCommand(uint8_t data);
 
 /**
  * Simple delay
@@ -298,28 +298,28 @@ extern void TM_GRAPHIC_ILI9341_SendCommand(uint8_t data);
  * Parameters:
  * 	- volatile unsigned int delay: clock cycles
  */
-extern void TM_GRAPHIC_ILI9341_Delay(volatile unsigned int delay);
+extern void GRAPHIC_ILI9341_Delay(volatile unsigned int delay);
 
 /**
  * Set cursor position
  *
  * Called private
  */
-extern void TM_GRAPHIC_ILI9341_SetCursorPosition(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
+extern void GRAPHIC_ILI9341_SetCursorPosition(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 
 /**
  * Set layer 1 to drive data on it
  *
  *
  */
-extern void TM_GRAPHIC_ILI9341_SetLayer1(void);
+extern void GRAPHIC_ILI9341_SetLayer1(void);
 
 /**
  * Set layer 2 to drive data on it
  *
  *
  */
-extern void TM_GRAPHIC_ILI9341_SetLayer2(void);
+extern void GRAPHIC_ILI9341_SetLayer2(void);
 
 /**
  * Set layer 1 opacity
@@ -327,7 +327,7 @@ extern void TM_GRAPHIC_ILI9341_SetLayer2(void);
  * Parameters:
  * 	uint8_t opacity: 0 to 255, 0 is no opacity, 255 is no transparent
  */
-extern void TM_GRAPHIC_ILI9341_SetLayer1Opacity(uint8_t opacity);
+extern void GRAPHIC_ILI9341_SetLayer1Opacity(uint8_t opacity);
 
 /**
  * Set layer 2 opacity
@@ -335,8 +335,8 @@ extern void TM_GRAPHIC_ILI9341_SetLayer1Opacity(uint8_t opacity);
  * Parameters:
  * 	uint8_t opacity: 0 to 255, 0 is no opacity, 255 is no transparent
  */
-extern void TM_GRAPHIC_ILI9341_SetLayer2Opacity(uint8_t opacity);
-extern void TM_GRAPHIC_ILI9341_UpdateLayerOpacity(void);
+extern void GRAPHIC_ILI9341_SetLayer2Opacity(uint8_t opacity);
+extern void GRAPHIC_ILI9341_UpdateLayerOpacity(void);
 
 /**
  * This changes current active layer.
@@ -345,19 +345,19 @@ extern void TM_GRAPHIC_ILI9341_UpdateLayerOpacity(void);
  *
  * It set transparency to 0 and 255 dependency to which layer is selected
  */
-extern void TM_GRAPHIC_ILI9341_ChangeLayers(void);
+extern void GRAPHIC_ILI9341_ChangeLayers(void);
 
 /**
  * Copy content of layer 2 to layer 1
  *
  */
-extern void TM_GRAPHIC_ILI9341_Layer2To1(void);
+extern void GRAPHIC_ILI9341_Layer2To1(void);
 
 /**
  * Copy content of layer 1 to layer 2
  *
  */
-extern void TM_GRAPHIC_ILI9341_Layer1To2(void);
+extern void GRAPHIC_ILI9341_Layer1To2(void);
 
 #endif
 

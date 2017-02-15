@@ -34,7 +34,7 @@
 
 #include "usbd_cdc_core.h"
 
-#include "tm_stm32f4_usb_vcp.h"
+#include "stm32f4_usb_vcp.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -222,7 +222,7 @@ uint16_t VCP_DataRx (uint8_t* Buf, uint32_t Len) {
 	uint32_t i;
 	for (i = 0; i < Len; i++) {
 		/* Add data to internal buffer */
-		TM_INT_USB_VCP_AddReceived(*(Buf + i));
+		INT_USB_VCP_AddReceived(*(Buf + i));
 	}
 	
 	return USBD_OK;

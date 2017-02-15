@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_PVD_H
-#define TM_PVD_H 100
+#ifndef PVD_H
+#define PVD_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_PVD
+ * @defgroup PVD
  * @brief    PVD - Power Voltage Detector for STM32F4xx
  * @{
  *
@@ -68,7 +68,7 @@ extern "C" {
 #include "defines.h"
 
 /**
- * @defgroup TM_PVD_Macros
+ * @defgroup PVD_Macros
  * @brief    Library defines
  * @{
  */
@@ -88,7 +88,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_PVD_Typedefs
+ * @defgroup PVD_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -97,50 +97,50 @@ extern "C" {
  * @brief  PVD Triggers for interrupt
  */
 typedef enum {
-	TM_PVD_Trigger_Rising = 0x00,  /*!< PVD will trigger interrupt when voltage rises above treshold */
-	TM_PVD_Trigger_Falling = 0x01, /*!< PVD will trigger interrupt when voltage falls below treshold */
-	TM_PVD_Trigger_Rising_Falling  /*!< PVD will trigger interrupt when voltage rises or falls above/below treshold */
-} TM_PVD_Trigger_t;
+	PVD_Trigger_Rising = 0x00,  /*!< PVD will trigger interrupt when voltage rises above treshold */
+	PVD_Trigger_Falling = 0x01, /*!< PVD will trigger interrupt when voltage falls below treshold */
+	PVD_Trigger_Rising_Falling  /*!< PVD will trigger interrupt when voltage rises or falls above/below treshold */
+} PVD_Trigger_t;
 
 /**
  * @brief  PVD levels for interrupt triggering
  * @note   Check datasheets for proper values for voltages
  */
 typedef enum {
-	TM_PVD_Level_0 = 0x00, /*!< PVD level 0 is used as treshold value */
-	TM_PVD_Level_1 = 0x01, /*!< PVD level 1 is used as treshold value */
-	TM_PVD_Level_2 = 0x02, /*!< PVD level 2 is used as treshold value */
-	TM_PVD_Level_3 = 0x03, /*!< PVD level 3 is used as treshold value */
-	TM_PVD_Level_4 = 0x04, /*!< PVD level 4 is used as treshold value */
-	TM_PVD_Level_5 = 0x05, /*!< PVD level 5 is used as treshold value */
-	TM_PVD_Level_6 = 0x06, /*!< PVD level 6 is used as treshold value */
-	TM_PVD_Level_7 = 0x07  /*!< PVD level 7 is used as treshold value */
-} TM_PVD_Level_t;
+	PVD_Level_0 = 0x00, /*!< PVD level 0 is used as treshold value */
+	PVD_Level_1 = 0x01, /*!< PVD level 1 is used as treshold value */
+	PVD_Level_2 = 0x02, /*!< PVD level 2 is used as treshold value */
+	PVD_Level_3 = 0x03, /*!< PVD level 3 is used as treshold value */
+	PVD_Level_4 = 0x04, /*!< PVD level 4 is used as treshold value */
+	PVD_Level_5 = 0x05, /*!< PVD level 5 is used as treshold value */
+	PVD_Level_6 = 0x06, /*!< PVD level 6 is used as treshold value */
+	PVD_Level_7 = 0x07  /*!< PVD level 7 is used as treshold value */
+} PVD_Level_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_PVD_Functions
+ * @defgroup PVD_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Enables PVD feature for interrupt generation when voltage changes are detected
- * @param  Level: Level voltage when interrupt will happen. This parameter can be a value of @ref TM_PVD_Level_t enumeration
- * @param  Trigger: Trigger option when interrupt will be generated. This parameter can be a value of @ref TM_PVD_Trigger_t enumeration
+ * @param  Level: Level voltage when interrupt will happen. This parameter can be a value of @ref PVD_Level_t enumeration
+ * @param  Trigger: Trigger option when interrupt will be generated. This parameter can be a value of @ref PVD_Trigger_t enumeration
  * @retval None
  */
-void TM_PVD_Enable(TM_PVD_Level_t Level, TM_PVD_Trigger_t Trigger);
+void PVD_Enable(PVD_Level_t Level, PVD_Trigger_t Trigger);
 
 /**
  * @brief  Disables PVD feature
  * @param  None
  * @retval None
  */
-void TM_PVD_Disable(void);
+void PVD_Disable(void);
 
 /**
  * @brief  Callback for handling PVD interrupts
@@ -150,7 +150,7 @@ void TM_PVD_Disable(void);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_PVD_Handler(uint8_t status);
+void PVD_Handler(uint8_t status);
 
 /**
  * @}

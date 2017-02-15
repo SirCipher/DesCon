@@ -16,18 +16,18 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_swo.h"
+#include "stm32f4_swo.h"
 
 /* If SWO debug is enabled */
 #if SWO_DEBUG_ENABLED == 1
 
 /* File struct for SWO output */
-FILE TM_SWO_File;
+FILE SWO_File;
 
-int TM_SWO_fputc(int ch, FILE *f) {
+int SWO_fputc(int ch, FILE *f) {
 	/* Check parameters */
 	if (
-		(ITM->TCR & ITM_TCR_ITMENA_Msk) &&      /* ITM enabled */
+		(ITM->TCR & ITCR_ITMENA_Msk) &&      /* ITM enabled */
 		(ITM->TER & (1UL << 0))					/* ITM Port #0 enabled */
 	) {
 		while (ITM->PORT[0].u32 == 0);			/* Wait for available */
@@ -41,12 +41,12 @@ int TM_SWO_fputc(int ch, FILE *f) {
 	return -1;
 }
 
-void TM_SWO_Init(void) {
+void SWO_Init(void) {
 	/* Enable SWO output */
 	DBGMCU->CR = 0x00000020;
 	
 	/* Link output function for output stream functionality */
-	TM_STDIO_SetOutputFunction(&TM_SWO_File, TM_SWO_fputc);
+	STDIO_SetOutputFunction(&SWO_File, SWO_fputc);
 }
 
 #endif

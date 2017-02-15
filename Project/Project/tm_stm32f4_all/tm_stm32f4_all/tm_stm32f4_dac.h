@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_DAC_H
-#define TM_DAC_H 110
+#ifndef DAC_H
+#define DAC_H 110
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_DAC
+ * @defgroup DAC
  * @brief    DAC library for STM32F4xx - http://stm32f4-discovery.com/2014/04/library-07-da-converter-on-stm32f4xx/
  * @{
  *
@@ -83,10 +83,10 @@ DAC2			PA5
 #include "stm32f4xx.h"
 #include "stm32f4xx_dac.h"
 #include "defines.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_gpio.h"
 
 /**
- * @defgroup TM_DAC_Typedefs
+ * @defgroup DAC_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -95,34 +95,34 @@ DAC2			PA5
  * @brief  Select which DAC channel
  */
 typedef enum {
-	TM_DAC1, /*!< DAC channel 1 */
-	TM_DAC2  /*!< DAC channel 2 */
-} TM_DAC_Channel_t;
+	DAC1, /*!< DAC channel 1 */
+	DAC2  /*!< DAC channel 2 */
+} DAC_Channel_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_DAC_Functions
+ * @defgroup DAC_Functions
  * @brief    Library Functions
  * @{
  */
  
 /**
  * @brief  Initializes DAC channel and it's pin
- * @param  DACx: DAC Channel you will use. This parameter can be a value of @ref TM_DAC_Channel_t enumeration
+ * @param  DACx: DAC Channel you will use. This parameter can be a value of @ref DAC_Channel_t enumeration
  * @retval None
  */
-void TM_DAC_Init(TM_DAC_Channel_t DACx);
+void DAC_Init(DAC_Channel_t DACx);
 
 /**
  * @brief  Sets analog value to ADCx
- * @param  DACx: DAC Channel you will use. This parameter can be a value of @ref TM_DAC_Channel_t enumeration
+ * @param  DACx: DAC Channel you will use. This parameter can be a value of @ref DAC_Channel_t enumeration
  * @param  value: 12-bit unsigned value for 12-bit DAC
  * @retval None
  */
-void TM_DAC_SetValue(TM_DAC_Channel_t DACx, uint16_t value);
+void DAC_SetValue(DAC_Channel_t DACx, uint16_t value);
 
 /**
  * @}

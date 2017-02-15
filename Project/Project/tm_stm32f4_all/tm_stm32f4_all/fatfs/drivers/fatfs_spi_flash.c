@@ -21,7 +21,7 @@
 /* Status for SPIFLASH */
 static volatile DSTATUS SPI_FLASH_Status = STA_NOINIT;
 
-DSTATUS TM_FATFS_SPI_FLASH_disk_initialize(void) {
+DSTATUS FATFS_SPI_FLASH_disk_initialize(void) {
 	/* Clear NOINIT flag */
 	//SPI_FLASH_Status &= ~STA_NOINIT;
 	
@@ -29,12 +29,12 @@ DSTATUS TM_FATFS_SPI_FLASH_disk_initialize(void) {
 	return SPI_FLASH_Status;
 }
 
-DSTATUS TM_FATFS_SPI_FLASH_disk_status(void) {
+DSTATUS FATFS_SPI_FLASH_disk_status(void) {
 	/* Return disk status */
 	return SPI_FLASH_Status;
 }
 
-DRESULT TM_FATFS_SPI_FLASH_disk_ioctl(BYTE cmd, void *buff) {
+DRESULT FATFS_SPI_FLASH_disk_ioctl(BYTE cmd, void *buff) {
 	/* Get command */
 	switch (cmd) {
 		case GET_SECTOR_COUNT:	/* Get drive capacity in unit of sector (DWORD) */
@@ -54,12 +54,12 @@ DRESULT TM_FATFS_SPI_FLASH_disk_ioctl(BYTE cmd, void *buff) {
 	return RES_ERROR;
 }
 
-DRESULT TM_FATFS_SPI_FLASH_disk_read(BYTE *buff, DWORD sector, UINT count) {
+DRESULT FATFS_SPI_FLASH_disk_read(BYTE *buff, DWORD sector, UINT count) {
 	/* Future use */
 	return RES_ERROR;
 }
 
-DRESULT TM_FATFS_SPI_FLASH_disk_write(const BYTE *buff, DWORD sector, UINT count) {
+DRESULT FATFS_SPI_FLASH_disk_write(const BYTE *buff, DWORD sector, UINT count) {
 	/* Future use */
 	return RES_ERROR;
 }

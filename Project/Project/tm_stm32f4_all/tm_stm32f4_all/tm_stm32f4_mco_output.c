@@ -16,36 +16,36 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_mco_output.h"
+#include "stm32f4_mco_output.h"
 
-void TM_MCOOUTPUT_InitMCO1(void) {
+void MCOOUTPUT_InitMCO1(void) {
 	/* Enable PA8 */
-	TM_GPIO_Init(GPIOA, GPIO_PIN_8, TM_GPIO_Mode_AF, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
+	GPIO_Init(GPIOA, GPIO_PIN_8, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High);
 }
 
-void TM_MCOOUTPUT_InitMCO2(void) {
+void MCOOUTPUT_InitMCO2(void) {
 	/* Enable PC9 */
-	TM_GPIO_Init(GPIOC, GPIO_PIN_9, TM_GPIO_Mode_AF, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High);
+	GPIO_Init(GPIOC, GPIO_PIN_9, GPIO_Mode_AF, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High);
 }
 
-void TM_MCOOUTPUT_SetOutput1(TM_MCOOUTPUT1_Source_t Source, TM_MCOOUTPUT_Prescaler_t Prescaler) {
+void MCOOUTPUT_SetOutput1(MCOOUTPUT1_Source_t Source, MCOOUTPUT_Prescaler_t Prescaler) {
 	uint32_t presc = 0, src = 0;
 	
 	/* Get prescaler */
 	switch (Prescaler) {
-		case TM_MCOOUTPUT_Prescaler_1:
+		case MCOOUTPUT_Prescaler_1:
 			presc = RCC_MCO1Div_1;
 			break;
-		case TM_MCOOUTPUT_Prescaler_2:
+		case MCOOUTPUT_Prescaler_2:
 			presc = RCC_MCO1Div_2;
 			break;
-		case TM_MCOOUTPUT_Prescaler_3:
+		case MCOOUTPUT_Prescaler_3:
 			presc = RCC_MCO1Div_3;
 			break;
-		case TM_MCOOUTPUT_Prescaler_4:
+		case MCOOUTPUT_Prescaler_4:
 			presc = RCC_MCO1Div_4;
 			break;
-		case TM_MCOOUTPUT_Prescaler_5:
+		case MCOOUTPUT_Prescaler_5:
 			presc = RCC_MCO1Div_5;
 			break;
 		default:
@@ -54,19 +54,19 @@ void TM_MCOOUTPUT_SetOutput1(TM_MCOOUTPUT1_Source_t Source, TM_MCOOUTPUT_Prescal
 	
 	/* Get source */
 	switch (Source) {
-		case TM_MCOOUTPUT1_Source_HSE:
+		case MCOOUTPUT1_Source_HSE:
 			src = RCC_MCO1Source_HSE;
 		
 			/* Enable RCC HSE oscillator */
 			RCC_HSEConfig(RCC_HSE_ON);
 			break;
-		case TM_MCOOUTPUT1_Source_HSI:
+		case MCOOUTPUT1_Source_HSI:
 			src = RCC_MCO1Source_HSI;
 			break;
-		case TM_MCOOUTPUT1_Source_PLLCLK:
+		case MCOOUTPUT1_Source_PLLCLK:
 			src = RCC_MCO1Source_PLLCLK;
 			break;
-		case TM_MCOOUTPUT1_Source_LSE:		
+		case MCOOUTPUT1_Source_LSE:		
 			src = RCC_MCO1Source_LSE;
 		
 			/* Start LSE clock if available */
@@ -81,24 +81,24 @@ void TM_MCOOUTPUT_SetOutput1(TM_MCOOUTPUT1_Source_t Source, TM_MCOOUTPUT_Prescal
 	RCC_MCO1Config(src, presc);
 }
 
-void TM_MCOOUTPUT_SetOutput2(TM_MCOOUTPUT2_Source_t Source, TM_MCOOUTPUT_Prescaler_t Prescaler) {
+void MCOOUTPUT_SetOutput2(MCOOUTPUT2_Source_t Source, MCOOUTPUT_Prescaler_t Prescaler) {
 	uint32_t presc, src;
 	
 	/* Get prescaler */
 	switch (Prescaler) {
-		case TM_MCOOUTPUT_Prescaler_1:
+		case MCOOUTPUT_Prescaler_1:
 			presc = RCC_MCO2Div_1;
 			break;
-		case TM_MCOOUTPUT_Prescaler_2:
+		case MCOOUTPUT_Prescaler_2:
 			presc = RCC_MCO2Div_2;
 			break;
-		case TM_MCOOUTPUT_Prescaler_3:
+		case MCOOUTPUT_Prescaler_3:
 			presc = RCC_MCO2Div_3;
 			break;
-		case TM_MCOOUTPUT_Prescaler_4:
+		case MCOOUTPUT_Prescaler_4:
 			presc = RCC_MCO2Div_4;
 			break;
-		case TM_MCOOUTPUT_Prescaler_5:
+		case MCOOUTPUT_Prescaler_5:
 			presc = RCC_MCO2Div_5;
 			break;
 		default:
@@ -107,16 +107,16 @@ void TM_MCOOUTPUT_SetOutput2(TM_MCOOUTPUT2_Source_t Source, TM_MCOOUTPUT_Prescal
 	
 	/* Get clock source */
 	switch (Source) {
-		case TM_MCOOUTPUT2_Source_SYSCLK:
+		case MCOOUTPUT2_Source_SYSCLK:
 			src = RCC_MCO2Source_SYSCLK;
 			break;
-		case TM_MCOOUTPUT2_Source_PLLI2SCLK:
+		case MCOOUTPUT2_Source_PLLI2SCLK:
 			src = RCC_MCO2Source_PLLI2SCLK;
 			break;
-		case TM_MCOOUTPUT2_Source_HSE:
+		case MCOOUTPUT2_Source_HSE:
 			src = RCC_MCO2Source_HSE;
 			break;
-		case TM_MCOOUTPUT2_Source_PLLCLK:
+		case MCOOUTPUT2_Source_PLLCLK:
 			src = RCC_MCO2Source_PLLCLK;
 			break;
 		default:

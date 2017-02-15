@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_ONEWIRE_H
-#define TM_ONEWIRE_H 210
+#ifndef ONEWIRE_H
+#define ONEWIRE_H 210
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_ONEWIRE
+ * @defgroup ONEWIRE
  * @brief    Onewire library for STM32F4 devices - http://stm32f4-discovery.com/2014/05/library-12-onewire-library-for-stm43f4xx/
  * @{
  *
@@ -49,7 +49,7 @@ extern "C" {
  * 
  * Because if you have a loot devices on one port, if one device fail, everything is failed. You can prevent this by use more than just one port.
  *
- * To set your port and pin for OneWire protocol, you can do this when calling @ref TM_OneWire_Init function.
+ * To set your port and pin for OneWire protocol, you can do this when calling @ref OneWire_Init function.
  *
  * \par Changelog
  *
@@ -86,11 +86,11 @@ extern "C" {
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_gpio.h"
 
 /**
- * @defgroup TM_ONEWIRE_Macros
+ * @defgroup ONEWIRE_Macros
  * @brief    Library defines
  * @{
  */
@@ -99,10 +99,10 @@ extern "C" {
 #define ONEWIRE_DELAY(x)				Delay(x)
 
 /* Pin settings */
-#define ONEWIRE_LOW(structure)			TM_GPIO_SetPinLow((structure)->GPIOx, (structure)->GPIO_Pin)
-#define ONEWIRE_HIGH(structure)			TM_GPIO_SetPinHigh((structure)->GPIOx, (structure)->GPIO_Pin)
-#define ONEWIRE_INPUT(structure)		TM_GPIO_SetPinAsInput(structure->GPIOx, (structure)->GPIO_Pin)
-#define ONEWIRE_OUTPUT(structure)		TM_GPIO_SetPinAsOutput(structure->GPIOx, (structure)->GPIO_Pin)
+#define ONEWIRE_LOW(structure)			GPIO_SetPinLow((structure)->GPIOx, (structure)->GPIO_Pin)
+#define ONEWIRE_HIGH(structure)			GPIO_SetPinHigh((structure)->GPIOx, (structure)->GPIO_Pin)
+#define ONEWIRE_INPUT(structure)		GPIO_SetPinAsInput(structure->GPIOx, (structure)->GPIO_Pin)
+#define ONEWIRE_OUTPUT(structure)		GPIO_SetPinAsOutput(structure->GPIOx, (structure)->GPIO_Pin)
 
 /* OneWire commands */
 #define ONEWIRE_CMD_RSCRATCHPAD			0xBE
@@ -120,7 +120,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_ONEWIRE_Typedefs
+ * @defgroup ONEWIRE_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -136,146 +136,146 @@ typedef struct {
 	uint8_t LastFamilyDiscrepancy; /*!< Search private */
 	uint8_t LastDeviceFlag;        /*!< Search private */
 	uint8_t ROM_NO[8];             /*!< 8-bytes address of last search device */
-} TM_OneWire_t;
+} OneWire_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_ONEWIRE_Functions
+ * @defgroup ONEWIRE_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Initializes OneWire bus
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t empty working onewire structure
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t empty working onewire structure
  * @param  *Pointer to GPIO port used for onewire channel
  * @param  GPIO_Pin: GPIO Pin on specific GPIOx to be used for onewire channel
  * @retval None
  */
-void TM_OneWire_Init(TM_OneWire_t* OneWireStruct, GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
+void OneWire_Init(OneWire_t* OneWireStruct, GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 /**
  * @brief  Resets OneWire bus
  * 
  * @note   Sends reset command for OneWire
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire structure
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire structure
  * @retval None
  */
-uint8_t TM_OneWire_Reset(TM_OneWire_t* OneWireStruct);
+uint8_t OneWire_Reset(OneWire_t* OneWireStruct);
 
 /**
  * @brief  Reads byte from one wire bus
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire structure
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire structure
  * @retval Byte from read operation
  */
-uint8_t TM_OneWire_ReadByte(TM_OneWire_t* OneWireStruct);
+uint8_t OneWire_ReadByte(OneWire_t* OneWireStruct);
 
 /**
  * @brief  Writes byte to bus
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire structure
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire structure
  * @param  byte: 8-bit value to write over OneWire protocol
  * @retval None
  */
-void TM_OneWire_WriteByte(TM_OneWire_t* OneWireStruct, uint8_t byte);
+void OneWire_WriteByte(OneWire_t* OneWireStruct, uint8_t byte);
 
 /**
  * @brief  Writes single bit to onewire bus
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire structure
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire structure
  * @param  bit: Bit value to send, 1 or 0
  * @retval None
  */
-void TM_OneWire_WriteBit(TM_OneWire_t* OneWireStruct, uint8_t bit);
+void OneWire_WriteBit(OneWire_t* OneWireStruct, uint8_t bit);
 
 /**
  * @brief  Reads single bit from one wire bus
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire structure
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire structure
  * @retval Bit value:
  *            - 0: Bit is low (zero)
  *            - > 0: Bit is high (one)
  */
-uint8_t TM_OneWire_ReadBit(TM_OneWire_t* OneWireStruct);
+uint8_t OneWire_ReadBit(OneWire_t* OneWireStruct);
 
 /**
  * @brief  Searches for OneWire devices on specific Onewire port
- * @note   Not meant for public use. Use @ref TM_OneWire_First and @ref TM_OneWire_Next for this.
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire structure where to search
+ * @note   Not meant for public use. Use @ref OneWire_First and @ref OneWire_Next for this.
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire structure where to search
  * @param  Device status:
  *            - 0: No devices detected
  *            - > 0: Device detected
  */
-uint8_t TM_OneWire_Search(TM_OneWire_t* OneWireStruct, uint8_t command);
+uint8_t OneWire_Search(OneWire_t* OneWireStruct, uint8_t command);
 
 /**
  * @brief  Resets search states
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire where to reset search values
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire where to reset search values
  * @retval None
  */
-void TM_OneWire_ResetSearch(TM_OneWire_t* OneWireStruct);
+void OneWire_ResetSearch(OneWire_t* OneWireStruct);
 
 /**
  * @brief  Starts search, reset states first
  * @note   When you want to search for ALL devices on one onewire port, you should first use this function.
 @verbatim
 /...Initialization before
-status = TM_OneWire_First(&OneWireStruct);
+status = OneWire_First(&OneWireStruct);
 while (status) {
 	//Save ROM number from device
-	TM_OneWire_GetFullROM(ROM_Array_Pointer);
+	OneWire_GetFullROM(ROM_Array_Pointer);
 	//Check for new device
-	status = TM_OneWire_Next(&OneWireStruct);
+	status = OneWire_Next(&OneWireStruct);
 }
 @endverbatim
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire where to reset search values
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire where to reset search values
  * @param  Device status:
  *            - 0: No devices detected
  *            - > 0: Device detected
  */
-uint8_t TM_OneWire_First(TM_OneWire_t* OneWireStruct);
+uint8_t OneWire_First(OneWire_t* OneWireStruct);
 
 /**
  * @brief  Reads next device
- * @note   Use @ref TM_OneWire_First to start searching
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire
+ * @note   Use @ref OneWire_First to start searching
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire
  * @param  Device status:
  *            - 0: No devices detected any more
  *            - > 0: New device detected
  */
-uint8_t TM_OneWire_Next(TM_OneWire_t* OneWireStruct);
+uint8_t OneWire_Next(OneWire_t* OneWireStruct);
 
 /**
  * @brief  Gets ROM number from device from search
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire
  * @param  index: Because each device has 8-bytes long ROm address, you have to call this 8 times, to get ROM bytes from 0 to 7
  * @reetval ROM byte for index (0 to 7) at current found device
  */
-uint8_t TM_OneWire_GetROM(TM_OneWire_t* OneWireStruct, uint8_t index);
+uint8_t OneWire_GetROM(OneWire_t* OneWireStruct, uint8_t index);
 
 /**
  * @brief  Gets all 8 bytes ROM value from device from search
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire
  * @param  *firstIndex: Pointer to first location for first byte, other bytes are automatically incremented
  * @retval None
  */
-void TM_OneWire_GetFullROM(TM_OneWire_t* OneWireStruct, uint8_t *firstIndex);
+void OneWire_GetFullROM(OneWire_t* OneWireStruct, uint8_t *firstIndex);
 
 /**
  * @brief  Selects specific slave on bus
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire
  * @param  *addr: Pointer to first location of 8-bytes long ROM address
  * @retval None
  */
-void TM_OneWire_Select(TM_OneWire_t* OneWireStruct, uint8_t* addr);
+void OneWire_Select(OneWire_t* OneWireStruct, uint8_t* addr);
 
 /**
  * @brief  Selects specific slave on bus with pointer address
- * @param  *OneWireStruct: Pointer to @ref TM_OneWire_t working onewire
+ * @param  *OneWireStruct: Pointer to @ref OneWire_t working onewire
  * @param  *ROM: Pointer to first byte of ROM address
  * @retval None
  */
-void TM_OneWire_SelectWithPointer(TM_OneWire_t* OneWireStruct, uint8_t* ROM);
+void OneWire_SelectWithPointer(OneWire_t* OneWireStruct, uint8_t* ROM);
 
 /**
  * @brief  Calculates 8-bit CRC for 1-wire devices
@@ -284,7 +284,7 @@ void TM_OneWire_SelectWithPointer(TM_OneWire_t* OneWireStruct, uint8_t* ROM);
  *
  * @retval Calculated CRC from input data
  */
-uint8_t TM_OneWire_CRC8(uint8_t* addr, uint8_t len);
+uint8_t OneWire_CRC8(uint8_t* addr, uint8_t len);
 
 /**
  * @}

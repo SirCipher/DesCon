@@ -7,8 +7,8 @@
  *	@version 	v1.0
  *	@ide		Keil uVision 5
  */
-#ifndef TM_DEFINES_H
-#define TM_DEFINES_H
+#ifndef DEFINES_H
+#define DEFINES_H
 
 //Put your global defines for all libraries here used in your project
 

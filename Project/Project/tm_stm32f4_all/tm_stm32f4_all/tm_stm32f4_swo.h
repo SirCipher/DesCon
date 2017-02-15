@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_SWO_H
-#define TM_SWO_H 100
+#ifndef SWO_H
+#define SWO_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_SWO
+ * @defgroup SWO
  * @brief    SWO Debugging library for Cortex-M4/M3 processors including STM32F4xx - http://stm32f4-discovery.com/2014/12/library-46-debug-stm32f4-device-swo-feature/
  * @{
  *
@@ -113,10 +113,10 @@ extern "C" {
 #include "stm32f4xx.h"
 #include "defines.h"
 #include "stdio.h"
-#include "tm_stm32f4_stdio.h"
+#include "stm32f4_stdio.h"
 
 /**
- * @defgroup TM_SWO_Macros
+ * @defgroup SWO_Macros
  * @brief    Library defines
  * @{
  */
@@ -130,7 +130,7 @@ extern "C" {
 
 #if SWO_DEBUG_ENABLED == 1
 	/* FILE struct for working with stream */
-	extern FILE TM_SWO_File;
+	extern FILE SWO_File;
 #endif
 
 /**
@@ -138,7 +138,7 @@ extern "C" {
  */
 
 /**
- * @defgroup TM_SWO_Functions
+ * @defgroup SWO_Functions
  * @brief    Library Functions
  * @{
  */
@@ -154,10 +154,10 @@ extern "C" {
  */	
 #if SWO_DEBUG_ENABLED == 1
 	/* Debugging enabled, initialize functionality */
-	extern void TM_SWO_Init(void);
+	extern void SWO_Init(void);
 #else
 	/* Do nothing here, compiler will throw out this statement because it is empty */
-	#define TM_SWO_Init()
+	#define SWO_Init()
 #endif
 
 /**
@@ -173,10 +173,10 @@ extern "C" {
  */
 #if SWO_DEBUG_ENABLED == 1
 	/* Format and output data to the SWO output with stream */
-	#define TM_SWO_Printf(args...)  { fprintf(&TM_SWO_File, ## args); }
+	#define SWO_Printf(args...)  { fprintf(&SWO_File, ## args); }
 #else
 	/* Do nothing here, compiler will throw out this statement because it is empty */
-	#define TM_SWO_Printf(args...) 
+	#define SWO_Printf(args...) 
 #endif
 
 

@@ -49,7 +49,7 @@ Section Cross References
     stm32f4_discovery.o(.text) refers to stm32f4xx_dma.o(.text) for DMA_ClearFlag
     stm32f4_discovery.o(.text) refers to stm32f4_discovery.o(.constdata) for .constdata
     stm32f4_discovery.o(.text) refers to stm32f4_discovery.o(.data) for .data
-    stm32f4_discovery_debug.o(.text) refers to stm32f4_discovery.o(.text) for STM_EVAL_COMInit
+    stm32f4_discovery_debug.o(.text) refers to stm32f4_discovery.o(.text) for SEVAL_COMInit
     stm32f4_discovery_debug.o(.text) refers to printfa.o(i.__0printf) for __2printf
     stm32f4_discovery_debug.o(.text) refers to stm32f4xx_usart.o(.text) for USART_GetFlagStatus
     stm32f4_discovery_sdio_sd.o(.text) refers to stm32f4_discovery.o(.text) for SD_LowLevel_DeInit

@@ -20,10 +20,10 @@
 #include "usbh_usr.h"
 #include "fatfs_usb.h"
 #include "usbh_msc_core.h"
-#include "tm_stm32f4_usb_msc_host.h"
+#include "stm32f4_usb_msc_host.h"
 
 static volatile DSTATUS USB_Stat = STA_NOINIT;	/* Disk status */
-extern TM_USB_MSCHOST_Result_t 	TM_USB_MSCHOST_INT_Result;
+extern USB_MSCHOST_Result_t 	USB_MSCHOST_INT_Result;
 
 extern USB_OTG_CORE_HANDLE   USB_OTG_MSC_Core;
 extern USBH_HOST             USB_Host;
@@ -31,8 +31,8 @@ extern USBH_HOST             USB_Host;
 /*-----------------------------------------------------------------------*/
 /* Initialize USB                                                        */
 /*-----------------------------------------------------------------------*/
-DSTATUS TM_FATFS_USB_disk_initialize(void) {
-	if (HCD_IsDeviceConnected(&USB_OTG_MSC_Core) && TM_USB_MSCHOST_INT_Result == TM_USB_MSCHOST_Result_Connected) {
+DSTATUS FATFS_USB_disk_initialize(void) {
+	if (HCD_IsDeviceConnected(&USB_OTG_MSC_Core) && USB_MSCHOST_INT_Result == USB_MSCHOST_Result_Connected) {
 		USB_Stat &= ~STA_NOINIT;
 	} else {
 		USB_Stat |= STA_NOINIT;
@@ -44,14 +44,14 @@ DSTATUS TM_FATFS_USB_disk_initialize(void) {
 /*-----------------------------------------------------------------------*/
 /* Get Disk Status                                                       */
 /*-----------------------------------------------------------------------*/
-DSTATUS TM_FATFS_USB_disk_status(void) {
+DSTATUS FATFS_USB_disk_status(void) {
 	return USB_Stat;
 }
 
 /*-----------------------------------------------------------------------*/
 /* Read Sector(s)                                                        */
 /*-----------------------------------------------------------------------*/
-DRESULT TM_FATFS_USB_disk_read (
+DRESULT FATFS_USB_disk_read (
 	BYTE *buff,		/* Data buffer to store read data */
 	DWORD sector,	/* Sector address (LBA) */
 	UINT count		/* Number of sectors to read (1..128) */
@@ -66,7 +66,7 @@ DRESULT TM_FATFS_USB_disk_read (
 		return RES_NOTRDY;
 	}
 
-	if (HCD_IsDeviceConnected(&USB_OTG_MSC_Core) && TM_USB_MSCHOST_INT_Result == TM_USB_MSCHOST_Result_Connected) {
+	if (HCD_IsDeviceConnected(&USB_OTG_MSC_Core) && USB_MSCHOST_INT_Result == USB_MSCHOST_Result_Connected) {
 		do {
 			status = USBH_MSC_Read10(&USB_OTG_MSC_Core, buff, sector, 512 * count);
 			USBH_MSC_HandleBOTXfer(&USB_OTG_MSC_Core, &USB_Host);
@@ -87,7 +87,7 @@ DRESULT TM_FATFS_USB_disk_read (
 /* Write Sector(s)                                                       */
 /*-----------------------------------------------------------------------*/
 #if _USE_WRITE
-DRESULT TM_FATFS_USB_disk_write (
+DRESULT FATFS_USB_disk_write (
 	const BYTE *buff,	/* Data to be written */
 	DWORD sector,		/* Sector address (LBA) */
 	UINT count			/* Number of sectors to write (1..128) */
@@ -100,11 +100,11 @@ DRESULT TM_FATFS_USB_disk_write (
 	if (USB_Stat & STA_NOINIT) {
 		return RES_NOTRDY;
 	}
-	if (TM_USB_MSCHOST_INT_Result == TM_USB_MSCHOST_Result_WriteProtected) {
+	if (USB_MSCHOST_INT_Result == USB_MSCHOST_Result_WriteProtected) {
 		return RES_WRPRT;
 	}
 
-	if (HCD_IsDeviceConnected(&USB_OTG_MSC_Core) && TM_USB_MSCHOST_INT_Result == TM_USB_MSCHOST_Result_Connected) {
+	if (HCD_IsDeviceConnected(&USB_OTG_MSC_Core) && USB_MSCHOST_INT_Result == USB_MSCHOST_Result_Connected) {
 		do {
 			status = USBH_MSC_Write10(&USB_OTG_MSC_Core, (BYTE*)buff, sector, 512 * count);
 			USBH_MSC_HandleBOTXfer(&USB_OTG_MSC_Core, &USB_Host);
@@ -128,7 +128,7 @@ DRESULT TM_FATFS_USB_disk_write (
 /*-----------------------------------------------------------------------*/
 
 #if _USE_IOCTL
-DRESULT TM_FATFS_USB_disk_ioctl (
+DRESULT FATFS_USB_disk_ioctl (
 	BYTE cmd,		/* Control code */
 	void *buff		/* Buffer to send/receive control data */
 )

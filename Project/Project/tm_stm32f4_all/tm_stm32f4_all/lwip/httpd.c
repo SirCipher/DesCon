@@ -83,14 +83,14 @@
 #include "httpd_structs.h"
 #include "lwip/tcp.h"
 #include "fs.h"
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_ethernet.h"
 #include "defines.h"
 
 #include <string.h>
 #include <stdlib.h>
 
-/* External TM_ETHRNET structure */
-extern TM_ETHERNET_t TM_ETHERNET;
+/* External ETHRNET structure */
+extern ETHERNET_t ETHERNET;
 
 #if LWIP_TCP
 
@@ -460,7 +460,7 @@ static err_t http_write(struct tcp_pcb *pcb, const void* ptr, u16_t *length, u8_
      err = tcp_write(pcb, ptr, len, apiflags);
 	
 	 /* Increase number of sent */
-	 TM_ETHERNET.Server_TX_Bytes += len;
+	 ETHERNET.Server_TX_Bytes += len;
 	   
      if (err == ERR_MEM) {
        if ((tcp_sndbuf(pcb) == 0) ||
@@ -516,7 +516,7 @@ static void http_close_conn(struct tcp_pcb *pcb, struct http_state *hs)
     tcp_poll(pcb, http_poll, HTTPD_POLL_INTERVAL);
   } else {
 	/* Call user function if defined */
-	TM_ETHERNETSERVER_ClientDisconnectedCallback();
+	ETHERNETSERVER_ClientDisconnectedCallback();
   }
 }
 #if LWIP_HTTPD_CGI
@@ -1568,7 +1568,7 @@ static err_t http_parse_request(struct pbuf **inp, struct http_state *hs, struct
   }
   
   /* Increase number of Server RX bytes */
-  TM_ETHERNET.Server_RX_Bytes += p->len;
+  ETHERNET.Server_RX_Bytes += p->len;
   
 #if LWIP_HTTPD_SUPPORT_REQUESTLIST
 
@@ -2065,10 +2065,10 @@ static err_t http_accept(void *arg, struct tcp_pcb *pcb, err_t err) {
 	LWIP_DEBUGF(HTTPD_DEBUG, ("http_accept %p / %p\n", (void*)pcb, arg));
 
 	/* Increase number of connections to server */
-	TM_ETHERNET.Server_Connections++;
+	ETHERNET.Server_Connections++;
 	
 	/* Call user function if defined */
-	if (!TM_ETHERNETSERVER_ClientConnectedCallback(pcb)) {
+	if (!ETHERNETSERVER_ClientConnectedCallback(pcb)) {
 		return ERR_CONN;
 	}
 	
@@ -2110,7 +2110,7 @@ static void httpd_init_addr(struct ip_addr *local_addr) {
 	LWIP_ASSERT("httpd_init: tcp_new failed", server_tpcb != NULL);
 	tcp_setprio(server_tpcb, HTTPD_TCP_PRIO);
 	/* set SOF_REUSEADDR here to explicitly bind httpd to multiple interfaces */
-	err = tcp_bind(server_tpcb, local_addr, TM_ETHERNET.server_port);
+	err = tcp_bind(server_tpcb, local_addr, ETHERNET.server_port);
 	LWIP_ASSERT("httpd_init: tcp_bind failed", err == ERR_OK);
 	server_tpcb = tcp_listen(server_tpcb);
 	LWIP_ASSERT("httpd_init: tcp_listen failed", server_tpcb != NULL);
@@ -2195,7 +2195,7 @@ void http_set_cgi_handlers(const tCGI *cgis, int num_handlers) {
 }
 #endif /* LWIP_HTTPD_CGI */
 
-TM_ETHERNETPOST_t POSTREQUEST;
+ETHERNETPOST_t POSTREQUEST;
 
 /** Called when a POST request has been received. The application can decide
  * whether to accept it or not.
@@ -2231,7 +2231,7 @@ err_t httpd_post_begin(void *connection, const char *uri, const char *http_reque
 	POSTREQUEST.response_uri[0] = 0;
 	
 	/* Call user function */
-	res = TM_ETHERNETSERVER_PostRequestBeginCallback(&POSTREQUEST);
+	res = ETHERNETSERVER_PostRequestBeginCallback(&POSTREQUEST);
 	
 	/* Check if user has filled response_uri */
 	if (POSTREQUEST.response_uri[0] == 0) {
@@ -2266,7 +2266,7 @@ err_t httpd_post_receive_data(void *connection, struct pbuf *p) {
 	do {
 		/* Call user function only if previous time it as returned 1 */
 		if (p->len && res) {
-			res = TM_ETHERNETSERVER_PostRequestReceiveDataCallback(&POSTREQUEST, p);
+			res = ETHERNETSERVER_PostRequestReceiveDataCallback(&POSTREQUEST, p);
 		}
 		/* Save it */
 		old = p;
@@ -2296,7 +2296,7 @@ void httpd_post_finished(void *connection, char *response_uri, u16_t response_ur
 	/* Set to 0 */
 	response_uri[0] = 0;
 	/* Call user function */
-	TM_ETHERNETSERVER_PostRequestEndCallback(connection, response_uri, response_uri_len);
+	ETHERNETSERVER_PostRequestEndCallback(connection, response_uri, response_uri_len);
 	
 	/* Check if user has filled response_uri */
 	if (response_uri[0] == 0) {

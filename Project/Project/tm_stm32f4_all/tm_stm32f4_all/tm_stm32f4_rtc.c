@@ -16,7 +16,7 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_rtc.h"
+#include "stm32f4_rtc.h"
 
 /* Private macros */
 /* Internal status registers for RTC */
@@ -37,9 +37,9 @@
 #define RTC_CHARISNUM(x)                ((x) >= '0' && (x) <= '9')
 
 /* Internal functions */
-void TM_RTC_Config(TM_RTC_ClockSource_t source);
+void RTC_Config(RTC_ClockSource_t source);
 /* Default RTC status */
-uint32_t TM_RTC_Status = RTC_STATUS_ZERO;
+uint32_t RTC_Status = RTC_STATUS_ZERO;
 /* RTC declarations */
 RTC_TimeTypeDef RTC_TimeStruct;
 RTC_InitTypeDef RTC_InitStruct;
@@ -48,15 +48,15 @@ NVIC_InitTypeDef NVIC_InitStruct;
 EXTI_InitTypeDef EXTI_InitStruct;
 
 /* Days in a month */
-uint8_t TM_RTC_Months[2][12] = {
+uint8_t RTC_Months[2][12] = {
 	{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},	/* Not leap year */
 	{31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}	/* Leap year */
 };
 
-uint32_t TM_RTC_Init(TM_RTC_ClockSource_t source) {
+uint32_t RTC_Init(RTC_ClockSource_t source) {
 	uint32_t status;
 	uint8_t stat = 1;
-	TM_RTC_t datatime;
+	RTC_t datatime;
 	
 	/* Enable PWR peripheral clock */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
@@ -68,11 +68,11 @@ uint32_t TM_RTC_Init(TM_RTC_ClockSource_t source) {
 	status = RTC_ReadBackupRegister(RTC_STATUS_REG);
 	
 	if (status == RTC_STATUS_TIME_OK) {
-		TM_RTC_Status = RTC_STATUS_TIME_OK;
+		RTC_Status = RTC_STATUS_TIME_OK;
 		
 		/* Start internal clock if we choose internal clock */
-		if (source == TM_RTC_ClockSource_Internal) {
-			TM_RTC_Config(TM_RTC_ClockSource_Internal);
+		if (source == RTC_ClockSource_Internal) {
+			RTC_Config(RTC_ClockSource_Internal);
 		}
 		
 		/* Disable write protection */
@@ -89,13 +89,13 @@ uint32_t TM_RTC_Init(TM_RTC_ClockSource_t source) {
 		EXTI->PR = 0x00400000;
 		
 		/* Get date and time */
-		TM_RTC_GetDateTime(&datatime, TM_RTC_Format_BIN);
+		RTC_GetDateTime(&datatime, RTC_Format_BIN);
 	} else if (status == RTC_STATUS_INIT_OK) {
-		TM_RTC_Status = RTC_STATUS_INIT_OK;
+		RTC_Status = RTC_STATUS_INIT_OK;
 		
 		/* Start internal clock if we choose internal clock */
-		if (source == TM_RTC_ClockSource_Internal) {
-			TM_RTC_Config(TM_RTC_ClockSource_Internal);
+		if (source == RTC_ClockSource_Internal) {
+			RTC_Config(RTC_ClockSource_Internal);
 		}
 		
 		/* Disable write protection */
@@ -112,13 +112,13 @@ uint32_t TM_RTC_Init(TM_RTC_ClockSource_t source) {
 		EXTI->PR = 0x00400000;
 		
 		/* Get date and time */
-		TM_RTC_GetDateTime(&datatime, TM_RTC_Format_BIN);
+		RTC_GetDateTime(&datatime, RTC_Format_BIN);
 	} else {
-		TM_RTC_Status = RTC_STATUS_ZERO;
+		RTC_Status = RTC_STATUS_ZERO;
 		/* Return status = 0 -> RTC Never initialized before */
 		stat = RTC_STATUS_ZERO;
 		/* Config RTC */
-		TM_RTC_Config(source);
+		RTC_Config(source);
 		
 		/* Set date and time */
 		datatime.date = 1;
@@ -130,23 +130,23 @@ uint32_t TM_RTC_Init(TM_RTC_ClockSource_t source) {
 		datatime.seconds = 0;
 		
 		/* Set date and time */
-		TM_RTC_SetDateTime(&datatime, TM_RTC_Format_BIN);
+		RTC_SetDateTime(&datatime, RTC_Format_BIN);
 		
 		/* Initialized OK */
-		TM_RTC_Status = RTC_STATUS_INIT_OK;
+		RTC_Status = RTC_STATUS_INIT_OK;
 	}
 	/* If first time initialized */
 	if (stat == RTC_STATUS_ZERO) {
 		return 0;
 	}
-	return TM_RTC_Status;
+	return RTC_Status;
 }
 
-TM_RTC_Result_t TM_RTC_SetDateTime(TM_RTC_t* data, TM_RTC_Format_t format) {
-	TM_RTC_t tmp;
+RTC_Result_t RTC_SetDateTime(RTC_t* data, RTC_Format_t format) {
+	RTC_t tmp;
 	
 	/* Check date and time validation */
-	if (format == TM_RTC_Format_BCD) {
+	if (format == RTC_Format_BCD) {
 		tmp.date = RTC_BCD2BIN(data->date);
 		tmp.month = RTC_BCD2BIN(data->month);
 		tmp.year = RTC_BCD2BIN(data->year);
@@ -170,7 +170,7 @@ TM_RTC_Result_t TM_RTC_SetDateTime(TM_RTC_t* data, TM_RTC_Format_t format) {
 		tmp.month == 0 || 
 		tmp.month > 12 ||
 		tmp.date == 0 ||
-		tmp.date > TM_RTC_Months[RTC_LEAP_YEAR(2000 + tmp.year) ? 1 : 0][tmp.month - 1] ||
+		tmp.date > RTC_Months[RTC_LEAP_YEAR(2000 + tmp.year) ? 1 : 0][tmp.month - 1] ||
 		tmp.hours > 23 ||
 		tmp.minutes > 59 ||
 		tmp.seconds > 59 ||
@@ -178,7 +178,7 @@ TM_RTC_Result_t TM_RTC_SetDateTime(TM_RTC_t* data, TM_RTC_Format_t format) {
 		tmp.day > 7
 	) {
 		/* Invalid date */
-		return TM_RTC_Result_Error; 
+		return RTC_Result_Error; 
 	}
 	
 	/* Fill time */
@@ -198,30 +198,30 @@ TM_RTC_Result_t TM_RTC_SetDateTime(TM_RTC_t* data, TM_RTC_Format_t format) {
 	RTC_Init(&RTC_InitStruct);
 
 	/* Set time */
-	if (format == TM_RTC_Format_BCD) {
+	if (format == RTC_Format_BCD) {
 		RTC_SetTime(RTC_Format_BCD, &RTC_TimeStruct);
 	} else {
 		RTC_SetTime(RTC_Format_BIN, &RTC_TimeStruct);
 	}
 	
 	/* Set date */
-	if (format == TM_RTC_Format_BCD) {
+	if (format == RTC_Format_BCD) {
 		RTC_SetDate(RTC_Format_BCD, &RTC_DateStruct);
 	} else {
 		RTC_SetDate(RTC_Format_BIN, &RTC_DateStruct);
 	}	
 	
-	if (TM_RTC_Status != RTC_STATUS_ZERO) {
+	if (RTC_Status != RTC_STATUS_ZERO) {
 		/* Write backup registers */
 		RTC_WriteBackupRegister(RTC_STATUS_REG, RTC_STATUS_TIME_OK);
 	}
 	
 	/* Return OK */
-	return TM_RTC_Result_Ok;
+	return RTC_Result_Ok;
 }
 
-TM_RTC_Result_t TM_RTC_SetDateTimeString(char* str) {
-	TM_RTC_t tmp;
+RTC_Result_t RTC_SetDateTimeString(char* str) {
+	RTC_t tmp;
 	uint8_t i = 0;
 	
 	/* Get date */
@@ -281,14 +281,14 @@ TM_RTC_Result_t TM_RTC_SetDateTimeString(char* str) {
 	i++;
 	
 	/* Return status from set date time function */
-	return TM_RTC_SetDateTime(&tmp, TM_RTC_Format_BIN);
+	return RTC_SetDateTime(&tmp, RTC_Format_BIN);
 }
 
-void TM_RTC_GetDateTime(TM_RTC_t* data, TM_RTC_Format_t format) {
+void RTC_GetDateTime(RTC_t* data, RTC_Format_t format) {
 	uint32_t unix;
 
 	/* Get time */
-	if (format == TM_RTC_Format_BIN) {
+	if (format == RTC_Format_BIN) {
 		RTC_GetTime(RTC_Format_BIN, &RTC_TimeStruct);
 	} else {
 		RTC_GetTime(RTC_Format_BCD, &RTC_TimeStruct);
@@ -303,7 +303,7 @@ void TM_RTC_GetDateTime(TM_RTC_t* data, TM_RTC_Format_t format) {
 	data->subseconds = RTC->SSR;
 	
 	/* Get date */
-	if (format == TM_RTC_Format_BIN) {
+	if (format == RTC_Format_BIN) {
 		RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct);
 	} else {
 		RTC_GetDate(RTC_Format_BCD, &RTC_DateStruct);
@@ -316,11 +316,11 @@ void TM_RTC_GetDateTime(TM_RTC_t* data, TM_RTC_Format_t format) {
 	data->day = RTC_DateStruct.RTC_WeekDay;
 	
 	/* Calculate unix offset */
-	unix = TM_RTC_GetUnixTimeStamp(data);
+	unix = RTC_GetUnixTimeStamp(data);
 	data->unix = unix;
 }
 
-uint8_t TM_RTC_GetDaysInMonth(uint8_t month, uint8_t year) {
+uint8_t RTC_GetDaysInMonth(uint8_t month, uint8_t year) {
 	/* Check input data */
 	if (
 		month == 0 ||
@@ -331,16 +331,16 @@ uint8_t TM_RTC_GetDaysInMonth(uint8_t month, uint8_t year) {
 	}
 	
 	/* Return days in month */
-	return TM_RTC_Months[RTC_LEAP_YEAR(2000 + year) ? 1 : 0][month - 1];
+	return RTC_Months[RTC_LEAP_YEAR(2000 + year) ? 1 : 0][month - 1];
 }
 
-uint16_t TM_RTC_GetDaysInYear(uint8_t year) {
+uint16_t RTC_GetDaysInYear(uint8_t year) {
 	/* Return days in year */
 	return RTC_DAYS_IN_YEAR(2000 + year);
 }
 
-void TM_RTC_Config(TM_RTC_ClockSource_t source) {
-	if (source == TM_RTC_ClockSource_Internal) {
+void RTC_Config(RTC_ClockSource_t source) {
+	if (source == RTC_ClockSource_Internal) {
 		/* Enable the LSI OSC */
 		RCC_LSICmd(ENABLE);
 
@@ -349,7 +349,7 @@ void TM_RTC_Config(TM_RTC_ClockSource_t source) {
 
 		/* Select the RTC Clock Source */
 		RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
-	} else if (source == TM_RTC_ClockSource_External) {
+	} else if (source == RTC_ClockSource_External) {
 		/* Enable the LSE OSC */
 		RCC_LSEConfig(RCC_LSE_ON);
 
@@ -376,7 +376,7 @@ void TM_RTC_Config(TM_RTC_ClockSource_t source) {
 	RTC_WriteBackupRegister(RTC_STATUS_REG, RTC_STATUS_INIT_OK);
 }
 
-void TM_RTC_Interrupts(TM_RTC_Int_t int_value) {
+void RTC_Interrupts(RTC_Int_t int_value) {
 	uint32_t int_val;
 	
 	/* Clear pending bit */
@@ -402,7 +402,7 @@ void TM_RTC_Interrupts(TM_RTC_Int_t int_value) {
 	EXTI_InitStruct.EXTI_LineCmd = DISABLE;
 	EXTI_Init(&EXTI_InitStruct);
 	
-	if (int_value != TM_RTC_Int_Disable) {
+	if (int_value != RTC_Int_Disable) {
 		/* Enable NVIC */
 		NVIC_InitStruct.NVIC_IRQChannelCmd = ENABLE;
 		NVIC_Init(&NVIC_InitStruct); 
@@ -413,25 +413,25 @@ void TM_RTC_Interrupts(TM_RTC_Int_t int_value) {
 		/* First disable wake up command */
 		RTC_WakeUpCmd(DISABLE);
 
-		if (int_value == TM_RTC_Int_60s) {
+		if (int_value == RTC_Int_60s) {
 			int_val = 0x3BFFF; 		/* 60 seconds = 60 * 4096 / 1 = 245760 */
-		} else if (int_value == TM_RTC_Int_30s) {
+		} else if (int_value == RTC_Int_30s) {
 			int_val = 0x1DFFF;		/* 30 seconds */
-		} else if (int_value == TM_RTC_Int_15s) {
+		} else if (int_value == RTC_Int_15s) {
 			int_val = 0xEFFF;		/* 15 seconds */
-		} else if (int_value == TM_RTC_Int_10s) {
+		} else if (int_value == RTC_Int_10s) {
 			int_val = 0x9FFF;		/* 10 seconds */
-		} else if (int_value == TM_RTC_Int_5s) {
+		} else if (int_value == RTC_Int_5s) {
 			int_val = 0x4FFF;		/* 5 seconds */
-		} else if (int_value == TM_RTC_Int_2s) {
+		} else if (int_value == RTC_Int_2s) {
 			int_val = 0x1FFF;		/* 2 seconds */
-		} else if (int_value == TM_RTC_Int_1s) {
+		} else if (int_value == RTC_Int_1s) {
 			int_val = 0x0FFF;		/* 1 second */
-		} else if (int_value == TM_RTC_Int_500ms) {
+		} else if (int_value == RTC_Int_500ms) {
 			int_val = 0x7FF;		/* 500 ms */
-		} else if (int_value == TM_RTC_Int_250ms) {
+		} else if (int_value == RTC_Int_250ms) {
 			int_val = 0x3FF;		/* 250 ms */
-		} else if (int_value == TM_RTC_Int_125ms) {
+		} else if (int_value == RTC_Int_125ms) {
 			int_val = 0x1FF;		/* 125 ms */
 		}		
 
@@ -448,7 +448,7 @@ void TM_RTC_Interrupts(TM_RTC_Int_t int_value) {
 	}
 }
 
-uint32_t TM_RTC_GetUnixTimeStamp(TM_RTC_t* data) {
+uint32_t RTC_GetUnixTimeStamp(RTC_t* data) {
 	uint32_t days = 0, seconds = 0;
 	uint16_t i;
 	uint16_t year = (uint16_t) (data->year + 2000);
@@ -462,7 +462,7 @@ uint32_t TM_RTC_GetUnixTimeStamp(TM_RTC_t* data) {
 	}
 	/* Days in current year */
 	for (i = 1; i < data->month; i++) {
-		days += TM_RTC_Months[RTC_LEAP_YEAR(year)][i - 1];
+		days += RTC_Months[RTC_LEAP_YEAR(year)][i - 1];
 	}
 	/* Day starts with 1 */
 	days += data->date - 1;
@@ -475,7 +475,7 @@ uint32_t TM_RTC_GetUnixTimeStamp(TM_RTC_t* data) {
 	return seconds;
 }
 
-void TM_RTC_GetDateTimeFromUnix(TM_RTC_t* data, uint32_t unix) {
+void RTC_GetDateTimeFromUnix(RTC_t* data, uint32_t unix) {
 	uint16_t year;
 	
 	/* Store unix time to unix in struct */
@@ -518,13 +518,13 @@ void TM_RTC_GetDateTimeFromUnix(TM_RTC_t* data, uint32_t unix) {
 	/* Get month */
 	for (data->month = 0; data->month < 12; data->month++) {
 		if (RTC_LEAP_YEAR(year)) {
-			if (unix >= (uint32_t)TM_RTC_Months[1][data->month]) {
-				unix -= TM_RTC_Months[1][data->month];
+			if (unix >= (uint32_t)RTC_Months[1][data->month]) {
+				unix -= RTC_Months[1][data->month];
 			} else {
 				break;
 			}
-		} else if (unix >= (uint32_t)TM_RTC_Months[0][data->month]) {
-			unix -= TM_RTC_Months[0][data->month];
+		} else if (unix >= (uint32_t)RTC_Months[0][data->month]) {
+			unix -= RTC_Months[0][data->month];
 		} else {
 			break;
 		}
@@ -537,11 +537,11 @@ void TM_RTC_GetDateTimeFromUnix(TM_RTC_t* data, uint32_t unix) {
 	data->date = unix + 1;
 }
 
-void TM_RTC_SetAlarm(TM_RTC_Alarm_t Alarm, TM_RTC_AlarmTime_t* DataTime, TM_RTC_Format_t format) {
+void RTC_SetAlarm(RTC_Alarm_t Alarm, RTC_AlarmTime_t* DataTime, RTC_Format_t format) {
 	RTC_AlarmTypeDef RTC_AlarmStruct;
 	
 	/* Disable alarm first */
-	TM_RTC_DisableAlarm(Alarm);
+	RTC_DisableAlarm(Alarm);
 	
 	/* Set RTC alarm settings */
 	/* Set alarm time */
@@ -551,7 +551,7 @@ void TM_RTC_SetAlarm(TM_RTC_Alarm_t Alarm, TM_RTC_AlarmTime_t* DataTime, TM_RTC_
 	RTC_AlarmStruct.RTC_AlarmMask = RTC_AlarmMask_DateWeekDay;
 	
 	/* Alarm type is every week the same day in a week */
-	if (DataTime->alarmtype == TM_RTC_AlarmType_DayInWeek) {
+	if (DataTime->alarmtype == RTC_AlarmType_DayInWeek) {
 		/* Alarm trigger every week the same day in a week */
 		RTC_AlarmStruct.RTC_AlarmDateWeekDaySel = RTC_AlarmDateWeekDaySel_WeekDay;
 		
@@ -578,7 +578,7 @@ void TM_RTC_SetAlarm(TM_RTC_Alarm_t Alarm, TM_RTC_AlarmTime_t* DataTime, TM_RTC_
 	}
 
 	switch (Alarm) {
-		case TM_RTC_Alarm_A:		
+		case RTC_Alarm_A:		
 			/* Configure the RTC Alarm A */
 			RTC_SetAlarm(format, RTC_Alarm_A, &RTC_AlarmStruct);
 		
@@ -591,7 +591,7 @@ void TM_RTC_SetAlarm(TM_RTC_Alarm_t Alarm, TM_RTC_AlarmTime_t* DataTime, TM_RTC_
 			/* Clear Alarm A pending bit */
 			RTC_ClearFlag(RTC_IT_ALRA);
 			break;
-		case TM_RTC_Alarm_B:
+		case RTC_Alarm_B:
 			/* Configure the RTC Alarm B */
 			RTC_SetAlarm(format, RTC_Alarm_B, &RTC_AlarmStruct);
 		
@@ -609,9 +609,9 @@ void TM_RTC_SetAlarm(TM_RTC_Alarm_t Alarm, TM_RTC_AlarmTime_t* DataTime, TM_RTC_
 	}
 }
 
-void TM_RTC_DisableAlarm(TM_RTC_Alarm_t Alarm) {
+void RTC_DisableAlarm(RTC_Alarm_t Alarm) {
 	switch (Alarm) {
-		case TM_RTC_Alarm_A:
+		case RTC_Alarm_A:
 			/* Disable Alarm A */
 			RTC_AlarmCmd(RTC_Alarm_A, DISABLE);
 			
@@ -621,7 +621,7 @@ void TM_RTC_DisableAlarm(TM_RTC_Alarm_t Alarm) {
 			/* Clear Alarm A pending bit */
 			RTC_ClearFlag(RTC_IT_ALRA);
 			break;
-		case TM_RTC_Alarm_B:
+		case RTC_Alarm_B:
 			/* Disable Alarm B */
 			RTC_AlarmCmd(RTC_Alarm_B, DISABLE);
 		
@@ -657,7 +657,7 @@ void TM_RTC_DisableAlarm(TM_RTC_Alarm_t Alarm) {
 	NVIC_Init(&NVIC_InitStruct);
 }
 
-void TM_RTC_WriteBackupRegister(uint8_t location, uint32_t value) {
+void RTC_WriteBackupRegister(uint8_t location, uint32_t value) {
 	/* Check input, 0 to 18 registers are allowed */
 	if (location > 18) {
 		return;
@@ -667,7 +667,7 @@ void TM_RTC_WriteBackupRegister(uint8_t location, uint32_t value) {
 	*(uint32_t *)((&RTC->BKP0R) + 4 * location) = value;
 }
 
-uint32_t TM_RTC_ReadBackupRegister(uint8_t location){
+uint32_t RTC_ReadBackupRegister(uint8_t location){
 	/* Check input, 0 to 18 registers are allowed */
 	if (location > 18) {
 		return 0;
@@ -678,15 +678,15 @@ uint32_t TM_RTC_ReadBackupRegister(uint8_t location){
 }
 
 /* Callbacks */
-__weak void TM_RTC_RequestHandler(void) {
+__weak void RTC_RequestHandler(void) {
 	/* If user needs this function, then they should be defined separatelly in your project */
 }
 
-__weak void TM_RTC_AlarmAHandler(void) {
+__weak void RTC_AlarmAHandler(void) {
 	/* If user needs this function, then they should be defined separatelly in your project */
 }
 
-__weak void TM_RTC_AlarmBHandler(void) {
+__weak void RTC_AlarmBHandler(void) {
 	/* If user needs this function, then they should be defined separatelly in your project */
 }
 
@@ -698,7 +698,7 @@ void RTC_WKUP_IRQHandler(void) {
 		RTC_ClearITPendingBit(RTC_IT_WUT);
 		
 		/* Call user function */
-		TM_RTC_RequestHandler();
+		RTC_RequestHandler();
 	}
 	
 	/* Clear EXTI line 22 bit */
@@ -712,7 +712,7 @@ void RTC_Alarm_IRQHandler(void) {
 		RTC_ClearITPendingBit(RTC_IT_ALRA);
 		
 		/* Call user function for Alarm A */
-		TM_RTC_AlarmAHandler();
+		RTC_AlarmAHandler();
 	}
 	
 	/* RTC Alarm B check */
@@ -721,7 +721,7 @@ void RTC_Alarm_IRQHandler(void) {
 		RTC_ClearITPendingBit(RTC_IT_ALRB);
 		
 		/* Call user function for Alarm B */
-		TM_RTC_AlarmBHandler();
+		RTC_AlarmBHandler();
 	}
 	
 	/* Clear EXTI line 17 bit */

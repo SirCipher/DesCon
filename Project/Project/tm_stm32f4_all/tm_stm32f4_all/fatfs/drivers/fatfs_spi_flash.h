@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_FATFS_SPI_FLASH_H
-#define TM_FATFS_SPI_FLASH_H 100
+#ifndef FATFS_SPI_FLASH_H
+#define FATFS_SPI_FLASH_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern C {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_FATFS_SPI_FLASH
+ * @defgroup FATFS_SPI_FLASH
  * @brief    Library description here
  * @{
  *
@@ -66,7 +66,7 @@ extern C {
 #include "diskio.h"
 
 /**
- * @defgroup TM_FATFS_SPI_FLASH_Macros
+ * @defgroup FATFS_SPI_FLASH_Macros
  * @brief    Library defines
  * @{
  */
@@ -85,7 +85,7 @@ extern C {
  */
  
 /**
- * @defgroup TM_FATFS_SPI_FLASH_Typedefs
+ * @defgroup FATFS_SPI_FLASH_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -95,15 +95,15 @@ extern C {
  */
 
 /**
- * @defgroup TM_FATFS_SPI_FLASH_Functions
+ * @defgroup FATFS_SPI_FLASH_Functions
  * @brief    Library Functions
  * @{
  */
-DSTATUS TM_FATFS_SPI_FLASH_disk_initialize(void);
-DSTATUS TM_FATFS_SPI_FLASH_disk_status(void);
-DRESULT TM_FATFS_SPI_FLASH_disk_ioctl(BYTE cmd, void *buff);
-DRESULT TM_FATFS_SPI_FLASH_disk_read(BYTE *buff, DWORD sector, UINT count);
-DRESULT TM_FATFS_SPI_FLASH_disk_write(const BYTE *buff, DWORD sector, UINT count);
+DSTATUS FATFS_SPI_FLASH_disk_initialize(void);
+DSTATUS FATFS_SPI_FLASH_disk_status(void);
+DRESULT FATFS_SPI_FLASH_disk_ioctl(BYTE cmd, void *buff);
+DRESULT FATFS_SPI_FLASH_disk_read(BYTE *buff, DWORD sector, UINT count);
+DRESULT FATFS_SPI_FLASH_disk_write(const BYTE *buff, DWORD sector, UINT count);
 /**
  * @}
  */

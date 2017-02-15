@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_USART_DMA_H
-#define TM_USART_DMA_H 123
+#ifndef USART_DMA_H
+#define USART_DMA_H 123
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_USART_DMA
+ * @defgroup USART_DMA
  * @brief    DMA TX functionality for TM USART library - http://stm32f4-discovery.com/2015/04/library-55-extend-usart-with-tx-dma
  * @{
  *
@@ -49,14 +49,14 @@ extern "C" {
  *
  * It is great feature because you can do other stuff while DMA sends data to USART.
  *
- * It is designed only for TX data from MCU to other world. For RX, @ref TM_USART library already
+ * It is designed only for TX data from MCU to other world. For RX, @ref USART library already
  * uses RXNE (RX Not Empty) interrupts when data is available and there is no need for RX DMA too right now.
  *
  * \par Default stream and channel settings
  *
  * Library uses default settings for DMA TX Stream and Channel settings.
  * But it may happen that your USART DMA is on the same stream and DMA as something other you need.
- * You are able to use custom Stream and Channel using @ref TM_USART_DMA_InitWithStreamAndChannel() function.
+ * You are able to use custom Stream and Channel using @ref USART_DMA_InitWithStreamAndChannel() function.
  *
  * @note All possible DMA Streams and Channels for USART TX DMA can be found in STM32F4xx Reference manual.
  *
@@ -79,7 +79,7 @@ UART8      | DMA1 | DMA Stream 0 | DMA Channel 5
  *
 @verbatim
  Version 1.3
-  - TM_USART_DMA_Working() function now returns > 0 also when USART works, not only when DMA works.
+  - USART_DMA_Working() function now returns > 0 also when USART works, not only when DMA works.
      Requires updated USART library  
 
  Version 1.2.1
@@ -112,17 +112,17 @@ UART8      | DMA1 | DMA Stream 0 | DMA Channel 5
 #include "stm32f4xx.h"
 #include "stm32f4xx_dma.h"
 #include "defines.h"
-#include "tm_stm32f4_dma.h"
-#include "tm_stm32f4_usart.h"
+#include "stm32f4_dma.h"
+#include "stm32f4_usart.h"
 #include "string.h"
 
 /* Check USART library version */
-#if TM_USART_H < 250
+#if USART_H < 250
 #error "TM USART library version must be greater or equal to 2.5.0. Please redownload TM USART library!"
 #endif
 
 /**
- * @defgroup TM_USART_DMA_Macros
+ * @defgroup USART_DMA_Macros
  * @brief    Library defines
  * @{
  */
@@ -180,7 +180,7 @@ UART8      | DMA1 | DMA Stream 0 | DMA Channel 5
  */
  
 /**
- * @defgroup TM_USART_DMA_Typedefs
+ * @defgroup USART_DMA_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -190,22 +190,22 @@ UART8      | DMA1 | DMA Stream 0 | DMA Channel 5
  */
 
 /**
- * @defgroup TM_USART_DMA_Functions
+ * @defgroup USART_DMA_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Initializes USART DMA TX functionality
- * @note   USART HAVE TO be previously initialized using @ref TM_USART library
+ * @note   USART HAVE TO be previously initialized using @ref USART library
  * @param  *USARTx: Pointer to USARTx where you want to enable DMA TX mode
  * @retval None
  */
-void TM_USART_DMA_Init(USART_TypeDef* USARTx);
+void USART_DMA_Init(USART_TypeDef* USARTx);
 
 /**
  * @brief  Initializes USART DMA TX functionality with custom DMA stream and Channel options
- * @note   USART HAVE TO be previously initialized using @ref TM_USART library
+ * @note   USART HAVE TO be previously initialized using @ref USART library
  *
  * @note   Use this function only in case default Stream and Channel settings are not good for you
  * @param  *USARTx: Pointer to USARTx where you want to enable DMA TX mode
@@ -213,36 +213,36 @@ void TM_USART_DMA_Init(USART_TypeDef* USARTx);
  * @param  DMA_Channel: Select DMA channel for your USART in specific DMA Stream
  * @retval None
  */
-void TM_USART_DMA_InitWithStreamAndChannel(USART_TypeDef* USARTx, DMA_Stream_TypeDef* DMA_Stream, uint32_t DMA_Channel);
+void USART_DMA_InitWithStreamAndChannel(USART_TypeDef* USARTx, DMA_Stream_TypeDef* DMA_Stream, uint32_t DMA_Channel);
 
 /**
  * @brief  Deinitializes USART DMA TX functionality
  * @param  *USARTx: Pointer to USARTx where you want to disable DMA TX mode
  * @retval None
  */
-void TM_USART_DMA_Deinit(USART_TypeDef* USARTx);
+void USART_DMA_Deinit(USART_TypeDef* USARTx);
 
 /**
  * @breif  Enables interrupts for DMA for USART streams
- * @note   USART DMA must be initialized first using @ref TM_USART_DMA_Init() or @ref TM_USART_DMA_InitWithStreamAndChannel() functions
+ * @note   USART DMA must be initialized first using @ref USART_DMA_Init() or @ref USART_DMA_InitWithStreamAndChannel() functions
  * @param  *USARTx: Pointer to USARTx where DMA interrupts will be enabled
  * @retval None
  */
-void TM_USART_DMA_EnableInterrupts(USART_TypeDef* USARTx);
+void USART_DMA_EnableInterrupts(USART_TypeDef* USARTx);
 
 /**
  * @breif  Disables interrupts for DMA for USART streams
  * @param  *USARTx: Pointer to USARTx where DMA interrupts will be disabled
  * @retval None
  */
-void TM_USART_DMA_DisableInterrupts(USART_TypeDef* USARTx);
+void USART_DMA_DisableInterrupts(USART_TypeDef* USARTx);
 
 /**
  * @brief  Gets poitner to DMA stream for desired USART 
  * @param  *USARTx: Pointer to USART where you wanna get its stream pointer
  * @retval Pointer to DMA stream for desired USART
  */
-DMA_Stream_TypeDef* TM_USART_DMA_GetStream(USART_TypeDef* USARTx);
+DMA_Stream_TypeDef* USART_DMA_GetStream(USART_TypeDef* USARTx);
 
 /**
  * @brief  Puts string to USART port with DMA
@@ -253,7 +253,7 @@ DMA_Stream_TypeDef* TM_USART_DMA_GetStream(USART_TypeDef* USARTx);
  *            - 0: DMA has not started with sending data
  *            - > 0: DMA has started with sending data
  */
-uint8_t TM_USART_DMA_Puts(USART_TypeDef* USARTx, char* str);
+uint8_t USART_DMA_Puts(USART_TypeDef* USARTx, char* str);
 
 /**
  * @brief  Sends data over USART with DMA TX functionality
@@ -265,7 +265,7 @@ uint8_t TM_USART_DMA_Puts(USART_TypeDef* USARTx, char* str);
  *            - 0: DMA has not started with sending data
  *            - > 0: DMA has started with sending data
  */
-uint8_t TM_USART_DMA_Send(USART_TypeDef* USARTx, uint8_t* DataArray, uint16_t count);
+uint8_t USART_DMA_Send(USART_TypeDef* USARTx, uint8_t* DataArray, uint16_t count);
 
 /**
  * @brief  Checks if USART DMA TX is still sending data
@@ -274,7 +274,7 @@ uint8_t TM_USART_DMA_Send(USART_TypeDef* USARTx, uint8_t* DataArray, uint16_t co
  *            - 0: USART does not sending anymore
  *            - > 0: USART DMA is still sending data
  */
-uint16_t TM_USART_DMA_Sending(USART_TypeDef* USARTx);
+uint16_t USART_DMA_Sending(USART_TypeDef* USARTx);
 
 /**
  * @}

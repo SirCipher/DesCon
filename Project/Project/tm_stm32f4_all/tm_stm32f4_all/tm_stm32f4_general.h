@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_GENERAL_H
-#define TM_GENERAL_H 140
+#ifndef GENERAL_H
+#define GENERAL_H 140
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_GENERAL
+ * @defgroup GENERAL
  * @brief    GENERAL library for STM32F4xx devices - http://stm32f4-discovery.com/2015/03/library-54-general-library-for-stm32f4xx-devices
  * @{
  *
@@ -100,7 +100,7 @@ extern "C" {
 #include "attributes.h"
 
 /**
- * @defgroup TM_GENERAL_Macros
+ * @defgroup GENERAL_Macros
  * @brief    Library defines
  * @{
  */
@@ -115,7 +115,7 @@ extern uint16_t GENERAL_SystemSpeedInMHz;
  */
  
 /**
- * @defgroup TM_GENERAL_Variables
+ * @defgroup GENERAL_Variables
  * @brief    Library variables
  * @{
  */
@@ -125,7 +125,7 @@ extern uint16_t GENERAL_SystemSpeedInMHz;
  */
  
 /**
- * @defgroup TM_GENERAL_Typedefs
+ * @defgroup GENERAL_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -134,27 +134,27 @@ extern uint16_t GENERAL_SystemSpeedInMHz;
  * @brief  Clock speed enumeration
  */
 typedef enum {
-	TM_GENERAL_Clock_HSI,    /*!< High speed internal clock */
-	TM_GENERAL_Clock_HSE,    /*!< High speed external clock */
-	TM_GENERAL_Clock_SYSCLK, /*!< System core clock */
-	TM_GENERAL_Clock_PCLK1,  /*!< PCLK1 (APB1) peripheral clock */
-	TM_GENERAL_Clock_PCLK2,  /*!< PCLK2 (APB2) peripheral clock */
-	TM_GENERAL_Clock_HCLK    /*!< HCLK (AHB1) high speed clock */
-} TM_GENERAL_Clock_t;
+	GENERAL_Clock_HSI,    /*!< High speed internal clock */
+	GENERAL_Clock_HSE,    /*!< High speed external clock */
+	GENERAL_Clock_SYSCLK, /*!< System core clock */
+	GENERAL_Clock_PCLK1,  /*!< PCLK1 (APB1) peripheral clock */
+	GENERAL_Clock_PCLK2,  /*!< PCLK2 (APB2) peripheral clock */
+	GENERAL_Clock_HCLK    /*!< HCLK (AHB1) high speed clock */
+} GENERAL_Clock_t;
 
 /**
  * @brief  All possible reset sources
  */
 typedef enum {
-	TM_GENERAL_ResetSource_None = 0x00,     /*!< No reset source detected. Flags are already cleared */
-	TM_GENERAL_ResetSource_LowPower = 0x01, /*!< Low-power management reset occurs */
-	TM_GENERAL_ResetSource_WWDG = 0x02,     /*!< Window watchdog reset occurs */
-	TM_GENERAL_ResetSource_IWDG = 0x03,     /*!< Independent watchdog reset occurs */
-	TM_GENERAL_ResetSource_Software = 0x04, /*!< Software reset occurs */
-	TM_GENERAL_ResetSource_POR = 0x05,      /*!< POR/PDR reset occurs */
-	TM_GENERAL_ResetSource_PIN = 0x06,      /*!< NRST pin is set to low by hardware reset, hardware reset */
-	TM_GENERAL_ResetSource_BOR = 0x07,      /*!< BOR reset occurs */
-} TM_GENERAL_ResetSource_t;
+	GENERAL_ResetSource_None = 0x00,     /*!< No reset source detected. Flags are already cleared */
+	GENERAL_ResetSource_LowPower = 0x01, /*!< Low-power management reset occurs */
+	GENERAL_ResetSource_WWDG = 0x02,     /*!< Window watchdog reset occurs */
+	GENERAL_ResetSource_IWDG = 0x03,     /*!< Independent watchdog reset occurs */
+	GENERAL_ResetSource_Software = 0x04, /*!< Software reset occurs */
+	GENERAL_ResetSource_POR = 0x05,      /*!< POR/PDR reset occurs */
+	GENERAL_ResetSource_PIN = 0x06,      /*!< NRST pin is set to low by hardware reset, hardware reset */
+	GENERAL_ResetSource_BOR = 0x07,      /*!< BOR reset occurs */
+} GENERAL_ResetSource_t;
 
 /**
  * @brief  Float number operation structure
@@ -162,53 +162,53 @@ typedef enum {
 typedef struct {
 	int32_t Integer;  /*!< Integer part of float number */
 	uint32_t Decimal; /*!< Decimal part of float number */
-} TM_GENERAL_Float_t;
+} GENERAL_Float_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_GENERAL_Functions
+ * @defgroup GENERAL_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Performs a system reset
- * @note   Before system will be reset, @ref TM_GENERAL_SoftwareResetCallback() will be called,
+ * @note   Before system will be reset, @ref GENERAL_SoftwareResetCallback() will be called,
  *         where you can do important stuff if necessary
  * @param  None
  * @retval None
  */
-void TM_GENERAL_SystemReset(void);
+void GENERAL_SystemReset(void);
 
 /**
  * @brief  Gets reset source why system was reset
  * @param  reset_flags: After read, clear reset flags
  *            - 0: Flags will stay untouched
  *            - > 0: All reset flags will reset
- * @retval Member of @ref TM_GENERAL_ResetSource_t containing reset source
+ * @retval Member of @ref GENERAL_ResetSource_t containing reset source
  */
-TM_GENERAL_ResetSource_t TM_GENERAL_GetResetSource(uint8_t reset_flags);
+GENERAL_ResetSource_t GENERAL_GetResetSource(uint8_t reset_flags);
 
 /**
  * @brief  Disables all interrupts in system
  * @param  None
  * @retval None
  */
-void TM_GENERAL_DisableInterrupts(void);
+void GENERAL_DisableInterrupts(void);
 
 /**
  * @brief  Enables interrupts in system.
- * @note   This function has nesting support. This means that if you call @ref TM_GENERAL_DisableInterrupts() 4 times,
+ * @note   This function has nesting support. This means that if you call @ref GENERAL_DisableInterrupts() 4 times,
  *         then you have to call this function also 4 times to enable interrupts.
  * @param  None
  * @retval Interrupt enabled status:
  *            - 0: Interrupts were not enabled
  *            - > 0: Interrupts were enabled
  */
-uint8_t TM_GENERAL_EnableInterrupts(void);
+uint8_t GENERAL_EnableInterrupts(void);
 
 /**
  * @brief  Checks if code execution is inside active IRQ
@@ -218,14 +218,14 @@ uint8_t TM_GENERAL_EnableInterrupts(void);
  *            - > 0: Code execution is inside IRQ, IRQ mode
  * @note   Defines as macro for faster execution
  */
-#define TM_GENERAL_IsIRQMode()               (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk)
+#define GENERAL_IsIRQMode()               (SCB->ICSR & SCB_ICSR_VECTACTIVE_Msk)
 
 /**
  * @brief  Gets specific clock speed value from STM32F4xx device
- * @param  clock: Clock type you want to know speed for. This parameter can be a value of @ref TM_GENERAL_Clock_t enumeration
+ * @param  clock: Clock type you want to know speed for. This parameter can be a value of @ref GENERAL_Clock_t enumeration
  * @retval Clock speed in units of hertz
  */
-uint32_t TM_GENERAL_GetClockSpeed(TM_GENERAL_Clock_t clock);
+uint32_t GENERAL_GetClockSpeed(GENERAL_Clock_t clock);
 
 /**
  * @brief  Gets system clock speed in units of MHz
@@ -233,7 +233,7 @@ uint32_t TM_GENERAL_GetClockSpeed(TM_GENERAL_Clock_t clock);
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_GENERAL_GetSystemClockMHz()       ((uint16_t)(SystemCoreClock * (float)0.000001))
+#define GENERAL_GetSystemClockMHz()       ((uint16_t)(SystemCoreClock * (float)0.000001))
 
 /**
  * @brief  Enables DWT counter in Cortex-M4 core
@@ -246,7 +246,7 @@ uint32_t TM_GENERAL_GetClockSpeed(TM_GENERAL_Clock_t clock);
  *         When I used external debugger (J-Link or ULINK2) it worked always without problems.
  *         If your DWT doesn't start, you should perform software/hardware reset by yourself.
  */
-uint8_t TM_GENERAL_DWTCounterEnable(void);
+uint8_t GENERAL_DWTCounterEnable(void);
 
 /**
  * @brief  Disables DWT counter in Cortex-M4 core
@@ -254,7 +254,7 @@ uint8_t TM_GENERAL_DWTCounterEnable(void);
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_GENERAL_DWTCounterDisable()       (DWT->CTRL &= ~0x00000001)
+#define GENERAL_DWTCounterDisable()       (DWT->CTRL &= ~0x00000001)
 
 /**
  * @brief  Gets current DWT counter value
@@ -262,7 +262,7 @@ uint8_t TM_GENERAL_DWTCounterEnable(void);
  * @retval DWT counter value
  * @note   Defined as macro for faster execution
  */
-#define TM_GENERAL_DWTCounterGetValue()      (DWT->CYCCNT)
+#define GENERAL_DWTCounterGetValue()      (DWT->CYCCNT)
 
 /**
  * @brief  Sets DWT counter value
@@ -270,40 +270,40 @@ uint8_t TM_GENERAL_DWTCounterEnable(void);
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_GENERAL_DWTCounterSetValue(x)     (DWT->CYCCNT = (x))
+#define GENERAL_DWTCounterSetValue(x)     (DWT->CYCCNT = (x))
 
 /**
  * @brief  Delays for amount of microseconds using DWT counter
  * @param  micros: Number of micro seconds for delay 
  * @retval None
- * @note   DWT Counter HAVE to be initialized first using @ref TM_GENERAL_EnableDWTCounter()
+ * @note   DWT Counter HAVE to be initialized first using @ref GENERAL_EnableDWTCounter()
  */
-static __INLINE void TM_GENERAL_DWTCounterDelayus(uint32_t micros) {
-	uint32_t c = TM_GENERAL_DWTCounterGetValue();
+static __INLINE void GENERAL_DWTCounterDelayus(uint32_t micros) {
+	uint32_t c = GENERAL_DWTCounterGetValue();
 	
 	/* Calculate clock cycles */
 	micros *= (SystemCoreClock / 1000000);
 	micros -= 12;
 	
 	/* Wait till done */
-	while ((TM_GENERAL_DWTCounterGetValue() - c) < micros);
+	while ((GENERAL_DWTCounterGetValue() - c) < micros);
 }
 
 /**
  * @brief  Delays for amount of milliseconds using DWT counter
  * @param  millis: Number of micro seconds for delay 
  * @retval None
- * @note   DWT Counter HAVE to be initialized first using @ref TM_GENERAL_EnableDWTCounter()
+ * @note   DWT Counter HAVE to be initialized first using @ref GENERAL_EnableDWTCounter()
  */
-static __INLINE void TM_GENERAL_DWTCounterDelayms(uint32_t millis) {
-	uint32_t c = TM_GENERAL_DWTCounterGetValue();
+static __INLINE void GENERAL_DWTCounterDelayms(uint32_t millis) {
+	uint32_t c = GENERAL_DWTCounterGetValue();
 	
 	/* Calculate clock cycles */
 	millis *= (SystemCoreClock / 1000);
 	millis -= 12;
 	
 	/* Wait till done */
-	while ((TM_GENERAL_DWTCounterGetValue() - c) < millis);
+	while ((GENERAL_DWTCounterGetValue() - c) < millis);
 }
 
 /**
@@ -314,20 +314,20 @@ static __INLINE void TM_GENERAL_DWTCounterDelayms(uint32_t millis) {
  *            - > 0: Number is even
  * @note   Defined as macro for faster execution
  */
-#define TM_GENERAL_IsNumberEven(number)          ((number & 1) == 0)
+#define GENERAL_IsNumberEven(number)          ((number & 1) == 0)
 
 /**
  * @brief  Converts float coded number into integer and decimal part
- * @param  *Float_Struct: Pointer to empty @ref TM_GENERAL_Float_t to store result into
+ * @param  *Float_Struct: Pointer to empty @ref GENERAL_Float_t to store result into
  * @param  Number: Float number to convert
  * @param  decimals: Number of decimal places for conversion, maximum 9 decimal places
  * @retval None
  * @note   Example: You have number 15.002 in float format.
  *            - You want to split this to integer and decimal part with 6 decimal places.
- *            - Call @ref TM_GENERAL_ConvertFloat(&Float_Struct, 15.002, 6);
+ *            - Call @ref GENERAL_ConvertFloat(&Float_Struct, 15.002, 6);
  *            - Result will be: Integer: 15; Decimal: 2000 (0.002 * 10^6)
  */
-void TM_GENERAL_ConvertFloat(TM_GENERAL_Float_t* Float_Struct, float Number, uint8_t decimals);
+void GENERAL_ConvertFloat(GENERAL_Float_t* Float_Struct, float Number, uint8_t decimals);
 
 /**
  * @brief  Round float number to nearest number with custom number of decimal places
@@ -335,7 +335,7 @@ void TM_GENERAL_ConvertFloat(TM_GENERAL_Float_t* Float_Struct, float Number, uin
  * @param  decimals: Number of decimal places to round, maximum 9 decimal places
  * @retval Rounded float number
  */
-float TM_GENERAL_RoundFloat(float Number, uint8_t decimals);
+float GENERAL_RoundFloat(float Number, uint8_t decimals);
 
 /**
  * @brief  Checks if number is power of 2
@@ -347,7 +347,7 @@ float TM_GENERAL_RoundFloat(float Number, uint8_t decimals);
  *            - > 0: Number is power of 2
  * @note   Defined as macro for faster execution
  */
-#define TM_GENERAL_IsNumberPowerOfTwo(number)    (number && !(number & (number - 1)))
+#define GENERAL_IsNumberPowerOfTwo(number)    (number && !(number & (number - 1)))
 
 /**
  * @brief  Calculates next power of 2 from given number
@@ -357,7 +357,7 @@ float TM_GENERAL_RoundFloat(float Number, uint8_t decimals);
  *            - Input number: 450
  *            - Next power of 2 is: 512 = 2^9
  */
-uint32_t TM_GENERAL_NextPowerOf2(uint32_t number);
+uint32_t GENERAL_NextPowerOf2(uint32_t number);
 
 /**
  * @brief  Forces processor to jump to Hard-fault handler
@@ -365,7 +365,7 @@ uint32_t TM_GENERAL_NextPowerOf2(uint32_t number);
  * @param  None
  * @retval None
  */
-void TM_GENERAL_ForceHardFaultError(void);
+void GENERAL_ForceHardFaultError(void);
 
 /**
  * @brief  System reset callback.
@@ -374,7 +374,7 @@ void TM_GENERAL_ForceHardFaultError(void);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_GENERAL_SystemResetCallback(void);
+void GENERAL_SystemResetCallback(void);
 
 /**
  * @}

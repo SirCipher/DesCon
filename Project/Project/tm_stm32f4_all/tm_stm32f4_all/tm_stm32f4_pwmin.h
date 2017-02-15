@@ -51,25 +51,25 @@
  * Notes on table above
  * 	- Not all timers are available on all STM32F4xx devices
  * 	- All timers have 16bit prescaler
- * 	- TIM6 and TIM7 don’t have PWM input feature, they are only basic timers
+ * 	- TIM6 and TIM7 donï¿½t have PWM input feature, they are only basic timers
  * 	- TIM2 and TIM5 are 32bit timers
  * 	- TIM10, TIM11, TIM13 and TIM14 have only one PWM channel
  * 	- One timer can measure just 1 frequency and duty cycle at a time!
  */
-#ifndef TM_PWMIN_H
-#define TM_PWMIN_H 100
+#ifndef PWMIN_H
+#define PWMIN_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_PWMIN
+ * @defgroup PWMIN
  * @brief    PWM IN library for STM32F4xx devices - http://stm32f4-discovery.com/2015/01/library-48-measure-pwm-input-signal-with-stm32f4
  * @{
  *
@@ -132,11 +132,11 @@ TIM 14  |PA7    PF9    -      |-      -      -
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
-#include "tm_stm32f4_timer_properties.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_timer_properties.h"
+#include "stm32f4_gpio.h"
 
 /**
- * @defgroup TM_PWMIN_Macros
+ * @defgroup PWMIN_Macros
  * @brief    Library defines
  * @{
  */
@@ -153,7 +153,7 @@ TIM 14  |PA7    PF9    -      |-      -      -
  */
 
 /**
- * @defgroup TM_PWMIN_Typedefs
+ * @defgroup PWMIN_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -162,11 +162,11 @@ TIM 14  |PA7    PF9    -      |-      -      -
  * @brief  PWM Input result enumeration
  */
 typedef enum {
-	TM_PWMIN_Result_Ok = 0,          /*!< Everything OK */
-	TM_PWMIN_Result_TimerNotValid,   /*!< Invalid timer selected for PWM input capture */
-	TM_PWMIN_Result_ChannelNotValid, /*!< Invalid input channel selected for timer */
-	TM_PWMIN_Result_PinNotValid      /*!< Invalid pin selected for timer */
-} TM_PWMIN_Result_t;
+	PWMIN_Result_Ok = 0,          /*!< Everything OK */
+	PWMIN_Result_TimerNotValid,   /*!< Invalid timer selected for PWM input capture */
+	PWMIN_Result_ChannelNotValid, /*!< Invalid input channel selected for timer */
+	PWMIN_Result_PinNotValid      /*!< Invalid pin selected for timer */
+} PWMIN_Result_t;
 
 /**
  * @brief  PWM Input working struct
@@ -175,35 +175,35 @@ typedef struct {
 	float Frequency;                  /*!< Measured frequency on input pin */
 	float DutyCycle;                  /*!< Measured duty cycle on input pin */
 	TIM_TypeDef* __TIM;               /*!< Pointer to timer used for measure. For private use only */
-	TM_TIMER_PROPERTIES_t __TIM_Data; /*!< Settings about timer. For private use only */
+	TIMER_PROPERTIES_t __TIM_Data; /*!< Settings about timer. For private use only */
 	float __Freq;                     /*!< Temporary frequency value. For private use only */
 	float __Duty;                     /*!< Temporary duty cycle value. For private use only */
 	uint8_t __SubPriority;            /*!< Subpriority for NVIC. For private use only */
-} TM_PWMIN_t;
+} PWMIN_t;
 
 /**
  * @brief  Input channel for measure PWM selection
  */
 typedef enum {
-	TM_PWMIN_Channel_1 = 0, /*!< Use Channel 1 for PWMIN measure */
-	TM_PWMIN_Channel_2      /*!< Use Channel 2 for PWMIN measure */
-} TM_PWMIN_Channel_t;
+	PWMIN_Channel_1 = 0, /*!< Use Channel 1 for PWMIN measure */
+	PWMIN_Channel_2      /*!< Use Channel 2 for PWMIN measure */
+} PWMIN_Channel_t;
 
 /**
  * @brief  Pinspack for PWMIN channel pin
  */
 typedef enum {
-	TM_PWMIN_PinsPack_1 = 0, /*!< Use pinspack1 pin from PWMIN pinout table */
-	TM_PWMIN_PinsPack_2,     /*!< Use pinspack2 pin from PWMIN pinout table */
-	TM_PWMIN_PinsPack_3      /*!< Use pinspack3 pin from PWMIN pinout table */
-} TM_PWMIN_PinsPack_t;
+	PWMIN_PinsPack_1 = 0, /*!< Use pinspack1 pin from PWMIN pinout table */
+	PWMIN_PinsPack_2,     /*!< Use pinspack2 pin from PWMIN pinout table */
+	PWMIN_PinsPack_3      /*!< Use pinspack3 pin from PWMIN pinout table */
+} PWMIN_PinsPack_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_PWMIN_Functions
+ * @defgroup PWMIN_Functions
  * @brief    Library Functions
  * @{
  */
@@ -211,25 +211,25 @@ typedef enum {
 /**
  * @brief  Initializes and prepares timer for PWM input capture
  * @param  *TIMx: Pointer to TIM you will use for PWM input capture
- * @param  *PWMIN_Data: Pointer to an empty @ref TM_PWMIN_t structure
- * @param  PWMIN_Channel: Channel you will use on timer. This parameter can be a value of @ref TM_PWMIN_Channel_t enumeration
- * @param  PinsPack: Pinspack you will use for your channel. This parameter can be a value of @ref TM_PWMIN_PinsPack_t enumeration
+ * @param  *PWMIN_Data: Pointer to an empty @ref PWMIN_t structure
+ * @param  PWMIN_Channel: Channel you will use on timer. This parameter can be a value of @ref PWMIN_Channel_t enumeration
+ * @param  PinsPack: Pinspack you will use for your channel. This parameter can be a value of @ref PWMIN_PinsPack_t enumeration
  * @param  MinExpectedFrequency: Type minimal input frequency you expect in input.
  *            If you don't know what to expect, set to 1
  * @param  TIMx_IRQn: IRQ for NVIC settings. For TIM2 it can be TIM2_IRQn, for TIM3,4,5,... it can be TIMx_IRQn, where x is a number of timer.
  *            This parameter can be a value of @ref IRQn_Type enumeration
- * @retval Member of TM_PWMIN_Result_t 
+ * @retval Member of PWMIN_Result_t 
  */
-TM_PWMIN_Result_t TM_PWMIN_InitTimer(TIM_TypeDef* TIMx, TM_PWMIN_t* PWMIN_Data, TM_PWMIN_Channel_t PWMIN_Channel, TM_PWMIN_PinsPack_t PinsPack, float MinExpectedFrequency, IRQn_Type TIMx_IRQn);
+PWMIN_Result_t PWMIN_InitTimer(TIM_TypeDef* TIMx, PWMIN_t* PWMIN_Data, PWMIN_Channel_t PWMIN_Channel, PWMIN_PinsPack_t PinsPack, float MinExpectedFrequency, IRQn_Type TIMx_IRQn);
 
 /**
  * @brief  Reads data from measured input PWM signal
  * @note   Data are valid if frequency is greater than 0
- * @param  *PWMIN_Data: Pointer to TM_PWMIN_t struct.
+ * @param  *PWMIN_Data: Pointer to PWMIN_t struct.
  *		      Frequency and Duty cycle will be stored in this structure.
- * @retval Member of @ref TM_PWMIN_Result_t
+ * @retval Member of @ref PWMIN_Result_t
  */
-TM_PWMIN_Result_t TM_PWMIN_Get(TM_PWMIN_t* PWMIN_Data);
+PWMIN_Result_t PWMIN_Get(PWMIN_t* PWMIN_Data);
 
 /**
  * @brief  Most important function. 
@@ -238,13 +238,13 @@ TM_PWMIN_Result_t TM_PWMIN_Get(TM_PWMIN_t* PWMIN_Data);
 @verbatim
 //For TIM2, you will do:
 void TIM2_IRQHandler(void) {
-    TM_PWMIN_InterruptHandler(&PWMIN_TIM2_Data);
+    PWMIN_InterruptHandler(&PWMIN_TIM2_Data);
 }
 @endverbatim
- * @param  *PWMIN_Data: Pointer to @ref TM_PWMIN_t structure
- * @retval Member of @ref TM_PWMIN_Result_t
+ * @param  *PWMIN_Data: Pointer to @ref PWMIN_t structure
+ * @retval Member of @ref PWMIN_Result_t
  */
-TM_PWMIN_Result_t TM_PWMIN_InterruptHandler(TM_PWMIN_t* PWMIN_Data);
+PWMIN_Result_t PWMIN_InterruptHandler(PWMIN_t* PWMIN_Data);
 
 /**
  * @}

@@ -27,15 +27,15 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_DS1307_H
-#define TM_DS1307_H 120
+#ifndef DS1307_H
+#define DS1307_H 120
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_DS1307
+ * @defgroup DS1307
  * @brief    DS1307 Library for STM32F4xx - http://stm32f4-discovery.com/2014/05/library-15-ds1307-real-time-clock-for-stm32f429-discovery/
  * @note     Not recommended for future projects, use internal RTC inside STM32F4xx instead.
  *@{
@@ -54,8 +54,8 @@ SCL		PB6			I2C1, PinsPack 1
  * 
 @verbatim
 //Set your I2C, to see corresponding pins, look for TM I2C library
-#define TM_DS1307_I2C				I2C1
-#define TM_DS1307_I2C_PINSPACK		TM_I2C_PinsPack_1 
+#define DS1307_I2C				I2C1
+#define DS1307_I2C_PINSPACK		I2C_PinsPack_1 
 @endverbatim
  *
  *
@@ -69,8 +69,8 @@ SCL		PB6			I2C1, PinsPack 1
  Version 1.1
   - July 30, 2014
   - Added 2 new functions to work with SQW/OUT pin on DS1307
-     TM_DS1307_EnableOutputPin
-     TM_DS1307_DisableOutputPin
+     DS1307_EnableOutputPin
+     DS1307_DisableOutputPin
 	 
  Version 1.0
   - First release
@@ -89,11 +89,11 @@ SCL		PB6			I2C1, PinsPack 1
  */
 
 #include "stm32f4xx.h"
-#include "tm_stm32f4_i2c.h"
+#include "stm32f4_i2c.h"
 #include "defines.h"
 
 /**
- * @defgroup TM_DS1307_Macros
+ * @defgroup DS1307_Macros
  * @brief    Library defines
  * @{
  */
@@ -101,7 +101,7 @@ SCL		PB6			I2C1, PinsPack 1
 /* I2C settings for I2C library */
 #ifndef DS1307_I2C
 #define DS1307_I2C					I2C1
-#define DS1307_I2C_PINSPACK			TM_I2C_PinsPack_1
+#define DS1307_I2C_PINSPACK			I2C_PinsPack_1
 #endif
 
 /* DS1307 I2C clock */
@@ -133,7 +133,7 @@ SCL		PB6			I2C1, PinsPack 1
  */
  
 /**
- * @defgroup TM_DS1307_Typedefs
+ * @defgroup DS1307_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -142,10 +142,10 @@ SCL		PB6			I2C1, PinsPack 1
  * @brief  Result enumeration
  */
 typedef enum {
-	TM_DS1307_Result_Ok = 0x00,         /*!< Everything OK */
-	TM_DS1307_Result_Error,             /*!< An error occurred */
-	TM_DS1307_Result_DeviceNotConnected /*!< Device is not connected */
-} TM_DS1307_Result_t;
+	DS1307_Result_Ok = 0x00,         /*!< Everything OK */
+	DS1307_Result_Error,             /*!< An error occurred */
+	DS1307_Result_DeviceNotConnected /*!< Device is not connected */
+} DS1307_Result_t;
 
 /**
  * @brief  Structure for date/time
@@ -158,26 +158,26 @@ typedef struct {
 	uint8_t date;    /*!< Date in a month, 1 to 31 */
 	uint8_t month;   /*!< Month in a year, 1 to 12 */
 	uint8_t year;    /*!< Year parameter, 00 to 99, 00 is 2000 and 99 is 2099 */
-} TM_DS1307_Time_t;
+} DS1307_Time_t;
 
 /**
  * @brief  Enumeration for SQW/OUT pin
  */
 typedef enum {
-	TM_DS1307_OutputFrequency_1Hz = 0x00, /*!< Set SQW/OUT pin to 1Hz output frequency */
-	TM_DS1307_OutputFrequency_4096Hz,     /*!< Set SQW/OUT pin to 4096Hz output frequency */
-	TM_DS1307_OutputFrequency_8192Hz,     /*!< Set SQW/OUT pin to 8192Hz output frequency */
-	TM_DS1307_OutputFrequency_32768Hz,    /*!< Set SQW/OUT pin to 32768Hz output frequency */
-	TM_DS1307_OutputFrequency_High,       /*!< Set SQW/OUT pin high. Because this pin is open-drain, you will need external pull up resistor */
-	TM_DS1307_OutputFrequency_Low         /*!< Set SQW/OUT pin low */
-} TM_DS1307_OutputFrequency_t;
+	DS1307_OutputFrequency_1Hz = 0x00, /*!< Set SQW/OUT pin to 1Hz output frequency */
+	DS1307_OutputFrequency_4096Hz,     /*!< Set SQW/OUT pin to 4096Hz output frequency */
+	DS1307_OutputFrequency_8192Hz,     /*!< Set SQW/OUT pin to 8192Hz output frequency */
+	DS1307_OutputFrequency_32768Hz,    /*!< Set SQW/OUT pin to 32768Hz output frequency */
+	DS1307_OutputFrequency_High,       /*!< Set SQW/OUT pin high. Because this pin is open-drain, you will need external pull up resistor */
+	DS1307_OutputFrequency_Low         /*!< Set SQW/OUT pin low */
+} DS1307_OutputFrequency_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_DS1307_Functions
+ * @defgroup DS1307_Functions
  * @brief    Library Functions
  * @{
  */
@@ -187,56 +187,56 @@ typedef enum {
  * @param  None
  * @retval None
  */
-TM_DS1307_Result_t TM_DS1307_Init(void);
+DS1307_Result_t DS1307_Init(void);
 
 /**
  * @brief  Gets seconds from DS1307
  * @param  None
  * @retval Seconds from DS1307, 00 to 59
  */
-uint8_t TM_DS1307_GetSeconds(void);
+uint8_t DS1307_GetSeconds(void);
 
 /**
  * @brief  Gets minutes from DS1307
  * @param  None
  * @retval Minutes from DS1307, 00 to 59
  */
-uint8_t TM_DS1307_GetMinutes(void);
+uint8_t DS1307_GetMinutes(void);
 
 /**
  * @brief  Gets hours from DS1307
  * @param  None
  * @retval Hours from DS1307, 00 to 23
  */
-uint8_t TM_DS1307_GetHours(void);
+uint8_t DS1307_GetHours(void);
 
 /**
  * @brief  Gets day in a week from DS1307
  * @param  None
  * @retval Day in a week from DS1307, 1 to 7
  */
-uint8_t TM_DS1307_GetDay(void);
+uint8_t DS1307_GetDay(void);
 
 /**
  * @brief  Gets date from DS1307
  * @param  None
  * @retval Date from DS1307, 01 to 31
  */
-uint8_t TM_DS1307_GetDate(void);
+uint8_t DS1307_GetDate(void);
 
 /**
  * @brief  Gets month from DS1307
  * @param  None
  * @retval Month from DS1307, 01 to 12
  */
-uint8_t TM_DS1307_GetMonth(void);
+uint8_t DS1307_GetMonth(void);
 
 /**
  * @brief  Gets year from DS1307
  * @param  None
  * Returns year from DS1307, 00 (2000) to 99 (2099)
  */
-uint8_t TM_DS1307_GetYear(void);
+uint8_t DS1307_GetYear(void);
 
 
 /**
@@ -244,63 +244,63 @@ uint8_t TM_DS1307_GetYear(void);
  * @param  seconds: Seconds to be set to DS1307, 01 to 59
  * @retval None
  */
-void TM_DS1307_SetSeconds(uint8_t seconds);
+void DS1307_SetSeconds(uint8_t seconds);
 
 /**
  * @brief  Sets minutes to DS1307
  * @param  minutes: Minutes to be set to DS1307, 01 to 59
  * @retval None
  */
-void TM_DS1307_SetMinutes(uint8_t minutes);
+void DS1307_SetMinutes(uint8_t minutes);
 
 /**
  * @brief  Sets hours to DS1307
  * @param  hours: Hours to be set to DS1307, 01 to 23
  * @retval None
  */
-void TM_DS1307_SetHours(uint8_t hours);
+void DS1307_SetHours(uint8_t hours);
 
 /**
  * @brief  Sets day to DS1307
  * @param  day: Day to be set to DS1307, 1 to 7
  * @retval None
  */
-void TM_DS1307_SetDay(uint8_t day);
+void DS1307_SetDay(uint8_t day);
 
 /**
  * @brief  Sets date to DS1307
  * @param  date: Date to be set to DS1307, 01 to 31
  * @retval None
  */
-void TM_DS1307_SetDate(uint8_t date);
+void DS1307_SetDate(uint8_t date);
 
 /**
  * @brief  Sets month to DS1307
  * @param  month: Month to be set to DS1307, 01 to 12
  * @retval None
  */
-void TM_DS1307_SetMonth(uint8_t month);
+void DS1307_SetMonth(uint8_t month);
 
 /**
  * @brief  Sets year to DS1307
  * @param  year: Year to be set to DS1307, 00 (2000) to 99 (2099)
  * @retval None
  */
-void TM_DS1307_SetYear(uint8_t year);
+void DS1307_SetYear(uint8_t year);
 
 /**
  * @brief  Gets full date and time from DS1307
- * @param  *time: Pointer to @ret TM_DS1307_Time_t structure where to set data
+ * @param  *time: Pointer to @ret DS1307_Time_t structure where to set data
  * @retval None
  */
-void TM_DS1307_GetDateTime(TM_DS1307_Time_t* time);
+void DS1307_GetDateTime(DS1307_Time_t* time);
 
 /**
  * @brief  Sets full date and time to DS1307
- * @param  *time: Pointer to @ret TM_DS1307_Time_t structure where to get data
+ * @param  *time: Pointer to @ret DS1307_Time_t structure where to get data
  * @retval None
  */
-void TM_DS1307_SetDateTime(TM_DS1307_Time_t* time);
+void DS1307_SetDateTime(DS1307_Time_t* time);
 
 /**
  * @brief  DS1307 has SQW/OUT pin, which can be enabled in various modes.
@@ -311,10 +311,10 @@ void TM_DS1307_SetDateTime(TM_DS1307_Time_t* time);
  * @note   Also, this pin is Open-Drain. This means that pin cannot supply positive power supply,
  *         for that you need external pull up resistor (or pull up from MCU).
  *
- * @param  frequency: SQW frequency. This parameter can be a value of @ref TM_DS1307_OutputFrequency_t enumeration
+ * @param  frequency: SQW frequency. This parameter can be a value of @ref DS1307_OutputFrequency_t enumeration
  * @retval None
  */
-void TM_DS1307_EnableOutputPin(TM_DS1307_OutputFrequency_t frequency);
+void DS1307_EnableOutputPin(DS1307_OutputFrequency_t frequency);
 
 /**
  * @brief  Disables SQW/OUT pin
@@ -323,7 +323,7 @@ void TM_DS1307_EnableOutputPin(TM_DS1307_OutputFrequency_t frequency);
  * To get high state you need external pull up resistor (or use pull up from MCU)
  * @retval None
  */
-void TM_DS1307_DisableOutputPin(void);
+void DS1307_DisableOutputPin(void);
 
 
 /**
@@ -331,14 +331,14 @@ void TM_DS1307_DisableOutputPin(void);
  * @param  bcd: BCD value to be converted
  * @retval BIN value from given BCD
  */
-uint8_t TM_DS1307_Bcd2Bin(uint8_t bcd);
+uint8_t DS1307_Bcd2Bin(uint8_t bcd);
 
 /**
  * @brief  Converts BIN to BCD data
  * @param  bin: BIN value to be converted
  * @retval BCD value from given BIN
  */
-uint8_t TM_DS1307_Bin2Bcd(uint8_t bin);
+uint8_t DS1307_Bin2Bcd(uint8_t bin);
 
 /**
  * @brief  Checks for min and max values, which can be stored to DS1307
@@ -347,7 +347,7 @@ uint8_t TM_DS1307_Bin2Bcd(uint8_t bin);
  * @param  max: Maximal allowed value of val
  * @retval Value between min and max
  */
-uint8_t TM_DS1307_CheckMinMax(uint8_t val, uint8_t min, uint8_t max);
+uint8_t DS1307_CheckMinMax(uint8_t val, uint8_t min, uint8_t max);
 
 /**
  * @}

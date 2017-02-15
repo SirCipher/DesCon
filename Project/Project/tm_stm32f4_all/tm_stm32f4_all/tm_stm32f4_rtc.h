@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_RTC_H
-#define TM_RTC_H 171
+#ifndef RTC_H
+#define RTC_H 171
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_RTC
+ * @defgroup RTC
  * @brief    RTC Library for STM32F4xx devices - http://stm32f4-discovery.com/2014/07/library-19-use-internal-rtc-on-stm32f4xx-devices/
  * @{
  *
@@ -86,18 +86,18 @@ extern "C" {
 
  Version 1.6
    - February 17, 2015
-   - Created typedef TM_RTC_t from TM_RTC_Time_t
+   - Created typedef RTC_t from RTC_Time_t
 
  Version 1.5
    - December 21, 2014
    - Added 2 new functions:
-      TM_RTC_GetDaysInMonth: returns number of days in specific month and year
-      TM_RTC_GetDaysInYear: returns number of days in specific year
+      RTC_GetDaysInMonth: returns number of days in specific month and year
+      RTC_GetDaysInYear: returns number of days in specific year
 
  Version 1.4
    - December 21, 2014
-   - TM_RTC_SetDateTime now checks for valid input data before save
-   - Added function TM_RTC_SetDateTimeString which allows you to set your
+   - RTC_SetDateTime now checks for valid input data before save
+   - Added function RTC_SetDateTimeString which allows you to set your
       date and time using string format
 
  Version 1.3
@@ -115,7 +115,7 @@ extern "C" {
 
  Version 1.0.2
    - September 24, 2014
-   - TM_RTC_RequestHandler function has now "__weak" attribute to prevent errors,
+   - RTC_RequestHandler function has now "__weak" attribute to prevent errors,
       if function is not implemented by user
 
  Version 1.0.1
@@ -149,7 +149,7 @@ extern "C" {
 #include "attributes.h"
 
 /**
- * @defgroup TM_RTC_Macros
+ * @defgroup RTC_Macros
  * @brief    Library defines
  *
  * All these settings can be overwritten in defines.h file if necessary
@@ -184,7 +184,7 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_RTC_Typedefs
+ * @defgroup RTC_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -203,76 +203,76 @@ typedef struct {
 	uint8_t month;       /*!< Month in a year, 1 to 12 */
 	uint8_t year;        /*!< Year parameter, 00 to 99, 00 is 2000 and 99 is 2099 */
 	uint32_t unix;       /*!< Seconds from 01.01.1970 00:00:00 */
-} TM_RTC_t;
+} RTC_t;
 
 /**
  * @brief  Backward compatibility for RTC time
  */
-typedef TM_RTC_t TM_RTC_Time_t;
+typedef RTC_t RTC_Time_t;
 
 /**
  * @brief RTC Result enumeration
  */
 typedef enum {
-	TM_RTC_Result_Ok,   /*!< Everything OK */
-	TM_RTC_Result_Error /*!< An error occurred */
-} TM_RTC_Result_t;
+	RTC_Result_Ok,   /*!< Everything OK */
+	RTC_Result_Error /*!< An error occurred */
+} RTC_Result_t;
 
 /**
  * @brief RTC date and time format
  */
 typedef enum {
-	TM_RTC_Format_BIN = 0x00, /*!< RTC data in binary format */
-	TM_RTC_Format_BCD         /*!< RTC data in binary-coded decimal format */
-} TM_RTC_Format_t;
+	RTC_Format_BIN = 0x00, /*!< RTC data in binary format */
+	RTC_Format_BCD         /*!< RTC data in binary-coded decimal format */
+} RTC_Format_t;
 
 /**
  * @brief  RTC Interrupt enumeration
  */
 typedef enum {
-	TM_RTC_Int_Disable = 0x00, /*!< Disable RTC wakeup interrupts */
-	TM_RTC_Int_60s,            /*!< RTC Wakeup interrupt every 60 seconds */
-	TM_RTC_Int_30s,            /*!< RTC Wakeup interrupt every 30 seconds */
-	TM_RTC_Int_15s,            /*!< RTC Wakeup interrupt every 15 seconds */
-	TM_RTC_Int_10s,            /*!< RTC Wakeup interrupt every 10 seconds */
-	TM_RTC_Int_5s,             /*!< RTC Wakeup interrupt every 5 seconds */
-	TM_RTC_Int_2s,             /*!< RTC Wakeup interrupt every 2 seconds */
-	TM_RTC_Int_1s,             /*!< RTC Wakeup interrupt every 1 seconds */
-	TM_RTC_Int_500ms,          /*!< RTC Wakeup interrupt every 500 milliseconds */
-	TM_RTC_Int_250ms,          /*!< RTC Wakeup interrupt every 250 milliseconds */
-	TM_RTC_Int_125ms           /*!< RTC Wakeup interrupt every 125 milliseconds */
-} TM_RTC_Int_t;
+	RTC_Int_Disable = 0x00, /*!< Disable RTC wakeup interrupts */
+	RTC_Int_60s,            /*!< RTC Wakeup interrupt every 60 seconds */
+	RTC_Int_30s,            /*!< RTC Wakeup interrupt every 30 seconds */
+	RTC_Int_15s,            /*!< RTC Wakeup interrupt every 15 seconds */
+	RTC_Int_10s,            /*!< RTC Wakeup interrupt every 10 seconds */
+	RTC_Int_5s,             /*!< RTC Wakeup interrupt every 5 seconds */
+	RTC_Int_2s,             /*!< RTC Wakeup interrupt every 2 seconds */
+	RTC_Int_1s,             /*!< RTC Wakeup interrupt every 1 seconds */
+	RTC_Int_500ms,          /*!< RTC Wakeup interrupt every 500 milliseconds */
+	RTC_Int_250ms,          /*!< RTC Wakeup interrupt every 250 milliseconds */
+	RTC_Int_125ms           /*!< RTC Wakeup interrupt every 125 milliseconds */
+} RTC_Int_t;
 
 /**
  * @brief  Select RTC clock source
  * @note   Internal clock is not accurate and should not be used in production
  */
 typedef enum {
-	TM_RTC_ClockSource_Internal = 0x00, /*!< Use internal clock source for RTC (LSI oscillator) */
-	TM_RTC_ClockSource_External         /*!< Use external clock source for RTC (LSE oscillator) */
-} TM_RTC_ClockSource_t;
+	RTC_ClockSource_Internal = 0x00, /*!< Use internal clock source for RTC (LSI oscillator) */
+	RTC_ClockSource_External         /*!< Use external clock source for RTC (LSE oscillator) */
+} RTC_ClockSource_t;
 
 /**
  * @brief  RTC Alarm type
  */
 typedef enum {
-	TM_RTC_AlarmType_DayInWeek, /*!< Trigger alarm every day in a week, days from 1 to 7 (Monday to Sunday) */
-	TM_RTC_AlarmType_DayInMonth /*!< Trigger alarm every month */
-} TM_RTC_AlarmType_t;
+	RTC_AlarmType_DayInWeek, /*!< Trigger alarm every day in a week, days from 1 to 7 (Monday to Sunday) */
+	RTC_AlarmType_DayInMonth /*!< Trigger alarm every month */
+} RTC_AlarmType_t;
 
 /**
  * @brief  Alarm identifier you will use for Alarm functions
  */
 typedef enum {
-	TM_RTC_Alarm_A = 0x00, /*!< Work with alarm A */
-	TM_RTC_Alarm_B         /*!< Work with alarm B */
-} TM_RTC_Alarm_t;
+	RTC_Alarm_A = 0x00, /*!< Work with alarm A */
+	RTC_Alarm_B         /*!< Work with alarm B */
+} RTC_Alarm_t;
 
 /**
  * @brief  RTC structure for alarm time
  */
 typedef struct {
-	TM_RTC_AlarmType_t alarmtype; /*!< Alarm type setting. @ref TM_RTC_AlarmType_t for more info */
+	RTC_AlarmType_t alarmtype; /*!< Alarm type setting. @ref RTC_AlarmType_t for more info */
 	uint8_t seconds;              /*!< Alarm seconds value */
 	uint8_t minutes;              /*!< Alarm minutes value */
 	uint8_t hours;                /*!< Alarm hours value */
@@ -280,63 +280,63 @@ typedef struct {
                                           1 and 7, representing days in a week, Monday to Sunday
                                           If you select trigger for alarm every month, then this parameter has value between
                                           1 - 31, representing days in a month. */
-} TM_RTC_AlarmTime_t;
+} RTC_AlarmTime_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_RTC_Functions
+ * @defgroup RTC_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Initializes RTC and starts counting
- * @param  source. RTC Clock source @ref TM_RTC_ClockSource_t to be used for RTC
+ * @param  source. RTC Clock source @ref RTC_ClockSource_t to be used for RTC
  * @note   Internal clock source is not so accurate
  * @note   If you reset your MCU and RTC still has power, it will count independent of MCU status
  * @retval Returns RTC status.
  *            - 1: RTC has already been initialized and time is set
  *            - 0: RTC was now initialized first time. Now you can set your first clock
  */
-uint32_t TM_RTC_Init(TM_RTC_ClockSource_t source);
+uint32_t RTC_Init(RTC_ClockSource_t source);
 
 /**
  * @brief  Get number of seconds from date and time since 01.01.1970 00:00:00
- * @param  *data: Pointer to @ref TM_RTC_t data structure
+ * @param  *data: Pointer to @ref RTC_t data structure
  * @retval Calculated seconds from date and time since 01.01.1970 00:00:00
  */
-uint32_t TM_RTC_GetUnixTimeStamp(TM_RTC_t* data);
+uint32_t RTC_GetUnixTimeStamp(RTC_t* data);
 
 /**
  * @brief  Get formatted time from seconds till 01.01.1970 00:00:00
  *         It fills struct with valid data
  * @note   Valid if year is greater or equal (>=) than 2000
- * @param  *data: Pointer to @ref TM_RTC_Time_t struct to store formatted data in
+ * @param  *data: Pointer to @ref RTC_Time_t struct to store formatted data in
  * @param  unix: Seconds from 01.01.1970 00:00:00 to calculate user friendly time
  * @retval None
  */
-void TM_RTC_GetDateTimeFromUnix(TM_RTC_t* data, uint32_t unix);
+void RTC_GetDateTimeFromUnix(RTC_t* data, uint32_t unix);
 
 /**
  * @brief  Select RTC wakeup interrupts interval
  * @note   This function can also be used to disable interrupt
- * @param  int_value: Look for @ref TM_RTC_Int_t for valid inputs
+ * @param  int_value: Look for @ref RTC_Int_t for valid inputs
  * @retval None
  */
-void TM_RTC_Interrupts(TM_RTC_Int_t int_value);
+void RTC_Interrupts(RTC_Int_t int_value);
 
 /**
  * @brief  Set date and time to internal RTC registers
- * @param  *data: Pointer to filled @ref TM_RTC_t structure with date and time
- * @param  format: Format of your structure. This parameter can be a value of @ref TM_RTC_Format_t enumeration
- * @retval RTC datetime status @ref TM_RTC_Result_t:
- *            - @ref TM_RTC_Result_Ok: Date and Time set OK
- *            - @ref TM_RTC_Result_Error: Date and time is wrong
+ * @param  *data: Pointer to filled @ref RTC_t structure with date and time
+ * @param  format: Format of your structure. This parameter can be a value of @ref RTC_Format_t enumeration
+ * @retval RTC datetime status @ref RTC_Result_t:
+ *            - @ref RTC_Result_Ok: Date and Time set OK
+ *            - @ref RTC_Result_Error: Date and time is wrong
  */
-TM_RTC_Result_t TM_RTC_SetDateTime(TM_RTC_t* data, TM_RTC_Format_t format);
+RTC_Result_t RTC_SetDateTime(RTC_t* data, RTC_Format_t format);
 
 /**
  * @brief  Set date and time using string formatted date time
@@ -349,19 +349,19 @@ TM_RTC_Result_t TM_RTC_SetDateTime(TM_RTC_t* data, TM_RTC_Format_t format);
  *            - <b>ii</b>: minutes, 2 digits, decimal
  *            - <b>ss</b>: seconds, 2 digits, decimal
  * @param  *str: Pointer to string with datetime format
- * @retval RTC datetime status @ref TM_RTC_Result_t:
- *            - @ref TM_RTC_Result_Ok: Date and Time set OK
- *            - @ref TM_RTC_Result_Error: Date and time is wrong
+ * @retval RTC datetime status @ref RTC_Result_t:
+ *            - @ref RTC_Result_Ok: Date and Time set OK
+ *            - @ref RTC_Result_Error: Date and time is wrong
  */
-TM_RTC_Result_t TM_RTC_SetDateTimeString(char* str);
+RTC_Result_t RTC_SetDateTimeString(char* str);
 
 /**
  * @brief  Get date and time from internal RTC registers
- * @param  *data: Pointer to @ref TM_RTC_t structure to save data to
- * @param  format: Format of your structure. This parameter can be a value of @ref TM_RTC_Format_t enumeration
+ * @param  *data: Pointer to @ref RTC_t structure to save data to
+ * @param  format: Format of your structure. This parameter can be a value of @ref RTC_Format_t enumeration
  * @retval None
  */
-void TM_RTC_GetDateTime(TM_RTC_t* data, TM_RTC_Format_t format);
+void RTC_GetDateTime(RTC_t* data, RTC_Format_t format);
 
 /**
  * @brief  Get number of days in month
@@ -370,7 +370,7 @@ void TM_RTC_GetDateTime(TM_RTC_t* data, TM_RTC_Format_t format);
  * @param  year: Year number where you want to get days in month, last 2 digits
  * @retval Number of days in specific month and year
  */
-uint8_t TM_RTC_GetDaysInMonth(uint8_t month, uint8_t year);
+uint8_t RTC_GetDaysInMonth(uint8_t month, uint8_t year);
 
 /**
  * @brief  Get number of days in specific year
@@ -378,7 +378,7 @@ uint8_t TM_RTC_GetDaysInMonth(uint8_t month, uint8_t year);
  * @param  year: Year number where you want to get days in month, last 2 digits
  * @retval Number of days in year
  */
-uint16_t TM_RTC_GetDaysInYear(uint8_t year);
+uint16_t RTC_GetDaysInYear(uint8_t year);
 
 /**
  * @brief  Write RTC backup register value.
@@ -392,7 +392,7 @@ uint16_t TM_RTC_GetDaysInYear(uint8_t year);
  * @param  value: 32-bit long value to be stored in RTC backup register
  * @retval Value at specific RTC backup register location
  */
-void TM_RTC_WriteBackupRegister(uint8_t location, uint32_t value);
+void RTC_WriteBackupRegister(uint8_t location, uint32_t value);
 
 /**
  * @brief  Read RTC backup register value.
@@ -405,23 +405,23 @@ void TM_RTC_WriteBackupRegister(uint8_t location, uint32_t value);
  * @param  location: RTC backup register location. 0 to 18 are valid
  * @retval Value at specific RTC backup register location
  */
-uint32_t TM_RTC_ReadBackupRegister(uint8_t location);
+uint32_t RTC_ReadBackupRegister(uint8_t location);
 
 /**
  * @brief  Enables alarm A or alarm B
- * @param  Alarm: Specify which alarm to set. This parameter can be a value of @ref TM_RTC_Alarm_t enumeration
- * @param  *AlarmTime: Pointer to @ref TM_RTC_AlarmTime_t structure to get data from.
- * @param  format: RTC date and time format. This parameter can be a value of @ref TM_RTC_Format_t enumeration.
+ * @param  Alarm: Specify which alarm to set. This parameter can be a value of @ref RTC_Alarm_t enumeration
+ * @param  *AlarmTime: Pointer to @ref RTC_AlarmTime_t structure to get data from.
+ * @param  format: RTC date and time format. This parameter can be a value of @ref RTC_Format_t enumeration.
  * @retval None
  */
-void TM_RTC_SetAlarm(TM_RTC_Alarm_t Alarm, TM_RTC_AlarmTime_t* AlarmTime, TM_RTC_Format_t format);
+void RTC_SetAlarm(RTC_Alarm_t Alarm, RTC_AlarmTime_t* AlarmTime, RTC_Format_t format);
 
 /**
  * @brief  Disables specific alarm
- * @param  Alarm: Select which alarm you want to disable. This parameter can be a value of @ref TM_RTC_Alarm_t enumeration
+ * @param  Alarm: Select which alarm you want to disable. This parameter can be a value of @ref RTC_Alarm_t enumeration
  * @retval None
  */
-void TM_RTC_DisableAlarm(TM_RTC_Alarm_t Alarm);
+void RTC_DisableAlarm(RTC_Alarm_t Alarm);
 
 /**
  * @brief  RTC Wakeup handler function. Called when wakeup interrupt is triggered
@@ -430,7 +430,7 @@ void TM_RTC_DisableAlarm(TM_RTC_Alarm_t Alarm);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_RTC_RequestHandler(void);
+void RTC_RequestHandler(void);
 
 /**
  * @brief  RTC Alarm A handler function. Called when interrupt is triggered for alarm A
@@ -439,7 +439,7 @@ void TM_RTC_RequestHandler(void);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_RTC_AlarmAHandler(void);
+void RTC_AlarmAHandler(void);
 
 /**
  * @brief  RTC Alarm B handler function. Called when interrupt is triggered for alarm B.
@@ -448,7 +448,7 @@ void TM_RTC_AlarmAHandler(void);
  * @retval None
  * @note   With __weak parameter to prevent link errors if not defined by user
  */
-void TM_RTC_AlarmBHandler(void);
+void RTC_AlarmBHandler(void);
 
 /**
  * @}

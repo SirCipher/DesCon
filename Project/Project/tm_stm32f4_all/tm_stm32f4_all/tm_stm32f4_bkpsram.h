@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_BKPSRAM_H
-#define TM_BKPSRAM_H 110
+#ifndef BKPSRAM_H
+#define BKPSRAM_H 110
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_BKPSRAM
+ * @defgroup BKPSRAM
  * @brief    4-kBytes backup ram library for STM32F4xx - http://stm32f4-discovery.com/2014/12/library-45-interface-backup-sram-on-stm32f4
  * @{
  *
@@ -80,7 +80,7 @@ extern "C" {
 #endif	
 
 /**
- * @defgroup TM_BKPSRAM_Functions
+ * @defgroup BKPSRAM_Functions
  * @brief    Library Functions
  * @{
  */
@@ -90,7 +90,7 @@ extern "C" {
  * @param  None
  * @retval Memory size in bytes
  */
-#define TM_BKPSRAM_GetMemorySize()			(0x00001000)
+#define BKPSRAM_GetMemorySize()			(0x00001000)
 
 /**
  * @brief  Initializes backup SRAM peripheral
@@ -100,91 +100,91 @@ extern "C" {
  * @param  None
  * @retval None
  */
-void TM_BKPSRAM_Init(void);
+void BKPSRAM_Init(void);
 
 /**
  * @brief  Writes 8-bit value to backup SRAM at desired location
  * @param  address: Address where to save data in SRAM.
- * 		      - Value between 0 and TM_BKPSRAM_GetMemorySize() - 1 is valid, if more, HardFault error can happen.
+ * 		      - Value between 0 and BKPSRAM_GetMemorySize() - 1 is valid, if more, HardFault error can happen.
  * @param  value: 8-bit value which will be stored to backup SRAM
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_BKPSRAM_Write8(address, value)	(*(__IO uint8_t *) (BKPSRAM_BASE + (address)) = (value))
+#define BKPSRAM_Write8(address, value)	(*(__IO uint8_t *) (BKPSRAM_BASE + (address)) = (value))
 
 /**
  * @brief  Reads 8-bit value from backup SRAM at desired location
  *
  * Parameters:
  * @param  address: Address where to save data in SRAM.
- * 		      - Value between 0 and TM_BKPSRAM_GetMemorySize() - 1 is valid, if more, HardFault error can happen.
+ * 		      - Value between 0 and BKPSRAM_GetMemorySize() - 1 is valid, if more, HardFault error can happen.
  * @retval 8-bit value at specific location
  * @note   Defined as macro for faster execution
  */
-#define TM_BKPSRAM_Read8(address)			(*(__IO uint8_t *) (BKPSRAM_BASE + address))
+#define BKPSRAM_Read8(address)			(*(__IO uint8_t *) (BKPSRAM_BASE + address))
 
 /**
  * @brief  Writes 16-bit value to backup SRAM at desired location
  * @param  address: Address where to save data in SRAM.
- * 		      - Value between 0 and TM_BKPSRAM_GetMemorySize() - 2 is valid, if more, HardFault error can happen.
+ * 		      - Value between 0 and BKPSRAM_GetMemorySize() - 2 is valid, if more, HardFault error can happen.
  * @param  value: 16-bit value which will be stored to backup SRAM
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_BKPSRAM_Write16(address, value)	(*(__IO uint16_t *) (BKPSRAM_BASE + (address)) = (value))
+#define BKPSRAM_Write16(address, value)	(*(__IO uint16_t *) (BKPSRAM_BASE + (address)) = (value))
 
 /**
  * @brief  Reads 16-bit value from backup SRAM at desired location
  *
  * Parameters:
  * @param  address: Address where to save data in SRAM.
- * 		      - Value between 0 and TM_BKPSRAM_GetMemorySize() - 2 is valid, if more, HardFault error can happen.
+ * 		      - Value between 0 and BKPSRAM_GetMemorySize() - 2 is valid, if more, HardFault error can happen.
  * @retval 16-bit value at specific location
  * @note   Defined as macro for faster execution
  */
-#define TM_BKPSRAM_Read16(address)			(*(__IO uint16_t *) (BKPSRAM_BASE + address))
+#define BKPSRAM_Read16(address)			(*(__IO uint16_t *) (BKPSRAM_BASE + address))
 
 /**
  * @brief  Writes 32-bit value to backup SRAM at desired location
  * @param  address: Address where to save data in SRAM.
- * 		      - Value between 0 and TM_BKPSRAM_GetMemorySize() - 4 is valid, if more, HardFault error can happen.
+ * 		      - Value between 0 and BKPSRAM_GetMemorySize() - 4 is valid, if more, HardFault error can happen.
  * @param  value: 32-bit value which will be stored to backup SRAM
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_BKPSRAM_Write32(address, value)	(*(__IO uint32_t *) (BKPSRAM_BASE + (address)) = (value))
+#define BKPSRAM_Write32(address, value)	(*(__IO uint32_t *) (BKPSRAM_BASE + (address)) = (value))
 
 /**
  * @brief  Reads 32-bit value from backup SRAM at desired location
  *
  * Parameters:
  * @param  address: Address where to save data in SRAM.
- * 		      - Value between 0 and TM_BKPSRAM_GetMemorySize() - 4 is valid, if more, HardFault error can happen.
+ * 		      - Value between 0 and BKPSRAM_GetMemorySize() - 4 is valid, if more, HardFault error can happen.
  * @retval 32-bit value at specific location
  * @note   Defined as macro for faster execution
  */
-#define TM_BKPSRAM_Read32(address)			(*(__IO uint32_t *) (BKPSRAM_BASE + address))
+#define BKPSRAM_Read32(address)			(*(__IO uint32_t *) (BKPSRAM_BASE + address))
 
 /**
  * @brief  Writes 32-bit float value to backup SRAM at desired location
  * @param  address: Address where to save data in SRAM.
- * 		      - Value between 0 and TM_BKPSRAM_GetMemorySize() - 4 is valid, if more, HardFault error can happen.
+ * 		      - Value between 0 and BKPSRAM_GetMemorySize() - 4 is valid, if more, HardFault error can happen.
  * @param  value: 32-bit float value which will be stored to backup SRAM
  * @retval None
  * @note   Defined as macro for faster execution
  */
-#define TM_BKPSRAM_WriteFloat(address, value)	(*(__IO float *) (BKPSRAM_BASE + (address)) = (value))
+#define BKPSRAM_WriteFloat(address, value)	(*(__IO float *) (BKPSRAM_BASE + (address)) = (value))
 
 /**
  * @brief  Reads 32-bit float value from backup SRAM at desired location
  *
  * Parameters:
  * @param  address: Address where to save data in SRAM.
- * 		      - Value between 0 and TM_BKPSRAM_GetMemorySize() - 4 is valid, if more, HardFault error can happen.
+ * 		      - Value between 0 and BKPSRAM_GetMemorySize() - 4 is valid, if more, HardFault error can happen.
  * @retval 32-bit float value at specific location
  * @note   Defined as macro for faster execution
  */
-#define TM_BKPSRAM_ReadFloat(address)			(*(__IO float *) (BKPSRAM_BASE + address))
+#define BKPSRAM_ReadFloat(address)			(*(__IO float *) (BKPSRAM_BASE + address))
 
 /**
  * @}

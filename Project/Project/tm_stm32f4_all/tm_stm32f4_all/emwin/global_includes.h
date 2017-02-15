@@ -31,7 +31,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 
-#include "tm_stm32f4_ili9341_ltdc.h"
+#include "stm32f4_ili9341_ltdc.h"
 
 /* LCD frame buffer */
 #define LCD_FRAME_BUFFER	ILI9341_FRAME_BUFFER

@@ -16,127 +16,127 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_spi.h"
+#include "stm32f4_spi.h"
 
 /* Private functions */
-static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_Mode_t SPI_Mode, uint16_t SPI_BaudRatePrescaler, uint16_t SPI_MasterSlave, uint16_t SPI_FirstBit);
-void TM_SPI1_INT_InitPins(TM_SPI_PinsPack_t pinspack);
-void TM_SPI2_INT_InitPins(TM_SPI_PinsPack_t pinspack);
-void TM_SPI3_INT_InitPins(TM_SPI_PinsPack_t pinspack);
-void TM_SPI4_INT_InitPins(TM_SPI_PinsPack_t pinspack);
-void TM_SPI5_INT_InitPins(TM_SPI_PinsPack_t pinspack);
-void TM_SPI6_INT_InitPins(TM_SPI_PinsPack_t pinspack);
+static void SPIx_Init(SPI_TypeDef* SPIx, SPI_PinsPack_t pinspack, SPI_Mode_t SPI_Mode, uint16_t SPI_BaudRatePrescaler, uint16_t SPI_MasterSlave, uint16_t SPI_FirstBit);
+void SPI1_INT_InitPins(SPI_PinsPack_t pinspack);
+void SPI2_INT_InitPins(SPI_PinsPack_t pinspack);
+void SPI3_INT_InitPins(SPI_PinsPack_t pinspack);
+void SPI4_INT_InitPins(SPI_PinsPack_t pinspack);
+void SPI5_INT_InitPins(SPI_PinsPack_t pinspack);
+void SPI6_INT_InitPins(SPI_PinsPack_t pinspack);
 
-void TM_SPI_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack) {
+void SPI_Init(SPI_TypeDef* SPIx, SPI_PinsPack_t pinspack) {
 	/* Init with default settings */
 #ifdef USE_SPI1
 	if (SPIx == SPI1) {
-		TM_SPIx_Init(SPI1, pinspack, TM_SPI1_MODE, TM_SPI1_PRESCALER, TM_SPI1_MASTERSLAVE, TM_SPI1_FIRSTBIT);
+		SPIx_Init(SPI1, pinspack, SPI1_MODE, SPI1_PRESCALER, SPI1_MASTERSLAVE, SPI1_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI2
 	if (SPIx == SPI2) {
-		TM_SPIx_Init(SPI2, pinspack, TM_SPI2_MODE, TM_SPI2_PRESCALER, TM_SPI2_MASTERSLAVE, TM_SPI2_FIRSTBIT);
+		SPIx_Init(SPI2, pinspack, SPI2_MODE, SPI2_PRESCALER, SPI2_MASTERSLAVE, SPI2_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI3
 	if (SPIx == SPI3) {
-		TM_SPIx_Init(SPI3, pinspack, TM_SPI3_MODE, TM_SPI3_PRESCALER, TM_SPI3_MASTERSLAVE, TM_SPI3_FIRSTBIT);
+		SPIx_Init(SPI3, pinspack, SPI3_MODE, SPI3_PRESCALER, SPI3_MASTERSLAVE, SPI3_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI4
 	if (SPIx == SPI4) {
-		TM_SPIx_Init(SPI4, pinspack, TM_SPI4_MODE, TM_SPI4_PRESCALER, TM_SPI4_MASTERSLAVE, TM_SPI4_FIRSTBIT);
+		SPIx_Init(SPI4, pinspack, SPI4_MODE, SPI4_PRESCALER, SPI4_MASTERSLAVE, SPI4_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI5
 	if (SPIx == SPI5) {
-		TM_SPIx_Init(SPI5, pinspack, TM_SPI5_MODE, TM_SPI5_PRESCALER, TM_SPI5_MASTERSLAVE, TM_SPI5_FIRSTBIT);
+		SPIx_Init(SPI5, pinspack, SPI5_MODE, SPI5_PRESCALER, SPI5_MASTERSLAVE, SPI5_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI6
 	if (SPIx == SPI6) {
-		TM_SPIx_Init(SPI6, pinspack, TM_SPI6_MODE, TM_SPI6_PRESCALER, TM_SPI6_MASTERSLAVE, TM_SPI6_FIRSTBIT);
+		SPIx_Init(SPI6, pinspack, SPI6_MODE, SPI6_PRESCALER, SPI6_MASTERSLAVE, SPI6_FIRSTBIT);
 	}
 #endif
 }
 
-void TM_SPI_InitWithMode(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_Mode_t SPI_Mode) {
+void SPI_InitWithMode(SPI_TypeDef* SPIx, SPI_PinsPack_t pinspack, SPI_Mode_t SPI_Mode) {
 	/* Init with custom mode, 0, 1, 2, 3 */
 #ifdef USE_SPI1
 	if (SPIx == SPI1) {
-		TM_SPIx_Init(SPI1, pinspack, SPI_Mode, TM_SPI1_PRESCALER, TM_SPI1_MASTERSLAVE, TM_SPI1_FIRSTBIT);
+		SPIx_Init(SPI1, pinspack, SPI_Mode, SPI1_PRESCALER, SPI1_MASTERSLAVE, SPI1_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI2
 	if (SPIx == SPI2) {
-		TM_SPIx_Init(SPI2, pinspack, SPI_Mode, TM_SPI2_PRESCALER, TM_SPI2_MASTERSLAVE, TM_SPI2_FIRSTBIT);
+		SPIx_Init(SPI2, pinspack, SPI_Mode, SPI2_PRESCALER, SPI2_MASTERSLAVE, SPI2_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI3
 	if (SPIx == SPI3) {
-		TM_SPIx_Init(SPI3, pinspack, SPI_Mode, TM_SPI3_PRESCALER, TM_SPI3_MASTERSLAVE, TM_SPI3_FIRSTBIT);
+		SPIx_Init(SPI3, pinspack, SPI_Mode, SPI3_PRESCALER, SPI3_MASTERSLAVE, SPI3_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI4
 	if (SPIx == SPI4) {
-		TM_SPIx_Init(SPI4, pinspack, SPI_Mode, TM_SPI4_PRESCALER, TM_SPI4_MASTERSLAVE, TM_SPI4_FIRSTBIT);
+		SPIx_Init(SPI4, pinspack, SPI_Mode, SPI4_PRESCALER, SPI4_MASTERSLAVE, SPI4_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI5
 	if (SPIx == SPI5) {
-		TM_SPIx_Init(SPI5, pinspack, SPI_Mode, TM_SPI5_PRESCALER, TM_SPI5_MASTERSLAVE, TM_SPI5_FIRSTBIT);
+		SPIx_Init(SPI5, pinspack, SPI_Mode, SPI5_PRESCALER, SPI5_MASTERSLAVE, SPI5_FIRSTBIT);
 	}
 #endif
 #ifdef USE_SPI6
 	if (SPIx == SPI6) {
-		TM_SPIx_Init(SPI6, pinspack, SPI_Mode, TM_SPI6_PRESCALER, TM_SPI6_MASTERSLAVE, TM_SPI6_FIRSTBIT);
+		SPIx_Init(SPI6, pinspack, SPI_Mode, SPI6_PRESCALER, SPI6_MASTERSLAVE, SPI6_FIRSTBIT);
 	}
 #endif
 }
 
-void TM_SPI_InitFull(
+void SPI_InitFull(
 	SPI_TypeDef* SPIx,              \
-	TM_SPI_PinsPack_t pinspack,     \
+	SPI_PinsPack_t pinspack,     \
 	uint16_t SPI_BaudRatePrescaler, \
-	TM_SPI_Mode_t SPI_Mode_t,       \
+	SPI_Mode_t SPI_Mode_t,       \
 	uint16_t SPI_Mode,              \
 	uint16_t SPI_FirstBit           \
 ) {
 	/* Init FULL SPI settings by user */
 #ifdef USE_SPI1
 	if (SPIx == SPI1) {
-		TM_SPIx_Init(SPI1, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
+		SPIx_Init(SPI1, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
 	}
 #endif
 #ifdef USE_SPI2
 	if (SPIx == SPI2) {
-		TM_SPIx_Init(SPI2, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
+		SPIx_Init(SPI2, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
 	}
 #endif
 #ifdef USE_SPI3
 	if (SPIx == SPI3) {
-		TM_SPIx_Init(SPI3, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
+		SPIx_Init(SPI3, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
 	}
 #endif
 #ifdef USE_SPI4
 	if (SPIx == SPI4) {
-		TM_SPIx_Init(SPI4, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
+		SPIx_Init(SPI4, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
 	}
 #endif
 #ifdef USE_SPI5
 	if (SPIx == SPI5) {
-		TM_SPIx_Init(SPI5, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
+		SPIx_Init(SPI5, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
 	}
 #endif
 #ifdef USE_SPI6
 	if (SPIx == SPI6) {
-		TM_SPIx_Init(SPI6, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
+		SPIx_Init(SPI6, pinspack, SPI_Mode_t, SPI_BaudRatePrescaler, SPI_Mode, SPI_FirstBit);
 	}
 #endif
 }
 
-uint16_t TM_SPI_GetPrescalerFromMaxFrequency(SPI_TypeDef* SPIx, uint32_t MAX_SPI_Frequency) {
+uint16_t SPI_GetPrescalerFromMaxFrequency(SPI_TypeDef* SPIx, uint32_t MAX_SPI_Frequency) {
 	RCC_ClocksTypeDef RCC_Clocks;
 	uint32_t APB_Frequency;
 	uint8_t i;
@@ -183,14 +183,14 @@ uint16_t TM_SPI_GetPrescalerFromMaxFrequency(SPI_TypeDef* SPIx, uint32_t MAX_SPI
 	return SPI_BaudRatePrescaler_256;
 }
 
-TM_SPI_DataSize_t TM_SPI_SetDataSize(SPI_TypeDef* SPIx, TM_SPI_DataSize_t DataSize) {
-	TM_SPI_DataSize_t status = (SPIx->CR1 & SPI_CR1_DFF) ? TM_SPI_DataSize_16b : TM_SPI_DataSize_8b;
+SPI_DataSize_t SPI_SetDataSize(SPI_TypeDef* SPIx, SPI_DataSize_t DataSize) {
+	SPI_DataSize_t status = (SPIx->CR1 & SPI_CR1_DFF) ? SPI_DataSize_16b : SPI_DataSize_8b;
 	
 	/* Disable SPI first */
 	SPIx->CR1 &= ~SPI_CR1_SPE;
 	
 	/* Set proper value */
-	if (DataSize == TM_SPI_DataSize_16b) {
+	if (DataSize == SPI_DataSize_16b) {
 		/* Set bit for frame */
 		SPIx->CR1 |= SPI_CR1_DFF;
 	} else {
@@ -205,7 +205,7 @@ TM_SPI_DataSize_t TM_SPI_SetDataSize(SPI_TypeDef* SPIx, TM_SPI_DataSize_t DataSi
 	return status;
 }
 
-void TM_SPI_SendMulti(SPI_TypeDef* SPIx, uint8_t* dataOut, uint8_t* dataIn, uint32_t count) {
+void SPI_SendMulti(SPI_TypeDef* SPIx, uint8_t* dataOut, uint8_t* dataIn, uint32_t count) {
 	uint32_t i;
 	
 	/* Check if SPI is enabled */
@@ -226,7 +226,7 @@ void TM_SPI_SendMulti(SPI_TypeDef* SPIx, uint8_t* dataOut, uint8_t* dataIn, uint
 	}
 }
 
-void TM_SPI_WriteMulti(SPI_TypeDef* SPIx, uint8_t* dataOut, uint32_t count) {
+void SPI_WriteMulti(SPI_TypeDef* SPIx, uint8_t* dataOut, uint32_t count) {
 	uint32_t i;	
 	
 	/* Check if SPI is enabled */
@@ -247,7 +247,7 @@ void TM_SPI_WriteMulti(SPI_TypeDef* SPIx, uint8_t* dataOut, uint32_t count) {
 	}
 }
 
-void TM_SPI_ReadMulti(SPI_TypeDef* SPIx, uint8_t* dataIn, uint8_t dummy, uint32_t count) {
+void SPI_ReadMulti(SPI_TypeDef* SPIx, uint8_t* dataIn, uint8_t dummy, uint32_t count) {
 	uint32_t i;
 	
 	/* Check if SPI is enabled */
@@ -268,7 +268,7 @@ void TM_SPI_ReadMulti(SPI_TypeDef* SPIx, uint8_t* dataIn, uint8_t dummy, uint32_
 	}
 }
 
-void TM_SPI_SendMulti16(SPI_TypeDef* SPIx, uint16_t* dataOut, uint16_t* dataIn, uint32_t count) {
+void SPI_SendMulti16(SPI_TypeDef* SPIx, uint16_t* dataOut, uint16_t* dataIn, uint32_t count) {
 	uint32_t i;	
 	
 	/* Check if SPI is enabled */
@@ -289,7 +289,7 @@ void TM_SPI_SendMulti16(SPI_TypeDef* SPIx, uint16_t* dataOut, uint16_t* dataIn, 
 	}
 }
 
-void TM_SPI_WriteMulti16(SPI_TypeDef* SPIx, uint16_t* dataOut, uint32_t count) {
+void SPI_WriteMulti16(SPI_TypeDef* SPIx, uint16_t* dataOut, uint32_t count) {
 	uint32_t i;
 	
 	/* Check if SPI is enabled */
@@ -310,7 +310,7 @@ void TM_SPI_WriteMulti16(SPI_TypeDef* SPIx, uint16_t* dataOut, uint32_t count) {
 	}
 }
 
-void TM_SPI_ReadMulti16(SPI_TypeDef* SPIx, uint16_t* dataIn, uint16_t dummy, uint32_t count) {
+void SPI_ReadMulti16(SPI_TypeDef* SPIx, uint16_t* dataIn, uint16_t dummy, uint32_t count) {
 	uint32_t i;
 	
 	/* Check if SPI is enabled */
@@ -331,13 +331,13 @@ void TM_SPI_ReadMulti16(SPI_TypeDef* SPIx, uint16_t* dataIn, uint16_t dummy, uin
 	}
 }
 
-__weak void TM_SPI_InitCustomPinsCallback(SPI_TypeDef* SPIx, uint16_t AlternateFunction) {
+__weak void SPI_InitCustomPinsCallback(SPI_TypeDef* SPIx, uint16_t AlternateFunction) {
 	/* Custom user function. */
 	/* In case user needs functionality for custom pins, this function should be declared outside this library */
 }
 
 /* Private functions */
-static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_Mode_t SPI_Mode, uint16_t SPI_BaudRatePrescaler, uint16_t SPI_MasterSlave, uint16_t SPI_FirstBit) {
+static void SPIx_Init(SPI_TypeDef* SPIx, SPI_PinsPack_t pinspack, SPI_Mode_t SPI_Mode, uint16_t SPI_BaudRatePrescaler, uint16_t SPI_MasterSlave, uint16_t SPI_FirstBit) {
 	SPI_InitTypeDef SPI_InitStruct;
 
 	/* Set default settings */
@@ -348,10 +348,10 @@ static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_M
 		RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
 		
 		/* Init pins */
-		TM_SPI1_INT_InitPins(pinspack);
+		SPI1_INT_InitPins(pinspack);
 		
 		/* Set options */
-		SPI_InitStruct.SPI_DataSize = TM_SPI1_DATASIZE;
+		SPI_InitStruct.SPI_DataSize = SPI1_DATASIZE;
 	}
 #endif
 #ifdef USE_SPI2
@@ -360,10 +360,10 @@ static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_M
 		RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
 		
 		/* Init pins */
-		TM_SPI2_INT_InitPins(pinspack);
+		SPI2_INT_InitPins(pinspack);
 		
 		/* Set options */
-		SPI_InitStruct.SPI_DataSize = TM_SPI2_DATASIZE;
+		SPI_InitStruct.SPI_DataSize = SPI2_DATASIZE;
 	}
 #endif
 #ifdef USE_SPI3
@@ -372,10 +372,10 @@ static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_M
 		RCC->APB1ENR |= RCC_APB1ENR_SPI3EN;
 		
 		/* Init pins */
-		TM_SPI3_INT_InitPins(pinspack);
+		SPI3_INT_InitPins(pinspack);
 		
 		/* Set options */
-		SPI_InitStruct.SPI_DataSize = TM_SPI3_DATASIZE;
+		SPI_InitStruct.SPI_DataSize = SPI3_DATASIZE;
 	
 	}
 #endif
@@ -385,10 +385,10 @@ static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_M
 		RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
 		
 		/* Init pins */
-		TM_SPI4_INT_InitPins(pinspack);
+		SPI4_INT_InitPins(pinspack);
 		
 		/* Set options */
-		SPI_InitStruct.SPI_DataSize = TM_SPI4_DATASIZE;
+		SPI_InitStruct.SPI_DataSize = SPI4_DATASIZE;
 	}
 #endif
 #ifdef USE_SPI5
@@ -397,10 +397,10 @@ static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_M
 		RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
 		
 		/* Init pins */
-		TM_SPI5_INT_InitPins(pinspack);
+		SPI5_INT_InitPins(pinspack);
 		
 		/* Set options */
-		SPI_InitStruct.SPI_DataSize = TM_SPI5_DATASIZE;
+		SPI_InitStruct.SPI_DataSize = SPI5_DATASIZE;
 	}
 #endif
 #ifdef USE_SPI6
@@ -409,10 +409,10 @@ static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_M
 		RCC->APB2ENR |= RCC_APB2ENR_SPI6EN;
 		
 		/* Init pins */
-		TM_SPI6_INT_InitPins(pinspack);
+		SPI6_INT_InitPins(pinspack);
 		
 		/* Set options */
-		SPI_InitStruct.SPI_DataSize = TM_SPI6_DATASIZE;
+		SPI_InitStruct.SPI_DataSize = SPI6_DATASIZE;
 	}
 #endif
 
@@ -425,16 +425,16 @@ static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_M
 	//SPI_InitStruct.SPI_DataSize = SPI_DataSize_16b;
 	
 	/* SPI mode */
-	if (SPI_Mode == TM_SPI_Mode_0) {
+	if (SPI_Mode == SPI_Mode_0) {
 		SPI_InitStruct.SPI_CPOL = SPI_CPOL_Low;
 		SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge;
-	} else if (SPI_Mode == TM_SPI_Mode_1) {
+	} else if (SPI_Mode == SPI_Mode_1) {
 		SPI_InitStruct.SPI_CPOL = SPI_CPOL_Low;
 		SPI_InitStruct.SPI_CPHA = SPI_CPHA_2Edge;
-	} else if (SPI_Mode == TM_SPI_Mode_2) {
+	} else if (SPI_Mode == SPI_Mode_2) {
 		SPI_InitStruct.SPI_CPOL = SPI_CPOL_High;
 		SPI_InitStruct.SPI_CPHA = SPI_CPHA_1Edge;
-	} else if (SPI_Mode == TM_SPI_Mode_3) {
+	} else if (SPI_Mode == SPI_Mode_3) {
 		SPI_InitStruct.SPI_CPOL = SPI_CPOL_High;
 		SPI_InitStruct.SPI_CPHA = SPI_CPHA_2Edge;
 	}
@@ -451,123 +451,123 @@ static void TM_SPIx_Init(SPI_TypeDef* SPIx, TM_SPI_PinsPack_t pinspack, TM_SPI_M
 
 /* Private functions */
 #ifdef USE_SPI1
-void TM_SPI1_INT_InitPins(TM_SPI_PinsPack_t pinspack) {
+void SPI1_INT_InitPins(SPI_PinsPack_t pinspack) {
 	/* Init SPI pins */
 #if defined(GPIOA)
-	if (pinspack == TM_SPI_PinsPack_1) {
-		TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI1);
+	if (pinspack == SPI_PinsPack_1) {
+		GPIO_InitAlternate(GPIOA, GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI1);
 	}
 #endif
 #if defined(GPIOB)
-	if (pinspack == TM_SPI_PinsPack_2) {
-		TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI1);
+	if (pinspack == SPI_PinsPack_2) {
+		GPIO_InitAlternate(GPIOB, GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI1);
 	}
 #endif
-	if (pinspack == TM_SPI_PinsPack_Custom) {
+	if (pinspack == SPI_PinsPack_Custom) {
 		/* Call user function */
-		TM_SPI_InitCustomPinsCallback(SPI1, GPIO_AF_SPI1);
+		SPI_InitCustomPinsCallback(SPI1, GPIO_AF_SPI1);
 	}
 }
 #endif
 
 #ifdef USE_SPI2
-void TM_SPI2_INT_InitPins(TM_SPI_PinsPack_t pinspack) {
+void SPI2_INT_InitPins(SPI_PinsPack_t pinspack) {
 	/* Init SPI pins */
 #if defined(GPIOB) && defined(GPIOC)
-	if (pinspack == TM_SPI_PinsPack_1) {
-		TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_10, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI2);
-		TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_2 | GPIO_PIN_3, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI2);
+	if (pinspack == SPI_PinsPack_1) {
+		GPIO_InitAlternate(GPIOB, GPIO_PIN_10, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI2);
+		GPIO_InitAlternate(GPIOC, GPIO_PIN_2 | GPIO_PIN_3, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI2);
 	}
 #endif
 #if defined(GPIOB)
-	if (pinspack == TM_SPI_PinsPack_2) {
-		TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI2);
+	if (pinspack == SPI_PinsPack_2) {
+		GPIO_InitAlternate(GPIOB, GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI2);
 	}
 #endif
 #if defined(GPIOI)
-	if (pinspack == TM_SPI_PinsPack_3) {
-		TM_GPIO_InitAlternate(GPIOI, GPIO_PIN_0 | GPIO_PIN_2 | GPIO_PIN_3, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI2);
+	if (pinspack == SPI_PinsPack_3) {
+		GPIO_InitAlternate(GPIOI, GPIO_PIN_0 | GPIO_PIN_2 | GPIO_PIN_3, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI2);
 	}
 #endif
-	if (pinspack == TM_SPI_PinsPack_Custom) {
+	if (pinspack == SPI_PinsPack_Custom) {
 		/* Call user function */
-		TM_SPI_InitCustomPinsCallback(SPI2, GPIO_AF_SPI2);
+		SPI_InitCustomPinsCallback(SPI2, GPIO_AF_SPI2);
 	}
 }
 #endif
 
 #ifdef USE_SPI3
-void TM_SPI3_INT_InitPins(TM_SPI_PinsPack_t pinspack) {
+void SPI3_INT_InitPins(SPI_PinsPack_t pinspack) {
 	/* Enable SPI pins */
 #if defined(GPIOB)
-	if (pinspack == TM_SPI_PinsPack_1) {
-		TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI3);
+	if (pinspack == SPI_PinsPack_1) {
+		GPIO_InitAlternate(GPIOB, GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI3);
 	}
 #endif
 #if defined(GPIOC)
-	if (pinspack == TM_SPI_PinsPack_2) {
-		TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI3);
+	if (pinspack == SPI_PinsPack_2) {
+		GPIO_InitAlternate(GPIOC, GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI3);
 	}
 #endif
-	if (pinspack == TM_SPI_PinsPack_Custom) {
+	if (pinspack == SPI_PinsPack_Custom) {
 		/* Call user function */
-		TM_SPI_InitCustomPinsCallback(SPI3, GPIO_AF_SPI3);
+		SPI_InitCustomPinsCallback(SPI3, GPIO_AF_SPI3);
 	}
 }
 #endif
 
 #ifdef USE_SPI4
-void TM_SPI4_INT_InitPins(TM_SPI_PinsPack_t pinspack) {
+void SPI4_INT_InitPins(SPI_PinsPack_t pinspack) {
 	/* Init SPI pins */
 #if defined(GPIOE)
-	if (pinspack == TM_SPI_PinsPack_1) {
-		TM_GPIO_InitAlternate(GPIOE, GPIO_PIN_2 | GPIO_PIN_5 | GPIO_PIN_6, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI4);
+	if (pinspack == SPI_PinsPack_1) {
+		GPIO_InitAlternate(GPIOE, GPIO_PIN_2 | GPIO_PIN_5 | GPIO_PIN_6, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI4);
 	}
 #endif
 #if defined(GPIOE)
-	if (pinspack == TM_SPI_PinsPack_2) {
-		TM_GPIO_InitAlternate(GPIOE, GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI4);
+	if (pinspack == SPI_PinsPack_2) {
+		GPIO_InitAlternate(GPIOE, GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI4);
 	}
 #endif
-	if (pinspack == TM_SPI_PinsPack_Custom) {
+	if (pinspack == SPI_PinsPack_Custom) {
 		/* Call user function */
-		TM_SPI_InitCustomPinsCallback(SPI4, GPIO_AF_SPI4);
+		SPI_InitCustomPinsCallback(SPI4, GPIO_AF_SPI4);
 	}
 }
 #endif
 
 #ifdef USE_SPI5
-void TM_SPI5_INT_InitPins(TM_SPI_PinsPack_t pinspack) {
+void SPI5_INT_InitPins(SPI_PinsPack_t pinspack) {
 	/* Init SPI pins */
 #if defined(GPIOF)
-	if (pinspack == TM_SPI_PinsPack_1) {
-		TM_GPIO_InitAlternate(GPIOF, GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI5);
+	if (pinspack == SPI_PinsPack_1) {
+		GPIO_InitAlternate(GPIOF, GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI5);
 	}
 #endif
 #if defined(GPIOF) && defined(GPIOH)
-	if (pinspack == TM_SPI_PinsPack_2) {
-		TM_GPIO_InitAlternate(GPIOF, GPIO_PIN_11, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI5);
-		TM_GPIO_InitAlternate(GPIOH, GPIO_PIN_6 | GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI5);
+	if (pinspack == SPI_PinsPack_2) {
+		GPIO_InitAlternate(GPIOF, GPIO_PIN_11, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI5);
+		GPIO_InitAlternate(GPIOH, GPIO_PIN_6 | GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI5);
 	}
 #endif
-	if (pinspack == TM_SPI_PinsPack_Custom) {
+	if (pinspack == SPI_PinsPack_Custom) {
 		/* Call user function */
-		TM_SPI_InitCustomPinsCallback(SPI5, GPIO_AF_SPI5);
+		SPI_InitCustomPinsCallback(SPI5, GPIO_AF_SPI5);
 	}
 }
 #endif
 
 #ifdef USE_SPI6
-void TM_SPI6_INT_InitPins(TM_SPI_PinsPack_t pinspack) {
+void SPI6_INT_InitPins(SPI_PinsPack_t pinspack) {
 #if defined(GPIOG)
-	if (pinspack == TM_SPI_PinsPack_1) {
+	if (pinspack == SPI_PinsPack_1) {
 		/* Init SPI pins */
-		TM_GPIO_InitAlternate(GPIOG, GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_SPI6);
+		GPIO_InitAlternate(GPIOG, GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_SPI6);
 	}
 #endif
-	if (pinspack == TM_SPI_PinsPack_Custom) {
+	if (pinspack == SPI_PinsPack_Custom) {
 		/* Call user function */
-		TM_SPI_InitCustomPinsCallback(SPI6, GPIO_AF_SPI6);
+		SPI_InitCustomPinsCallback(SPI6, GPIO_AF_SPI6);
 	}
 }
 #endif

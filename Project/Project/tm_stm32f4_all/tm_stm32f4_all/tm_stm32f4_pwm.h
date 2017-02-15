@@ -27,15 +27,15 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_PWM_H
-#define TM_PWM_H 210
+#ifndef PWM_H
+#define PWM_H 210
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_PWM
+ * @defgroup PWM
  * @brief    PWM library for STM32F4xx devices, supporting all possible timers with PWM feature - http://stm32f4-discovery.com/2014/09/library-33-pwm-for-stm32f4xx/
  * @{
  *
@@ -110,12 +110,12 @@ TIM 14  |PA7    PF9    -      |-      -      -      |-      -      -      |-    
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_tim.h"
-#include "tm_stm32f4_timer_properties.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_timer_properties.h"
+#include "stm32f4_gpio.h"
 #include "defines.h"
 
 /**
- * @defgroup TM_PWM_Typedefs
+ * @defgroup PWM_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -124,17 +124,17 @@ TIM 14  |PA7    PF9    -      |-      -      -      |-      -      -      |-    
  * @brief  PWM Result enumeration
  */
 typedef enum {
-	TM_PWM_Result_Ok = 0,           /*!< Everything OK */
-	TM_PWM_Result_FrequencyTooHigh, /*!< You select too high frequency for timer for PWM */
-	TM_PWM_Result_FrequencyTooLow,  /*!< Prescaler value is too big for selected frequency */
-	TM_PWM_Result_PulseTooHigh,     /*!< Pulse for Output compare is larger than timer period */
-	TM_PWM_Result_TimerNotValid,    /*!< Selected timer is not valid. This happens when you select TIM6 or TIM7,
+	PWM_Result_Ok = 0,           /*!< Everything OK */
+	PWM_Result_FrequencyTooHigh, /*!< You select too high frequency for timer for PWM */
+	PWM_Result_FrequencyTooLow,  /*!< Prescaler value is too big for selected frequency */
+	PWM_Result_PulseTooHigh,     /*!< Pulse for Output compare is larger than timer period */
+	PWM_Result_TimerNotValid,    /*!< Selected timer is not valid. This happens when you select TIM6 or TIM7,
                                             because they don't have PWM capability */
-	TM_PWM_Result_ChannelNotValid,  /*!< Channel is not valid. Some timers don't have all 4 timers available for PWM */
-	TM_PWM_Result_PinNotValid       /*!< Selected pin is not valid. Most channels have only 2 possible pins for PWM,
+	PWM_Result_ChannelNotValid,  /*!< Channel is not valid. Some timers don't have all 4 timers available for PWM */
+	PWM_Result_PinNotValid       /*!< Selected pin is not valid. Most channels have only 2 possible pins for PWM,
                                             but some 3. If you select pin 3 on channel that don't have 3rd pin available
                                             for PWM, this will be returned */
-} TM_PWM_Result_t;
+} PWM_Result_t;
 
 /**
  * @brief  PWM Timer data
@@ -149,33 +149,33 @@ typedef struct {
                                     Where you need exact time of pulse high */
 	uint32_t CH_Periods[4]; /*!< Array of periods for PWM compare */
 	uint8_t CH_Init;        /*!< Flag to check if specific channel is already initialized */
-} TM_PWM_TIM_t;
+} PWM_TIM_t;
 
 /**
  * @brief  Channel selection for PWM on specific timer
  */
 typedef enum {
-	TM_PWM_Channel_1 = 0x00, /*!<  Operate with channel 1 */
-	TM_PWM_Channel_2 = 0x01, /*!<  Operate with channel 2 */
-	TM_PWM_Channel_3 = 0x02, /*!<  Operate with channel 3 */
-	TM_PWM_Channel_4 = 0x03  /*!<  Operate with channel 4 */
-} TM_PWM_Channel_t;
+	PWM_Channel_1 = 0x00, /*!<  Operate with channel 1 */
+	PWM_Channel_2 = 0x01, /*!<  Operate with channel 2 */
+	PWM_Channel_3 = 0x02, /*!<  Operate with channel 3 */
+	PWM_Channel_4 = 0x03  /*!<  Operate with channel 4 */
+} PWM_Channel_t;
 
 /**
  * @brief  Pin selected for corresponding channel on specific channel
  */
 typedef enum {
-	TM_PWM_PinsPack_1 = 0x00, /*!< Pinspack 1 from pinout table */
-	TM_PWM_PinsPack_2,        /*!< Pinspack 2 from pinout table */
-	TM_PWM_PinsPack_3         /*!< Pinspack 3 from pinout table */
-} TM_PWM_PinsPack_t;
+	PWM_PinsPack_1 = 0x00, /*!< Pinspack 1 from pinout table */
+	PWM_PinsPack_2,        /*!< Pinspack 2 from pinout table */
+	PWM_PinsPack_3         /*!< Pinspack 3 from pinout table */
+} PWM_PinsPack_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_PWM_Functions
+ * @defgroup PWM_Functions
  * @brief    Library Functions
  * @{
  */
@@ -183,38 +183,38 @@ typedef enum {
 /**
  * @brief  Initializes specific timer for PWM capability
  * @param  *TIMx: Pointer to selected timer, you want to use for PWM
- * @param  *TIM_Data: Pointer to blank @ref TM_PWM_TIM_t structure. Here will init function save all data for specific timer
+ * @param  *TIM_Data: Pointer to blank @ref PWM_TIM_t structure. Here will init function save all data for specific timer
  * @param  PWMFrequency: Select custom frequency for PWM
- * @retval Member of @ref TM_PWM_Result_t
+ * @retval Member of @ref PWM_Result_t
  */
-TM_PWM_Result_t TM_PWM_InitTimer(TIM_TypeDef* TIMx, TM_PWM_TIM_t* TIM_Data, double PWMFrequency);
+PWM_Result_t PWM_InitTimer(TIM_TypeDef* TIMx, PWM_TIM_t* TIM_Data, double PWMFrequency);
 
 /**
  * @brief  Initializes channel used for specific timer
  * @param  *TIM_Data: Pointer to struct with already initialized timer for PWM
- * @param  Channel: Select channel you will use on specific timer. This parameter can be a value of @ref TM_PWM_Channel_t
- * @param  PinsPack: Select which pinspack you will use for pin. This parameter can be a value of @ref TM_PWM_PinsPack_t
- * @retval Member of @ref TM_PWM_Result_t
+ * @param  Channel: Select channel you will use on specific timer. This parameter can be a value of @ref PWM_Channel_t
+ * @param  PinsPack: Select which pinspack you will use for pin. This parameter can be a value of @ref PWM_PinsPack_t
+ * @retval Member of @ref PWM_Result_t
  */
-TM_PWM_Result_t TM_PWM_InitChannel(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_InitChannel(PWM_TIM_t* TIM_Data, PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
 
 /**
  * @brief  Sets PWM value for specific timer and channel
  * @param  *TIM_Data: Pointer to struct with already initialized timer for PWM
- * @param  Channel: Select channel you will use on specific timer. This parameter can be a value of @ref TM_PWM_Channel_t
+ * @param  Channel: Select channel you will use on specific timer. This parameter can be a value of @ref PWM_Channel_t
  * @param  Pulse: Pulse, to be set for compare match
- * @retval Member of @ref TM_PWM_Result_t
+ * @retval Member of @ref PWM_Result_t
  */
-TM_PWM_Result_t TM_PWM_SetChannel(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Channel, uint32_t Pulse);
+PWM_Result_t PWM_SetChannel(PWM_TIM_t* TIM_Data, PWM_Channel_t Channel, uint32_t Pulse);
 
 /**
  * @brief  Sets PWM value for specific timer and channel with percentage feature
  * @param  *TIM_Data: Pointer to struct with already initialized timer for PWM
- * @param  Channel: Select channel you will use on specific timer. This parameter can be a value of @ref TM_PWM_Channel_t
+ * @param  Channel: Select channel you will use on specific timer. This parameter can be a value of @ref PWM_Channel_t
  * @param  percent: Percentage from 0 to 100, to set PWM duty cycle
- * @retval Member of @ref TM_PWM_Result_t
+ * @retval Member of @ref PWM_Result_t
  */
-TM_PWM_Result_t TM_PWM_SetChannelPercent(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Channel, float percent);
+PWM_Result_t PWM_SetChannelPercent(PWM_TIM_t* TIM_Data, PWM_Channel_t Channel, float percent);
 
 /**
  * @brief  Sets PWM value for specific timer and channel with pulse high time feature.
@@ -223,12 +223,12 @@ TM_PWM_Result_t TM_PWM_SetChannelPercent(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_
  *         accuracy. It is perfect, and was designed for low frequencies, eg. use with servos, where you have exact amount of time
  *         for servo's rotation.
  * @param  *TIM_Data: Pointer to struct with already initialized timer for PWM
- * @param  Channel: Select channel you will use on specific timer. This parameter can be a value of @ref TM_PWM_Channel_t
+ * @param  Channel: Select channel you will use on specific timer. This parameter can be a value of @ref PWM_Channel_t
  * @param  micros: Microseconds for pulse high on PWM. Cannot be large than timer period in micros.
  *		      PWM 1kHz = Timer period = 1000000 / 1000 = 1000us. This parameter can not be greater than 1000us in this case.
- * @retval Member of @ref TM_PWM_Result_t
+ * @retval Member of @ref PWM_Result_t
  */
-TM_PWM_Result_t TM_PWM_SetChannelMicros(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Channel, uint32_t micros);
+PWM_Result_t PWM_SetChannelMicros(PWM_TIM_t* TIM_Data, PWM_Channel_t Channel, uint32_t micros);
 
 /**
  * @}

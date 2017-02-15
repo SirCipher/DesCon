@@ -44,7 +44,7 @@
 #include "stm32f4x7_eth.h"
 #include <string.h>
 
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_ethernet.h"
 
 /* Network interface name */
 #define IFNAME0 's'
@@ -83,12 +83,12 @@ static void low_level_init(struct netif *netif)
   netif->hwaddr_len = ETHARP_HWADDR_LEN;
 	
   /* set MAC hardware address */
-  netif->hwaddr[0] = TM_ETHERNET.mac_addr[0];
-  netif->hwaddr[1] = TM_ETHERNET.mac_addr[1];
-  netif->hwaddr[2] = TM_ETHERNET.mac_addr[2];
-  netif->hwaddr[3] = TM_ETHERNET.mac_addr[3];
-  netif->hwaddr[4] = TM_ETHERNET.mac_addr[4];
-  netif->hwaddr[5] = TM_ETHERNET.mac_addr[5];
+  netif->hwaddr[0] = ETHERNET.mac_addr[0];
+  netif->hwaddr[1] = ETHERNET.mac_addr[1];
+  netif->hwaddr[2] = ETHERNET.mac_addr[2];
+  netif->hwaddr[3] = ETHERNET.mac_addr[3];
+  netif->hwaddr[4] = ETHERNET.mac_addr[4];
+  netif->hwaddr[5] = ETHERNET.mac_addr[5];
   
   /* initialize MAC address in ethernet MAC */ 
   ETH_MACAddressConfig(ETH_MAC_Address0, netif->hwaddr); 

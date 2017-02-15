@@ -16,9 +16,9 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_bkpsram.h"
+#include "stm32f4_bkpsram.h"
 
-void TM_BKPSRAM_Init(void) {
+void BKPSRAM_Init(void) {
 	/* Enable PWR clock */
 	RCC->APB1ENR |= RCC_APB1ENR_PWREN;
 	

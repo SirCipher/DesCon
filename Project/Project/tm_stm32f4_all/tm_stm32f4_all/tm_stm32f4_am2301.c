@@ -16,30 +16,30 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_am2301.h"
+#include "stm32f4_am2301.h"
 
 /* Private functions */
-TM_AM2301_t TM_AM2301_INT_Read(TM_AM2301_Data_t* data);
-TM_AM2301_t TM_AM2301_INT_InitPins(void);
+AM2301_t AM2301_INT_Read(AM2301_Data_t* data);
+AM2301_t AM2301_INT_InitPins(void);
 
-TM_AM2301_t TM_AM2301_Init(void) {
+AM2301_t AM2301_Init(void) {
 	/* Initialize delay */
-	TM_DELAY_Init();
+	DELAY_Init();
 	
 	/* Initialize pin */
-	TM_GPIO_Init(AM2301_PORT, AM2301_PIN, TM_GPIO_Mode_IN, TM_GPIO_OType_PP, TM_GPIO_PuPd_UP, TM_GPIO_Speed_Medium);
+	GPIO_Init(AM2301_PORT, AM2301_PIN, GPIO_Mode_IN, GPIO_OType_PP, GPIO_PuPd_UP, GPIO_Speed_Medium);
 	
 	/* Return OK */
-	return TM_AM2301_OK;
+	return AM2301_OK;
 }
 
-TM_AM2301_t TM_AM2301_Read(TM_AM2301_Data_t* data) {
+AM2301_t AM2301_Read(AM2301_Data_t* data) {
 	/* Read data */
-	return TM_AM2301_INT_Read(data);
+	return AM2301_INT_Read(data);
 }
 
 /* Internal function */
-TM_AM2301_t TM_AM2301_INT_Read(TM_AM2301_Data_t* data) {
+AM2301_t AM2301_INT_Read(AM2301_Data_t* data) {
 	volatile uint32_t time;
 	uint8_t i, j, d[5];
 	
@@ -59,7 +59,7 @@ TM_AM2301_t TM_AM2301_INT_Read(TM_AM2301_Data_t* data) {
 	/* Wait 20us for acknowledge, low signal */
 	while (AM2301_PIN_READ) {
 		if (time > 20) {
-			return TM_AM2301_CONNECTION_ERROR;
+			return AM2301_CONNECTION_ERROR;
 		}
 		/* Increase time */
 		time++;
@@ -71,7 +71,7 @@ TM_AM2301_t TM_AM2301_INT_Read(TM_AM2301_Data_t* data) {
 	/* Wait high signal, about 80-85us long (measured with logic analyzer) */
 	while (!AM2301_PIN_READ) {
 		if (time > 85) {
-			return TM_AM2301_WAITHIGH_ERROR;
+			return AM2301_WAITHIGH_ERROR;
 		}
 		/* Increase time */
 		time++;
@@ -83,7 +83,7 @@ TM_AM2301_t TM_AM2301_INT_Read(TM_AM2301_Data_t* data) {
 	/* Wait low signal, about 80-85us long (measured with logic analyzer) */
 	while (AM2301_PIN_READ) {
 		if (time > 85) {
-			return TM_AM2301_WAITLOW_ERROR;
+			return AM2301_WAITLOW_ERROR;
 		}
 		/* Increase time */
 		time++;
@@ -100,7 +100,7 @@ TM_AM2301_t TM_AM2301_INT_Read(TM_AM2301_Data_t* data) {
 			/* Wait high signal, about 57-63us long (measured with logic analyzer) */
 			while (!AM2301_PIN_READ) {
 				if (time > 75) {
-					return TM_AM2301_WAITHIGH_LOOP_ERROR;
+					return AM2301_WAITHIGH_LOOP_ERROR;
 				}
 				/* Increase time */
 				time++;
@@ -112,7 +112,7 @@ TM_AM2301_t TM_AM2301_INT_Read(TM_AM2301_Data_t* data) {
 			/* Wait low signal, between 26 and 70us long (measured with logic analyzer) */
 			while (AM2301_PIN_READ) {
 				if (time > 90) {
-					return TM_AM2301_WAITLOW_LOOP_ERROR;
+					return AM2301_WAITLOW_LOOP_ERROR;
 				}
 				/* Increase time */
 				time++;
@@ -132,7 +132,7 @@ TM_AM2301_t TM_AM2301_INT_Read(TM_AM2301_Data_t* data) {
 	/* Check for parity */
 	if (((d[0] + d[1] + d[2] + d[3]) & 0xFF) != d[4]) {
 		/* Parity error, data not valid */
-		return TM_AM2301_PARITY_ERROR;
+		return AM2301_PARITY_ERROR;
 	}
 	
 	/* Set humidity */
@@ -145,6 +145,6 @@ TM_AM2301_t TM_AM2301_INT_Read(TM_AM2301_Data_t* data) {
 	}
 	
 	/* Data OK */
-	return TM_AM2301_OK;
+	return AM2301_OK;
 }
 

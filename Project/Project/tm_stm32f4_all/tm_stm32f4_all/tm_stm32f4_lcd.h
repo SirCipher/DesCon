@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_LIBRARY_H
-#define TM_LIBRARY_H 100
+#ifndef LIBRARY_H
+#define LIBRARY_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_LCD
+ * @defgroup LCD
  * @brief    Library description here
  * @{
  *
@@ -65,18 +65,18 @@ extern "C" {
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_ltdc.h"
 #include "defines.h"
-#include "tm_stm32f4_sdram.h"
-#include "tm_stm32f4_gpio.h"
-#include "tm_stm32f4_fonts.h"
-#include "tm_stm32f4_dma2d_graphic.h"
+#include "stm32f4_sdram.h"
+#include "stm32f4_gpio.h"
+#include "stm32f4_fonts.h"
+#include "stm32f4_dma2d_graphic.h"
 
 /**
- * @defgroup TM_LCD_Macros
+ * @defgroup LCD_Macros
  * @brief    Library defines
  * @{
  */
 
-#if defined(USE_LCD_STM324x9_EVAL) || defined(TM_DISCO_STM324x9_EVAL)
+#if defined(USE_LCD_STM324x9_EVAL) || defined(DISCO_STM324x9_EVAL)
 
 /* Check define */
 #ifndef USE_LCD_STM324x9_EVAL
@@ -104,74 +104,74 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_LCD_Typedefs
+ * @defgroup LCD_Typedefs
  * @brief    Library Typedefs
  * @{
  */
 
-typedef enum _TM_LCD_Result_t {
-	TM_LCD_Result_Ok = 0x00,
-	TM_LCD_Result_Error,
-	TM_LCD_Result_SDRAM_Error
-} TM_LCD_Result_t;
+typedef enum _LCD_Result_t {
+	LCD_Result_Ok = 0x00,
+	LCD_Result_Error,
+	LCD_Result_SDRAM_Error
+} LCD_Result_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_LCD_Functions
+ * @defgroup LCD_Functions
  * @brief    Library Functions
  * @{
  */
 
-TM_LCD_Result_t TM_LCD_Init(void);
-TM_LCD_Result_t TM_LCD_Fill(uint32_t color);
-TM_LCD_Result_t TM_LCD_DisplayOn(void);
-TM_LCD_Result_t TM_LCD_DisplayOff(void);
-uint16_t TM_LCD_GetWidth(void);
-uint16_t TM_LCD_GetHeight(void);
-uint32_t TM_LCD_GetFrameBuffer(void);
+LCD_Result_t LCD_Init(void);
+LCD_Result_t LCD_Fill(uint32_t color);
+LCD_Result_t LCD_DisplayOn(void);
+LCD_Result_t LCD_DisplayOff(void);
+uint16_t LCD_GetWidth(void);
+uint16_t LCD_GetHeight(void);
+uint32_t LCD_GetFrameBuffer(void);
 
-TM_LCD_Result_t TM_LCD_SetXY(uint16_t X, uint16_t Y);
-TM_LCD_Result_t TM_LCD_SetFont(TM_FontDef_t* Font);
-TM_LCD_Result_t TM_LCD_SetColors(uint32_t Foreground, uint32_t Background);
-TM_LCD_Result_t TM_LCD_Putc(char c);
-TM_LCD_Result_t TM_LCD_Puts(char* str);
+LCD_Result_t LCD_SetXY(uint16_t X, uint16_t Y);
+LCD_Result_t LCD_SetFont(FontDef_t* Font);
+LCD_Result_t LCD_SetColors(uint32_t Foreground, uint32_t Background);
+LCD_Result_t LCD_Putc(char c);
+LCD_Result_t LCD_Puts(char* str);
 
 /**
- * @defgroup TM_LCD_GRAPHIC_Functions
+ * @defgroup LCD_GRAPHIC_Functions
  * @brief    Library Functions
  * @{
  */
 
-TM_LCD_Result_t TM_LCD_DrawPixel(uint16_t X, uint16_t Y, uint32_t color);
-uint32_t TM_LCD_GetPixel(uint16_t X, uint16_t Y);
-TM_LCD_Result_t TM_LCD_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color);
-TM_LCD_Result_t TM_LCD_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint32_t color);
-TM_LCD_Result_t TM_LCD_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint32_t color);
-TM_LCD_Result_t TM_LCD_DrawRoundedRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint16_t r, uint32_t color);
-TM_LCD_Result_t TM_LCD_DrawFilledRoundedRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint16_t r, uint32_t color);
-TM_LCD_Result_t TM_LCD_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color);
-TM_LCD_Result_t TM_LCD_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color);
+LCD_Result_t LCD_DrawPixel(uint16_t X, uint16_t Y, uint32_t color);
+uint32_t LCD_GetPixel(uint16_t X, uint16_t Y);
+LCD_Result_t LCD_DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint32_t color);
+LCD_Result_t LCD_DrawRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint32_t color);
+LCD_Result_t LCD_DrawFilledRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint32_t color);
+LCD_Result_t LCD_DrawRoundedRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint16_t r, uint32_t color);
+LCD_Result_t LCD_DrawFilledRoundedRectangle(uint16_t x0, uint16_t y0, uint16_t Width, uint16_t Height, uint16_t r, uint32_t color);
+LCD_Result_t LCD_DrawCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color);
+LCD_Result_t LCD_DrawFilledCircle(int16_t x0, int16_t y0, int16_t r, uint32_t color);
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_LCD_LAYER_Functions
+ * @defgroup LCD_LAYER_Functions
  * @brief    Library Functions
  * @{
  */
  
-TM_LCD_Result_t TM_LCD_SetLayer1(void);
-TM_LCD_Result_t TM_LCD_SetLayer2(void);
-TM_LCD_Result_t TM_LCD_SetLayer1Opacity(uint8_t opacity);
-TM_LCD_Result_t TM_LCD_SetLayer2Opacity(uint8_t opacity);
-TM_LCD_Result_t TM_LCD_ChangeLayers(void);
-TM_LCD_Result_t TM_LCD_Layer2To1(void);
-TM_LCD_Result_t TM_LCD_Layer1To2(void);
+LCD_Result_t LCD_SetLayer1(void);
+LCD_Result_t LCD_SetLayer2(void);
+LCD_Result_t LCD_SetLayer1Opacity(uint8_t opacity);
+LCD_Result_t LCD_SetLayer2Opacity(uint8_t opacity);
+LCD_Result_t LCD_ChangeLayers(void);
+LCD_Result_t LCD_Layer2To1(void);
+LCD_Result_t LCD_Layer1To2(void);
 
 /**
  * @}

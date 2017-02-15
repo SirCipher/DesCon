@@ -16,28 +16,28 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_pwm.h"
+#include "stm32f4_pwm.h"
 
 /* Private functions */
-void TM_PWM_INT_EnableClock(TIM_TypeDef* TIMx);
-TM_PWM_Result_t TM_PWM_INT_GetTimerProperties(TIM_TypeDef* TIMx, uint32_t* frequency, uint32_t* period);
+void PWM_INT_EnableClock(TIM_TypeDef* TIMx);
+PWM_Result_t PWM_INT_GetTimerProperties(TIM_TypeDef* TIMx, uint32_t* frequency, uint32_t* period);
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM1Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM2Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM3Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM4Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM5Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM8Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM9Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM10Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM11Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM12Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM13Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
-TM_PWM_Result_t TM_PWM_INT_InitTIM14Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM1Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM2Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM3Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM4Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM5Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM8Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM9Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM10Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM11Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM12Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM13Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
+PWM_Result_t PWM_INT_InitTIM14Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack);
 
-TM_PWM_Result_t TM_PWM_InitTimer(TIM_TypeDef* TIMx, TM_PWM_TIM_t* TIM_Data, double PWMFrequency) {
+PWM_Result_t PWM_InitTimer(TIM_TypeDef* TIMx, PWM_TIM_t* TIM_Data, double PWMFrequency) {
 	TIM_TimeBaseInitTypeDef TIM_BaseStruct;
-	TM_TIMER_PROPERTIES_t Timer_Data;
+	TIMER_PROPERTIES_t Timer_Data;
 
 	/* Check valid timer */
 	if (0 
@@ -49,31 +49,31 @@ TM_PWM_Result_t TM_PWM_InitTimer(TIM_TypeDef* TIMx, TM_PWM_TIM_t* TIM_Data, doub
 #endif
 	) {
 		/* Timers TIM6 and TIM7 can not provide PWM feature */
-		return TM_PWM_Result_TimerNotValid;
+		return PWM_Result_TimerNotValid;
 	}
 	
 	/* Save timer */
 	TIM_Data->TIM = TIMx;
 	
 	/* Get timer properties */
-	TM_TIMER_PROPERTIES_GetTimerProperties(TIMx, &Timer_Data);
+	TIMER_PROPERTIES_GetTimerProperties(TIMx, &Timer_Data);
 	
 	/* Check for maximum timer frequency */
 	if (PWMFrequency > Timer_Data.TimerFrequency) {
 		/* Frequency too high */
-		return TM_PWM_Result_FrequencyTooHigh;
+		return PWM_Result_FrequencyTooHigh;
 	} else if (PWMFrequency == 0) {
 		/* Not valid frequency */
-		return TM_PWM_Result_FrequencyTooLow;
+		return PWM_Result_FrequencyTooLow;
 	}
 
 	/* Generate settings */
-	TM_TIMER_PROPERTIES_GenerateDataForWorkingFrequency(&Timer_Data, PWMFrequency);
+	TIMER_PROPERTIES_GenerateDataForWorkingFrequency(&Timer_Data, PWMFrequency);
 	
 	/* Check valid data */
 	if (Timer_Data.Period == 0) {
 		/* Too high frequency */
-		return TM_PWM_Result_FrequencyTooHigh;
+		return PWM_Result_FrequencyTooHigh;
 	}
 	
 	/* Tests are OK */
@@ -83,7 +83,7 @@ TM_PWM_Result_t TM_PWM_InitTimer(TIM_TypeDef* TIMx, TM_PWM_TIM_t* TIM_Data, doub
 	TIM_Data->Prescaler = Timer_Data.Prescaler;
 	
 	/* Enable clock for Timer */	
-	TM_TIMER_PROPERTIES_EnableClock(TIMx);
+	TIMER_PROPERTIES_EnableClock(TIMx);
 
 	/* Set timer options */
 	TIM_BaseStruct.TIM_Prescaler = Timer_Data.Prescaler - 1;
@@ -117,84 +117,84 @@ TM_PWM_Result_t TM_PWM_InitTimer(TIM_TypeDef* TIMx, TM_PWM_TIM_t* TIM_Data, doub
 	TIM_Data->CH_Init = 0;
 	
 	/* Return OK */
-	return TM_PWM_Result_Ok;
+	return PWM_Result_Ok;
 }
 
 
-TM_PWM_Result_t TM_PWM_InitChannel(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
+PWM_Result_t PWM_InitChannel(PWM_TIM_t* TIM_Data, PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
 #ifdef TIM1
 	if (TIM_Data->TIM == TIM1) {
-		return TM_PWM_INT_InitTIM1Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM1Pins(Channel, PinsPack);
 	}  
 #endif
 #ifdef TIM2
 	if (TIM_Data->TIM == TIM2) {
-		return TM_PWM_INT_InitTIM2Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM2Pins(Channel, PinsPack);
 	}  
 #endif
 #ifdef TIM3
 	if (TIM_Data->TIM == TIM3) {
-		return TM_PWM_INT_InitTIM3Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM3Pins(Channel, PinsPack);
 	}  
 #endif
 #ifdef TIM4
 	if (TIM_Data->TIM == TIM4) {
-		return TM_PWM_INT_InitTIM4Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM4Pins(Channel, PinsPack);
 	}  
 #endif
 #ifdef TIM5
 	if (TIM_Data->TIM == TIM5) {
-		return TM_PWM_INT_InitTIM5Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM5Pins(Channel, PinsPack);
 	}  
 #endif
 #ifdef TIM8
 	if (TIM_Data->TIM == TIM8) {
-		return TM_PWM_INT_InitTIM8Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM8Pins(Channel, PinsPack);
 	}  
 #endif
 #ifdef TIM9
 	if (TIM_Data->TIM == TIM9) {
-		return TM_PWM_INT_InitTIM9Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM9Pins(Channel, PinsPack);
 	}  
 #endif
 #ifdef TIM10
 	if (TIM_Data->TIM == TIM10) {
-		return TM_PWM_INT_InitTIM10Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM10Pins(Channel, PinsPack);
 	}  
 #endif
 #ifdef TIM11
 	if (TIM_Data->TIM == TIM11) {
-		return TM_PWM_INT_InitTIM11Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM11Pins(Channel, PinsPack);
 	}  
 #endif
 #ifdef TIM12
 	if (TIM_Data->TIM == TIM12) {
-		return TM_PWM_INT_InitTIM12Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM12Pins(Channel, PinsPack);
 	}
 #endif
 #ifdef TIM13
 	if (TIM_Data->TIM == TIM13) {
-		return TM_PWM_INT_InitTIM13Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM13Pins(Channel, PinsPack);
 	} 
 #endif
 #ifdef TIM14
 	if (TIM_Data->TIM == TIM14) {
-		return TM_PWM_INT_InitTIM14Pins(Channel, PinsPack);
+		return PWM_INT_InitTIM14Pins(Channel, PinsPack);
 	}
 #endif
 	
 	/* Timer is not valid */
-	return TM_PWM_Result_TimerNotValid;
+	return PWM_Result_TimerNotValid;
 }
 
-TM_PWM_Result_t TM_PWM_SetChannel(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Channel, uint32_t Pulse) {
+PWM_Result_t PWM_SetChannel(PWM_TIM_t* TIM_Data, PWM_Channel_t Channel, uint32_t Pulse) {
 	TIM_OCInitTypeDef TIM_OCStruct;
 	uint8_t ch = (uint8_t)Channel;
 	
 	/* Check pulse length */
 	if (Pulse >= TIM_Data->Period) {
 		/* Pulse too high */
-		return TM_PWM_Result_PulseTooHigh;
+		return PWM_Result_PulseTooHigh;
 	}
 
 	/* Common settings */
@@ -211,7 +211,7 @@ TM_PWM_Result_t TM_PWM_SetChannel(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Chann
 	
 	/* Select proper channel */
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			/* Check if initialized */
 			if (!(TIM_Data->CH_Init & ch)) {
 				TIM_Data->CH_Init |= ch;
@@ -224,7 +224,7 @@ TM_PWM_Result_t TM_PWM_SetChannel(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Chann
 			/* Set pulse */
 			TIM_Data->TIM->CCR1 = Pulse;
 			break;
-		case TM_PWM_Channel_2:
+		case PWM_Channel_2:
 			/* Check if initialized */
 			if (!(TIM_Data->CH_Init & ch)) {
 				TIM_Data->CH_Init |= ch;
@@ -237,7 +237,7 @@ TM_PWM_Result_t TM_PWM_SetChannel(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Chann
 			/* Set pulse */
 			TIM_Data->TIM->CCR2 = Pulse;
 			break;
-		case TM_PWM_Channel_3:
+		case PWM_Channel_3:
 			/* Check if initialized */
 			if (!(TIM_Data->CH_Init & ch)) {
 				TIM_Data->CH_Init |= ch;
@@ -250,7 +250,7 @@ TM_PWM_Result_t TM_PWM_SetChannel(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Chann
 			/* Set pulse */
 			TIM_Data->TIM->CCR3 = Pulse;
 			break;
-		case TM_PWM_Channel_4:
+		case PWM_Channel_4:
 			/* Check if initialized */
 			if (!(TIM_Data->CH_Init & ch)) {
 				TIM_Data->CH_Init |= ch;
@@ -268,797 +268,797 @@ TM_PWM_Result_t TM_PWM_SetChannel(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Chann
 	}
 	
 	/* Return everything OK */
-	return TM_PWM_Result_Ok;
+	return PWM_Result_Ok;
 }
 
-TM_PWM_Result_t TM_PWM_SetChannelPercent(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Channel, float percent) {
+PWM_Result_t PWM_SetChannelPercent(PWM_TIM_t* TIM_Data, PWM_Channel_t Channel, float percent) {
 	/* Check input value */
 	if (percent > 100) {
-		return TM_PWM_SetChannel(TIM_Data, Channel, TIM_Data->Period);
+		return PWM_SetChannel(TIM_Data, Channel, TIM_Data->Period);
 	} else if (percent <= 0) {
-		return TM_PWM_SetChannel(TIM_Data, Channel, 0);
+		return PWM_SetChannel(TIM_Data, Channel, 0);
 	}
 	
 	/* Set channel value */
-	return TM_PWM_SetChannel(TIM_Data, Channel, (uint32_t)((float)(TIM_Data->Period - 1) * percent) / 100);
+	return PWM_SetChannel(TIM_Data, Channel, (uint32_t)((float)(TIM_Data->Period - 1) * percent) / 100);
 }
 
-TM_PWM_Result_t TM_PWM_SetChannelMicros(TM_PWM_TIM_t* TIM_Data, TM_PWM_Channel_t Channel, uint32_t micros) {
+PWM_Result_t PWM_SetChannelMicros(PWM_TIM_t* TIM_Data, PWM_Channel_t Channel, uint32_t micros) {
 	/* If we choose too much micro seconds that we have valid */
 	if (micros > TIM_Data->Micros) {
 		/* Too high pulse */
-		return TM_PWM_Result_PulseTooHigh;
+		return PWM_Result_PulseTooHigh;
 	}
 	
 	/* Set PWM channel */
-	return TM_PWM_SetChannel(TIM_Data, Channel, (uint32_t)((TIM_Data->Period - 1) * micros) / TIM_Data->Micros);
+	return PWM_SetChannel(TIM_Data, Channel, (uint32_t)((TIM_Data->Period - 1) * micros) / TIM_Data->Micros);
 }
 
 /* Private functions */
-TM_PWM_Result_t TM_PWM_INT_InitTIM1Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM1Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 	
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_8, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM1);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_8, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM1);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOE
-					TM_GPIO_InitAlternate(GPIOE, GPIO_PIN_9, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM1);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOE, GPIO_PIN_9, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM1);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_2:
+		case PWM_Channel_2:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_9, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM1);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_9, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM1);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOE
-					TM_GPIO_InitAlternate(GPIOE, GPIO_PIN_10, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM1);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOE, GPIO_PIN_10, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM1);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_3:
+		case PWM_Channel_3:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_10, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM1);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_10, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM1);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOE
-					TM_GPIO_InitAlternate(GPIOE, GPIO_PIN_13, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM1);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOE, GPIO_PIN_13, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM1);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_4:
+		case PWM_Channel_4:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_11, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM1);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_11, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM1);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOE
-					TM_GPIO_InitAlternate(GPIOE, GPIO_PIN_14, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM1);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOE, GPIO_PIN_14, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM1);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM2Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM2Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 	
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_0, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_0, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM2);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_5, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_5, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM2);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_3:
+				case PWM_PinsPack_3:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_15, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_15, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM2);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_2:
+		case PWM_Channel_2:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_1, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_1, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM2);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_3, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_3, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM2);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_3:
+		case PWM_Channel_3:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_2, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_2, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM2);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_10, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_10, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM2);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_4:
+		case PWM_Channel_4:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_3, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_3, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM2);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_11, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM2);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_11, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM2);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM3Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM3Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 	
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_6, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_6, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_4, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_4, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_3:
+				case PWM_PinsPack_3:
 #ifdef GPIOC
-					TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_10, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOC, GPIO_PIN_10, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_2:
+		case PWM_Channel_2:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_5, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_5, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_3:
+				case PWM_PinsPack_3:
 #ifdef GPIOC
-					TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOC, GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_3:
+		case PWM_Channel_3:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_0, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_0, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOC
-					TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_8, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOC, GPIO_PIN_8, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_4:
+		case PWM_Channel_4:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_1, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_1, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOC
-					TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_9, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM3);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOC, GPIO_PIN_9, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM3);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM4Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM4Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_6, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_6, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM4);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOD
-					TM_GPIO_InitAlternate(GPIOD, GPIO_PIN_12, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOD, GPIO_PIN_12, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM4);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_2:
+		case PWM_Channel_2:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM4);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOD
-					TM_GPIO_InitAlternate(GPIOD, GPIO_PIN_13, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOD, GPIO_PIN_13, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM4);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_3:
+		case PWM_Channel_3:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_8, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_8, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM4);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOD
-					TM_GPIO_InitAlternate(GPIOD, GPIO_PIN_14, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOD, GPIO_PIN_14, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM4);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_4:
+		case PWM_Channel_4:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_9, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_9, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM4);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOD
-					TM_GPIO_InitAlternate(GPIOD, GPIO_PIN_15, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM4);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOD, GPIO_PIN_15, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM4);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM5Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM5Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_0, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_0, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM5);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOH
-					TM_GPIO_InitAlternate(GPIOH, GPIO_PIN_10, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOH, GPIO_PIN_10, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM5);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_2:
+		case PWM_Channel_2:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_1, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_1, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM5);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOH
-					TM_GPIO_InitAlternate(GPIOH, GPIO_PIN_11, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOH, GPIO_PIN_11, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM5);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_3:
+		case PWM_Channel_3:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_2, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_2, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM5);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOH
-					TM_GPIO_InitAlternate(GPIOH, GPIO_PIN_12, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOH, GPIO_PIN_12, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM5);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_4:
+		case PWM_Channel_4:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_3, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_3, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM5);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOI
-					TM_GPIO_InitAlternate(GPIOI, GPIO_PIN_0, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM5);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOI, GPIO_PIN_0, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM5);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM8Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM8Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOC
-					TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_6, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM8);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOC, GPIO_PIN_6, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM8);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOI
-					TM_GPIO_InitAlternate(GPIOI, GPIO_PIN_5, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM8);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOI, GPIO_PIN_5, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM8);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_2:
+		case PWM_Channel_2:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOC
-					TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM8);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOC, GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM8);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOI
-					TM_GPIO_InitAlternate(GPIOI, GPIO_PIN_6, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM8);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOI, GPIO_PIN_6, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM8);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_3:
+		case PWM_Channel_3:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOC
-					TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_8, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM8);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOC, GPIO_PIN_8, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM8);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOI
-					TM_GPIO_InitAlternate(GPIOI, GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM8);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOI, GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM8);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_4:
+		case PWM_Channel_4:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOC
-					TM_GPIO_InitAlternate(GPIOC, GPIO_PIN_9, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM8);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOC, GPIO_PIN_9, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM8);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOI
-					TM_GPIO_InitAlternate(GPIOI, GPIO_PIN_8, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM8);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOI, GPIO_PIN_8, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM8);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM9Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM9Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_2, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM9);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_2, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM9);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOE
-					TM_GPIO_InitAlternate(GPIOE, GPIO_PIN_5, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM9);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOE, GPIO_PIN_5, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM9);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_2:
+		case PWM_Channel_2:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_3, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM9);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_3, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM9);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOE
-					TM_GPIO_InitAlternate(GPIOE, GPIO_PIN_6, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM9);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOE, GPIO_PIN_6, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM9);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM10Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM10Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_8, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM10);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_8, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM10);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOF
-					TM_GPIO_InitAlternate(GPIOF, GPIO_PIN_6, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM10);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOF, GPIO_PIN_6, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM10);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM11Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM11Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_9, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM11);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_9, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM11);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOF
-					TM_GPIO_InitAlternate(GPIOF, GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM11);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOF, GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM11);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM12Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM12Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_14, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM12);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_14, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM12);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOH
-					TM_GPIO_InitAlternate(GPIOH, GPIO_PIN_6, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM12);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOH, GPIO_PIN_6, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM12);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
-		case TM_PWM_Channel_2:
+		case PWM_Channel_2:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOB
-					TM_GPIO_InitAlternate(GPIOB, GPIO_PIN_15, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM12);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOB, GPIO_PIN_15, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM12);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOH
-					TM_GPIO_InitAlternate(GPIOH, GPIO_PIN_9, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM12);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOH, GPIO_PIN_9, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM12);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM13Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM13Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_1, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM13);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_1, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM13);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOF
-					TM_GPIO_InitAlternate(GPIOF, GPIO_PIN_8, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM13);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOF, GPIO_PIN_8, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM13);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	
 	return result;
 }
 
-TM_PWM_Result_t TM_PWM_INT_InitTIM14Pins(TM_PWM_Channel_t Channel, TM_PWM_PinsPack_t PinsPack) {
-	TM_PWM_Result_t result = TM_PWM_Result_PinNotValid;
+PWM_Result_t PWM_INT_InitTIM14Pins(PWM_Channel_t Channel, PWM_PinsPack_t PinsPack) {
+	PWM_Result_t result = PWM_Result_PinNotValid;
 
 	switch (Channel) {
-		case TM_PWM_Channel_1:
+		case PWM_Channel_1:
 			switch (PinsPack) {
-				case TM_PWM_PinsPack_1:
+				case PWM_PinsPack_1:
 #ifdef GPIOA
-					TM_GPIO_InitAlternate(GPIOA, GPIO_PIN_7, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM14);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOA, GPIO_PIN_7, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM14);
+					result = PWM_Result_Ok;
 #endif
 					break;
-				case TM_PWM_PinsPack_2:
+				case PWM_PinsPack_2:
 #ifdef GPIOF
-					TM_GPIO_InitAlternate(GPIOF, GPIO_PIN_9, TM_GPIO_OType_PP, TM_GPIO_PuPd_NOPULL, TM_GPIO_Speed_High, GPIO_AF_TIM14);
-					result = TM_PWM_Result_Ok;
+					GPIO_InitAlternate(GPIOF, GPIO_PIN_9, GPIO_OType_PP, GPIO_PuPd_NOPULL, GPIO_Speed_High, GPIO_AF_TIM14);
+					result = PWM_Result_Ok;
 #endif
 					break;
 				default:
-					result = TM_PWM_Result_PinNotValid;
+					result = PWM_Result_PinNotValid;
 					break;
 			}
 			break;
 		default:
-			result = TM_PWM_Result_ChannelNotValid;
+			result = PWM_Result_ChannelNotValid;
 			break;
 	}
 	

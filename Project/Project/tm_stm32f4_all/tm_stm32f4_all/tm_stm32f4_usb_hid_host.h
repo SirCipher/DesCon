@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_USB_HID_HOST_H
-#define TM_USB_HID_HOST_H 100
+#ifndef USB_HID_HOST_H
+#define USB_HID_HOST_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_USB_HID_HOST
+ * @defgroup USB_HID_HOST
  * @brief    USB HID HOST library for STM32F4xx devices - http://stm32f4-discovery.com/2014/08/library-31-usb-hid-host-for-stm32f4xx-devices
  * @{
  *
@@ -134,7 +134,7 @@ VBUS		PA9								PB13						VBUS pin, used on F4 and F429 discovery board for act
 #include "usbh_hid_core.h"
 
 /**
- * @defgroup TM_USB_HID_HOST_Macros
+ * @defgroup USB_HID_HOST_Macros
  * @brief    Library defines
  * @{
  */
@@ -158,7 +158,7 @@ VBUS		PA9								PB13						VBUS pin, used on F4 and F429 discovery board for act
  */
  
 /**
- * @defgroup TM_USB_HID_HOST_Typedefs
+ * @defgroup USB_HID_HOST_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -167,29 +167,29 @@ VBUS		PA9								PB13						VBUS pin, used on F4 and F429 discovery board for act
  * @brief  USB HID Host result enumeration 		
  */
 typedef enum {
-	TM_USB_HIDHOST_Result_Error,                /*!< An error occurred */
-	TM_USB_HIDHOST_Result_KeyboardConnected,    /*!< Keyboard is connected and ready to use */
-	TM_USB_HIDHOST_Result_MouseConnected,       /*!< Mouse is connected and ready to use */
-	TM_USB_HIDHOST_Result_Disconnected,         /*!< Device is not connected */
-	TM_USB_HIDHOST_Result_DeviceNotSupported,   /*!< Device is not supported */
-	TM_USB_HIDHOST_Result_LibraryNotInitialized /*!< Library is not initialized */
-} TM_USB_HIDHOST_Result_t;
+	USB_HIDHOST_Result_Error,                /*!< An error occurred */
+	USB_HIDHOST_Result_KeyboardConnected,    /*!< Keyboard is connected and ready to use */
+	USB_HIDHOST_Result_MouseConnected,       /*!< Mouse is connected and ready to use */
+	USB_HIDHOST_Result_Disconnected,         /*!< Device is not connected */
+	USB_HIDHOST_Result_DeviceNotSupported,   /*!< Device is not supported */
+	USB_HIDHOST_Result_LibraryNotInitialized /*!< Library is not initialized */
+} USB_HIDHOST_Result_t;
 
 /**
  * @brief  USB HID Host Button enumeration
  */
 typedef enum {
-	TM_USB_HIDHOST_Button_Pressed = 0, /*!< Button was pressed */
-	TM_USB_HIDHOST_Button_Released     /*!< Button was released */
-} TM_USB_HIDHOST_Button_t;
+	USB_HIDHOST_Button_Pressed = 0, /*!< Button was pressed */
+	USB_HIDHOST_Button_Released     /*!< Button was released */
+} USB_HIDHOST_Button_t;
 
 /**
  * @brief  USB HID Host keyboard structure	
  */
 typedef struct {
-	TM_USB_HIDHOST_Button_t ButtonStatus; /*!< Indicates if button is pressed or released */
+	USB_HIDHOST_Button_t ButtonStatus; /*!< Indicates if button is pressed or released */
 	uint8_t Button;                       /*!< Button number pressed */
-} TM_USB_HIDHOST_Keyboard_t;
+} USB_HIDHOST_Keyboard_t;
 
 /**
  * @brief  USB HID Host mouse structure
@@ -202,17 +202,17 @@ typedef struct {
 	int16_t DiffY;                        /*!< Difference cursor Y position from last check */
 	
 	/* Buttons */
-	TM_USB_HIDHOST_Button_t LeftButton;   /*!< Indicates if left button is pressed or released */
-	TM_USB_HIDHOST_Button_t RightButton;  /*!< Indicates if right button is pressed or released */
-	TM_USB_HIDHOST_Button_t MiddleButton; /*!< Indicates if middle button is pressed or released */
-} TM_USB_HIDHOST_Mouse_t;
+	USB_HIDHOST_Button_t LeftButton;   /*!< Indicates if left button is pressed or released */
+	USB_HIDHOST_Button_t RightButton;  /*!< Indicates if right button is pressed or released */
+	USB_HIDHOST_Button_t MiddleButton; /*!< Indicates if middle button is pressed or released */
+} USB_HIDHOST_Mouse_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_USB_HID_HOST_Functions
+ * @defgroup USB_HID_HOST_Functions
  * @brief    Library Functions
  * @{
  */
@@ -222,38 +222,38 @@ typedef struct {
  * @param  None
  * @retval None
  */
-void TM_USB_HIDHOST_Init(void);
+void USB_HIDHOST_Init(void);
 
 /**
  * @brief  Processes USB HID library
  * @note   This function has to be called periodically, as fast as possible
  * @param  None
- * @retval Status: Member of @ref TM_USB_HIDHOST_Result_t
+ * @retval Status: Member of @ref USB_HIDHOST_Result_t
  */
-TM_USB_HIDHOST_Result_t TM_USB_HIDHOST_Process(void);
+USB_HIDHOST_Result_t USB_HIDHOST_Process(void);
 
 /**
  * @brief  Checks device status
  * @param  None
- * @retval Status: Member of @ref TM_USB_HIDHOST_Result_t
+ * @retval Status: Member of @ref USB_HIDHOST_Result_t
  */
-TM_USB_HIDHOST_Result_t TM_USB_HIDHOST_Device(void);
+USB_HIDHOST_Result_t USB_HIDHOST_Device(void);
 
 /**
  * @param  Reads keyboard data
- * @param  *Keyboard: Pointer to @ref TM_USB_HIDHOST_Keyboard_t keyboard structure
+ * @param  *Keyboard: Pointer to @ref USB_HIDHOST_Keyboard_t keyboard structure
  * @retval Keyboard status: 
- *            - @ref TM_USB_HIDHOST_Result_KeyboardConnected if keyboard is connected
+ *            - @ref USB_HIDHOST_Result_KeyboardConnected if keyboard is connected
  */
-TM_USB_HIDHOST_Result_t TM_USB_HIDHOST_ReadKeyboard(TM_USB_HIDHOST_Keyboard_t* Keyboard);
+USB_HIDHOST_Result_t USB_HIDHOST_ReadKeyboard(USB_HIDHOST_Keyboard_t* Keyboard);
 
 /**
  * @param  Reads mouse data
- * @param  *Mouse: Pointer to @ref TM_USB_HIDHOST_Mouse_t mouse structure
+ * @param  *Mouse: Pointer to @ref USB_HIDHOST_Mouse_t mouse structure
  * @retval Mouse status: 
- *            - @ref TM_USB_HIDHOST_Result_MouseConnected if mouse is connected
+ *            - @ref USB_HIDHOST_Result_MouseConnected if mouse is connected
  */
-TM_USB_HIDHOST_Result_t TM_USB_HIDHOST_ReadMouse(TM_USB_HIDHOST_Mouse_t* Mouse);
+USB_HIDHOST_Result_t USB_HIDHOST_ReadMouse(USB_HIDHOST_Mouse_t* Mouse);
 
 /**
  * @}

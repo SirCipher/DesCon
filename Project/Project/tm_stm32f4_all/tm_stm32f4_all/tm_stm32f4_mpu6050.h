@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_MPU6050_H
-#define TM_MPU6050_H 100
+#ifndef MPU6050_H
+#define MPU6050_H 100
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_MPU6050
+ * @defgroup MPU6050
  * @brief    MPU6050 library for STM32F4xx - http://stm32f4-discovery.com/2014/10/library-43-mpu-6050-6-axes-gyro-accelerometer-stm32f4/
  * @{
  *
@@ -81,10 +81,10 @@ AD0			-			If pin is low, I2C address is 0xD0, if pin is high, the address is 0xD
 #include "stm32f4xx_gpio.h"
 #include "stm32f4xx_i2c.h"
 #include "defines.h"
-#include "tm_stm32f4_i2c.h"
+#include "stm32f4_i2c.h"
 
 /**
- * @defgroup TM_LIB_Macros
+ * @defgroup LIB_Macros
  * @brief    Library defines
  * @{
  */
@@ -92,7 +92,7 @@ AD0			-			If pin is low, I2C address is 0xD0, if pin is high, the address is 0xD
 /* Default I2C used */
 #ifndef MPU6050_I2C
 #define	MPU6050_I2C					I2C3
-#define MPU6050_I2C_PINSPACK		TM_I2C_PinsPack_1
+#define MPU6050_I2C_PINSPACK		I2C_PinsPack_1
 #endif
 
 /* Default I2C clock */
@@ -158,7 +158,7 @@ AD0			-			If pin is low, I2C address is 0xD0, if pin is high, the address is 0xD
  */
  
 /**
- * @defgroup TM_MPU6050_Typedefs
+ * @defgroup MPU6050_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -168,38 +168,38 @@ AD0			-			If pin is low, I2C address is 0xD0, if pin is high, the address is 0xD
  *         This feature allows you to use 2 different sensors with this library at the same time
  */
 typedef enum {
-	TM_MPU6050_Device_0 = 0,   /*!< AD0 pin is set to low */
-	TM_MPU6050_Device_1 = 0x02 /*!< AD0 pin is set to high */
-} TM_MPU6050_Device_t;
+	MPU6050_Device_0 = 0,   /*!< AD0 pin is set to low */
+	MPU6050_Device_1 = 0x02 /*!< AD0 pin is set to high */
+} MPU6050_Device_t;
 
 /**
  * @brief  MPU6050 result enumeration	
  */
 typedef enum {
-	TM_MPU6050_Result_Ok = 0x00,          /*!< Everything OK */
-	TM_MPU6050_Result_DeviceNotConnected, /*!< There is no device with valid slave address */
-	TM_MPU6050_Result_DeviceInvalid       /*!< Connected device with address is not MPU6050 */
-} TM_MPU6050_Result_t;
+	MPU6050_Result_Ok = 0x00,          /*!< Everything OK */
+	MPU6050_Result_DeviceNotConnected, /*!< There is no device with valid slave address */
+	MPU6050_Result_DeviceInvalid       /*!< Connected device with address is not MPU6050 */
+} MPU6050_Result_t;
 
 /**
  * @brief  Parameters for accelerometer range
  */
 typedef enum {
-	TM_MPU6050_Accelerometer_2G = 0x00, /*!< Range is +- 2G */
-	TM_MPU6050_Accelerometer_4G = 0x01, /*!< Range is +- 4G */
-	TM_MPU6050_Accelerometer_8G = 0x02, /*!< Range is +- 8G */
-	TM_MPU6050_Accelerometer_16G = 0x03 /*!< Range is +- 16G */
-} TM_MPU6050_Accelerometer_t;
+	MPU6050_Accelerometer_2G = 0x00, /*!< Range is +- 2G */
+	MPU6050_Accelerometer_4G = 0x01, /*!< Range is +- 4G */
+	MPU6050_Accelerometer_8G = 0x02, /*!< Range is +- 8G */
+	MPU6050_Accelerometer_16G = 0x03 /*!< Range is +- 16G */
+} MPU6050_Accelerometer_t;
 
 /**
  * @brief  Parameters for gyroscope range
  */
 typedef enum {
-	TM_MPU6050_Gyroscope_250s = 0x00,  /*!< Range is +- 250 degrees/s */
-	TM_MPU6050_Gyroscope_500s = 0x01,  /*!< Range is +- 500 degrees/s */
-	TM_MPU6050_Gyroscope_1000s = 0x02, /*!< Range is +- 1000 degrees/s */
-	TM_MPU6050_Gyroscope_2000s = 0x03  /*!< Range is +- 2000 degrees/s */
-} TM_MPU6050_Gyroscope_t;
+	MPU6050_Gyroscope_250s = 0x00,  /*!< Range is +- 250 degrees/s */
+	MPU6050_Gyroscope_500s = 0x01,  /*!< Range is +- 500 degrees/s */
+	MPU6050_Gyroscope_1000s = 0x02, /*!< Range is +- 1000 degrees/s */
+	MPU6050_Gyroscope_2000s = 0x03  /*!< Range is +- 2000 degrees/s */
+} MPU6050_Gyroscope_t;
 
 /**
  * @brief  Main MPU6050 structure
@@ -217,70 +217,70 @@ typedef struct {
 	int16_t Gyroscope_Y;     /*!< Gyroscope value Y axis */
 	int16_t Gyroscope_Z;     /*!< Gyroscope value Z axis */
 	float Temperature;       /*!< Temperature in degrees */
-} TM_MPU6050_t;
+} MPU6050_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_MPU6050_Functions
+ * @defgroup MPU6050_Functions
  * @brief    Library Functions
  * @{
  */
 
 /**
  * @brief  Initializes MPU6050 and I2C peripheral
- * @param  *DataStruct: Pointer to empty @ref TM_MPU6050_t structure
+ * @param  *DataStruct: Pointer to empty @ref MPU6050_t structure
  * @param   DeviceNumber: MPU6050 has one pin, AD0 which can be used to set address of device.
  *          This feature allows you to use 2 different sensors on the same board with same library.
- *          If you set AD0 pin to low, then this parameter should be TM_MPU6050_Device_0,
- *          but if AD0 pin is high, then you should use TM_MPU6050_Device_1
+ *          If you set AD0 pin to low, then this parameter should be MPU6050_Device_0,
+ *          but if AD0 pin is high, then you should use MPU6050_Device_1
  *          
- *          Parameter can be a value of @ref TM_MPU6050_Device_t enumeration
- * @param  AccelerometerSensitivity: Set accelerometer sensitivity. This parameter can be a value of @ref TM_MPU6050_Accelerometer_t enumeration
- * @param  GyroscopeSensitivity: Set gyroscope sensitivity. This parameter can be a value of @ref TM_MPU6050_Gyroscope_t enumeration
+ *          Parameter can be a value of @ref MPU6050_Device_t enumeration
+ * @param  AccelerometerSensitivity: Set accelerometer sensitivity. This parameter can be a value of @ref MPU6050_Accelerometer_t enumeration
+ * @param  GyroscopeSensitivity: Set gyroscope sensitivity. This parameter can be a value of @ref MPU6050_Gyroscope_t enumeration
  * @retval Status:
- *            - TM_MPU6050_Result_t: Everything OK
+ *            - MPU6050_Result_t: Everything OK
  *            - Other member: in other cases
  */
-TM_MPU6050_Result_t TM_MPU6050_Init(TM_MPU6050_t* DataStruct, TM_MPU6050_Device_t DeviceNumber, TM_MPU6050_Accelerometer_t AccelerometerSensitivity, TM_MPU6050_Gyroscope_t GyroscopeSensitivity);
+MPU6050_Result_t MPU6050_Init(MPU6050_t* DataStruct, MPU6050_Device_t DeviceNumber, MPU6050_Accelerometer_t AccelerometerSensitivity, MPU6050_Gyroscope_t GyroscopeSensitivity);
 
 /**
  * @brief  Reads accelerometer data from sensor
- * @param  *DataStruct: Pointer to @ref TM_MPU6050_t structure to store data to
- * @retval Member of @ref TM_MPU6050_Result_t:
- *            - TM_MPU6050_Result_Ok: everything is OK
+ * @param  *DataStruct: Pointer to @ref MPU6050_t structure to store data to
+ * @retval Member of @ref MPU6050_Result_t:
+ *            - MPU6050_Result_Ok: everything is OK
  *            - Other: in other cases
  */
-TM_MPU6050_Result_t TM_MPU6050_ReadAccelerometer(TM_MPU6050_t* DataStruct);
+MPU6050_Result_t MPU6050_ReadAccelerometer(MPU6050_t* DataStruct);
 
 /**
  * @brief  Reads gyroscope data from sensor
- * @param  *DataStruct: Pointer to @ref TM_MPU6050_t structure to store data to
- * @retval Member of @ref TM_MPU6050_Result_t:
- *            - TM_MPU6050_Result_Ok: everything is OK
+ * @param  *DataStruct: Pointer to @ref MPU6050_t structure to store data to
+ * @retval Member of @ref MPU6050_Result_t:
+ *            - MPU6050_Result_Ok: everything is OK
  *            - Other: in other cases
  */
-TM_MPU6050_Result_t TM_MPU6050_ReadGyroscope(TM_MPU6050_t* DataStruct);
+MPU6050_Result_t MPU6050_ReadGyroscope(MPU6050_t* DataStruct);
 
 /**
  * @brief  Reads temperature data from sensor
- * @param  *DataStruct: Pointer to @ref TM_MPU6050_t structure to store data to
- * @retval Member of @ref TM_MPU6050_Result_t:
- *            - TM_MPU6050_Result_Ok: everything is OK
+ * @param  *DataStruct: Pointer to @ref MPU6050_t structure to store data to
+ * @retval Member of @ref MPU6050_Result_t:
+ *            - MPU6050_Result_Ok: everything is OK
  *            - Other: in other cases
  */
-TM_MPU6050_Result_t TM_MPU6050_ReadTemperature(TM_MPU6050_t* DataStruct);
+MPU6050_Result_t MPU6050_ReadTemperature(MPU6050_t* DataStruct);
 
 /**
  * @brief  Reads accelerometer, gyroscope and temperature data from sensor
- * @param  *DataStruct: Pointer to @ref TM_MPU6050_t structure to store data to
- * @retval Member of @ref TM_MPU6050_Result_t:
- *            - TM_MPU6050_Result_Ok: everything is OK
+ * @param  *DataStruct: Pointer to @ref MPU6050_t structure to store data to
+ * @retval Member of @ref MPU6050_Result_t:
+ *            - MPU6050_Result_Ok: everything is OK
  *            - Other: in other cases
  */
-TM_MPU6050_Result_t TM_MPU6050_ReadAll(TM_MPU6050_t* DataStruct);
+MPU6050_Result_t MPU6050_ReadAll(MPU6050_t* DataStruct);
 
 /**
  * @}

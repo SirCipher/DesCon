@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_AM2301_H
-#define TM_AM2301_H 130
+#ifndef AM2301_H
+#define AM2301_H 130
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_AM2301
+ * @defgroup AM2301
  * @brief    Basic library for AM2301 (DHT21) temperature and humidity sensor - http://stm32f4-discovery.com/2014/08/library-25-am2301-dht21-sensor-stm32f4xx/
  * @{
  *
@@ -68,7 +68,7 @@ DATA		PD1				Data line
  * \par Data output
  *
  * Temperature and humidity are returned from sensor in x10 multiplier, so like 55.5% humidity,
- * sensor will return 555 and 27.3°C, sensor will return 273.
+ * sensor will return 555 and 27.3ï¿½C, sensor will return 273.
  *
  * @note This values are also returned from my library, you have to manually convert them (divide by 10)
  *
@@ -113,11 +113,11 @@ DATA		PD1				Data line
  */
 #include "stm32f4xx.h"
 #include "defines.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_gpio.h"
 
 /**
- * @defgroup TM_AM2301_Macros
+ * @defgroup AM2301_Macros
  * @brief    Library defines
  * @{
  */
@@ -131,18 +131,18 @@ DATA		PD1				Data line
 #endif
 
 /* Pin settings */
-#define AM2301_PIN_LOW			TM_GPIO_SetPinLow(AM2301_PORT, AM2301_PIN)
-#define AM2301_PIN_HIGH			TM_GPIO_SetPinHigh(AM2301_PORT, AM2301_PIN)
-#define AM2301_PIN_IN			TM_GPIO_SetPinAsInput(AM2301_PORT, AM2301_PIN)
-#define AM2301_PIN_OUT			TM_GPIO_SetPinAsOutput(AM2301_PORT, AM2301_PIN)
-#define AM2301_PIN_READ			TM_GPIO_GetInputPinValue(AM2301_PORT, AM2301_PIN)
+#define AM2301_PIN_LOW			GPIO_SetPinLow(AM2301_PORT, AM2301_PIN)
+#define AM2301_PIN_HIGH			GPIO_SetPinHigh(AM2301_PORT, AM2301_PIN)
+#define AM2301_PIN_IN			GPIO_SetPinAsInput(AM2301_PORT, AM2301_PIN)
+#define AM2301_PIN_OUT			GPIO_SetPinAsOutput(AM2301_PORT, AM2301_PIN)
+#define AM2301_PIN_READ			GPIO_GetInputPinValue(AM2301_PORT, AM2301_PIN)
 
 /**
  * @}
  */
  
 /**
- * @defgroup TM_AM2301_Typedefs
+ * @defgroup AM2301_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -151,35 +151,35 @@ DATA		PD1				Data line
  * Enumerations
  *
  * There are several different possible results.
- * If TM_AM2301_OK is returned from read function then you have valid data.
+ * If AM2301_OK is returned from read function then you have valid data.
  */
 typedef enum {
-	TM_AM2301_OK,						/*!< Data OK */
-	TM_AM2301_ERROR,					/*!< An error occurred */
-	TM_AM2301_CONNECTION_ERROR,			/*!< Device is not connected */
-	TM_AM2301_WAITHIGH_ERROR,           /*!< Wait high pulse timeout */
-	TM_AM2301_WAITLOW_ERROR,            /*!< Wait low pulse timeout */
-	TM_AM2301_WAITHIGH_LOOP_ERROR,      /*!< Loop error for high pulse */
- 	TM_AM2301_WAITLOW_LOOP_ERROR,       /*!< Loop error for low pulse */
-	TM_AM2301_PARITY_ERROR				/*!< Data read fail */
-} TM_AM2301_t;
+	AM2301_OK,						/*!< Data OK */
+	AM2301_ERROR,					/*!< An error occurred */
+	AM2301_CONNECTION_ERROR,			/*!< Device is not connected */
+	AM2301_WAITHIGH_ERROR,           /*!< Wait high pulse timeout */
+	AM2301_WAITLOW_ERROR,            /*!< Wait low pulse timeout */
+	AM2301_WAITHIGH_LOOP_ERROR,      /*!< Loop error for high pulse */
+ 	AM2301_WAITLOW_LOOP_ERROR,       /*!< Loop error for low pulse */
+	AM2301_PARITY_ERROR				/*!< Data read fail */
+} AM2301_t;
 
 /**
  * @brief  AM2301 main data structure		
  */
 typedef struct {
 	int16_t Temp; /*!< Temperature in tenths of degrees.
-	                   If real temperature is 27.3°C, this variable's value is 273 */
+	                   If real temperature is 27.3ï¿½C, this variable's value is 273 */
 	uint16_t Hum; /*!< Humidity in tenths of percent.
 	                   If real humidity is 55.5%, this variable's value is 555 */
-} TM_AM2301_Data_t;
+} AM2301_Data_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_AM2301_Functions
+ * @defgroup AM2301_Functions
  * @brief    Library Functions
  * @{
  */
@@ -187,18 +187,18 @@ typedef struct {
 /**
  * @brief  Initializes AM2301 sensor
  * @param  None
- * @retval TM_AM2301_OK
+ * @retval AM2301_OK
  */
-TM_AM2301_t TM_AM2301_Init(void);
+AM2301_t AM2301_Init(void);
 
 /**
  * @brief  Reads data from sensor
- * @param  *data: Pointer to @ref TM_AM2301_Data_t data structure to store data into
+ * @param  *data: Pointer to @ref AM2301_Data_t data structure to store data into
  * @retval Data valid:
- *            - TM_AM2301_OK: Data valid
+ *            - AM2301_OK: Data valid
  *            - Else: Data not valid
  */
-TM_AM2301_t TM_AM2301_Read(TM_AM2301_Data_t* data);
+AM2301_t AM2301_Read(AM2301_Data_t* data);
 
 /**
  * @}

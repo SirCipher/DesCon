@@ -16,17 +16,17 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_usb_hid_host.h"
+#include "stm32f4_usb_hid_host.h"
 
 /* Private variables */
 extern USB_OTG_CORE_HANDLE				USB_OTG_Core;
 extern USBH_HOST						USB_Host;
-extern TM_USB_HIDHOST_Result_t 			TM_USB_HIDHOST_INT_Result;
-extern TM_USB_HIDHOST_Keyboard_t 		TM_USB_HIDHOST_INT_Keyboard;
-extern TM_USB_HIDHOST_Mouse_t 			TM_USB_HIDHOST_INT_Mouse;
-uint8_t TM_USB_HIDHOST_Initialized = 	0;
+extern USB_HIDHOST_Result_t 			USB_HIDHOST_INT_Result;
+extern USB_HIDHOST_Keyboard_t 		USB_HIDHOST_INT_Keyboard;
+extern USB_HIDHOST_Mouse_t 			USB_HIDHOST_INT_Mouse;
+uint8_t USB_HIDHOST_Initialized = 	0;
 
-void TM_USB_HIDHOST_Init(void) {
+void USB_HIDHOST_Init(void) {
 	/* Init Host Library */
 	USBH_Init(&USB_OTG_Core, 
 #ifdef USE_USB_OTG_FS
@@ -38,78 +38,78 @@ void TM_USB_HIDHOST_Init(void) {
             &HID_cb, 
             &USR_Callbacks);
 	/* We are initialized */
-	TM_USB_HIDHOST_Initialized = 1;
+	USB_HIDHOST_Initialized = 1;
 }
 
-TM_USB_HIDHOST_Result_t TM_USB_HIDHOST_Process(void) {
+USB_HIDHOST_Result_t USB_HIDHOST_Process(void) {
 	/* Not initialized */
-	if (!TM_USB_HIDHOST_Initialized) {
-		return TM_USB_HIDHOST_Result_LibraryNotInitialized;
+	if (!USB_HIDHOST_Initialized) {
+		return USB_HIDHOST_Result_LibraryNotInitialized;
 	}
 	
 	/* Host Task handler */
 	USBH_Process(&USB_OTG_Core, &USB_Host);
 	
 	/* Return device status */
-	return TM_USB_HIDHOST_Device();
+	return USB_HIDHOST_Device();
 }
 
-TM_USB_HIDHOST_Result_t TM_USB_HIDHOST_Device(void) {
+USB_HIDHOST_Result_t USB_HIDHOST_Device(void) {
 	/* Not initialized */
-	if (!TM_USB_HIDHOST_Initialized) {
-		return TM_USB_HIDHOST_Result_LibraryNotInitialized;
+	if (!USB_HIDHOST_Initialized) {
+		return USB_HIDHOST_Result_LibraryNotInitialized;
 	}
-	return TM_USB_HIDHOST_INT_Result;
+	return USB_HIDHOST_INT_Result;
 }
 
-TM_USB_HIDHOST_Result_t TM_USB_HIDHOST_ReadKeyboard(TM_USB_HIDHOST_Keyboard_t* Keyboard) {
-	if (TM_USB_HIDHOST_INT_Result != TM_USB_HIDHOST_Result_KeyboardConnected) {
+USB_HIDHOST_Result_t USB_HIDHOST_ReadKeyboard(USB_HIDHOST_Keyboard_t* Keyboard) {
+	if (USB_HIDHOST_INT_Result != USB_HIDHOST_Result_KeyboardConnected) {
 		/* Keyboard not initialized */
-		return TM_USB_HIDHOST_Result_Error;
+		return USB_HIDHOST_Result_Error;
 	}
 	
 	/* Fill data */
-	Keyboard->Button = TM_USB_HIDHOST_INT_Keyboard.Button;
-	Keyboard->ButtonStatus = TM_USB_HIDHOST_INT_Keyboard.ButtonStatus;
+	Keyboard->Button = USB_HIDHOST_INT_Keyboard.Button;
+	Keyboard->ButtonStatus = USB_HIDHOST_INT_Keyboard.ButtonStatus;
 	
 	/* Reset internal data */
 #if USB_HIDHOST_REINITIALIZE_KEYBOARD_AFTER_READ > 0
-	TM_USB_HIDHOST_INT_Keyboard.ButtonStatus = TM_USB_HIDHOST_Button_Released;
-	TM_USB_HIDHOST_INT_Keyboard.Button = 0;
+	USB_HIDHOST_INT_Keyboard.ButtonStatus = USB_HIDHOST_Button_Released;
+	USB_HIDHOST_INT_Keyboard.Button = 0;
 #endif
 	
 	/* Return keyboard connected */
-	return TM_USB_HIDHOST_Result_KeyboardConnected;
+	return USB_HIDHOST_Result_KeyboardConnected;
 }
 
-TM_USB_HIDHOST_Result_t TM_USB_HIDHOST_ReadMouse(TM_USB_HIDHOST_Mouse_t* Mouse) {
-	if (TM_USB_HIDHOST_INT_Result != TM_USB_HIDHOST_Result_MouseConnected) {
+USB_HIDHOST_Result_t USB_HIDHOST_ReadMouse(USB_HIDHOST_Mouse_t* Mouse) {
+	if (USB_HIDHOST_INT_Result != USB_HIDHOST_Result_MouseConnected) {
 		/* Mouse is not connected */
-		return TM_USB_HIDHOST_Result_Error;
+		return USB_HIDHOST_Result_Error;
 	}
 
 	/* Fill data */
-	Mouse->AbsoluteX =    TM_USB_HIDHOST_INT_Mouse.AbsoluteX;
-	Mouse->AbsoluteY =    TM_USB_HIDHOST_INT_Mouse.AbsoluteY;
-	Mouse->DiffX =        TM_USB_HIDHOST_INT_Mouse.DiffX;
-	Mouse->DiffY =        TM_USB_HIDHOST_INT_Mouse.DiffY;
-	Mouse->LeftButton =   TM_USB_HIDHOST_INT_Mouse.LeftButton;
-	Mouse->MiddleButton = TM_USB_HIDHOST_INT_Mouse.MiddleButton;
-	Mouse->RightButton =  TM_USB_HIDHOST_INT_Mouse.RightButton;
+	Mouse->AbsoluteX =    USB_HIDHOST_INT_Mouse.AbsoluteX;
+	Mouse->AbsoluteY =    USB_HIDHOST_INT_Mouse.AbsoluteY;
+	Mouse->DiffX =        USB_HIDHOST_INT_Mouse.DiffX;
+	Mouse->DiffY =        USB_HIDHOST_INT_Mouse.DiffY;
+	Mouse->LeftButton =   USB_HIDHOST_INT_Mouse.LeftButton;
+	Mouse->MiddleButton = USB_HIDHOST_INT_Mouse.MiddleButton;
+	Mouse->RightButton =  USB_HIDHOST_INT_Mouse.RightButton;
 	
 	/* Reset internal data */
 	/* Difference from last call is 0 */
-	TM_USB_HIDHOST_INT_Mouse.DiffX = 0;
-	TM_USB_HIDHOST_INT_Mouse.DiffY = 0;
+	USB_HIDHOST_INT_Mouse.DiffX = 0;
+	USB_HIDHOST_INT_Mouse.DiffY = 0;
 	
 	/* Buttons are not pressed any more */
 #if USB_HIDHOST_REINITIALIZE_MOUSE_AFTER_READ > 0
-	TM_USB_HIDHOST_INT_Mouse.LeftButton = TM_USB_HIDHOST_Button_Released;
-	TM_USB_HIDHOST_INT_Mouse.MiddleButton = TM_USB_HIDHOST_Button_Released;
-	TM_USB_HIDHOST_INT_Mouse.RightButton = TM_USB_HIDHOST_Button_Released;
+	USB_HIDHOST_INT_Mouse.LeftButton = USB_HIDHOST_Button_Released;
+	USB_HIDHOST_INT_Mouse.MiddleButton = USB_HIDHOST_Button_Released;
+	USB_HIDHOST_INT_Mouse.RightButton = USB_HIDHOST_Button_Released;
 #endif
 	
 	/* Return mouse connected */
-	return TM_USB_HIDHOST_Result_MouseConnected;
+	return USB_HIDHOST_Result_MouseConnected;
 }
 

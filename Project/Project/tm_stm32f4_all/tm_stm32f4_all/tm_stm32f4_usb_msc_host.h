@@ -28,15 +28,15 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_USB_MSCHOST
-#define TM_USB_MSCHOST  100
+#ifndef USB_MSCHOST
+#define USB_MSCHOST  100
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_USB_MSC_HOST
+ * @defgroup USB_MSC_HOST
  * @brief    USB MSC HOST library for STM32F4xx devices - http://stm32f4-discovery.com/2014/07/library-21-read-sd-card-fatfs-stm32f4xx-devices/ - http://stm32f4-discovery.com/2014/08/library-29-usb-msc-host-usb-flash-drive-stm32f4xx-devices
  * @{
  *
@@ -101,7 +101,7 @@ VBUS		PA9								PB13						VBUS pin, used on F4 and F429 discovery board for act
 #define FATFS_USE_USB		1
 @endverbatim
  *
- * Too see, how to use FatFS with USB, open file tm_stm32f4_fatfs.h and check it's manual
+ * Too see, how to use FatFS with USB, open file stm32f4_fatfs.h and check it's manual
  *
  * -------------------------------------------------------------------------------------
  *
@@ -130,7 +130,7 @@ VBUS		PA9								PB13						VBUS pin, used on F4 and F429 discovery board for act
 #include "usbh_msc_core.h"
 
 /**
- * @defgroup TM_USB_MSC_HOST_Typedefs
+ * @defgroup USB_MSC_HOST_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -139,20 +139,20 @@ VBUS		PA9								PB13						VBUS pin, used on F4 and F429 discovery board for act
  * @brief  USB MSC Host result enumeration	
  */
 typedef enum {
-	TM_USB_MSCHOST_Result_Error,                /*!< An error occurred */
-	TM_USB_MSCHOST_Result_Connected,            /*!< Device is connected and ready to use with FATFS */
-	TM_USB_MSCHOST_Result_Disconnected,         /*!< Device is not connected */
-	TM_USB_MSCHOST_Result_DeviceNotSupported,   /*!< Device is not supported */
-	TM_USB_MSCHOST_Result_WriteProtected,       /*!< Device is write protected */
-	TM_USB_MSCHOST_Result_LibraryNotInitialized /*!< Library is not initialized yet */
-} TM_USB_MSCHOST_Result_t;
+	USB_MSCHOST_Result_Error,                /*!< An error occurred */
+	USB_MSCHOST_Result_Connected,            /*!< Device is connected and ready to use with FATFS */
+	USB_MSCHOST_Result_Disconnected,         /*!< Device is not connected */
+	USB_MSCHOST_Result_DeviceNotSupported,   /*!< Device is not supported */
+	USB_MSCHOST_Result_WriteProtected,       /*!< Device is write protected */
+	USB_MSCHOST_Result_LibraryNotInitialized /*!< Library is not initialized yet */
+} USB_MSCHOST_Result_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_USB_MSC_HOST_Functions
+ * @defgroup USB_MSC_HOST_Functions
  * @brief    Library Functions
  * @{
  */
@@ -160,16 +160,16 @@ typedef enum {
 /**
  * @brief  Initializes USB MSC HOST peripheral
  * @param  None
- * @retval Device status. A member of @ref TM_USB_MSCHOST_Result_t
+ * @retval Device status. A member of @ref USB_MSCHOST_Result_t
  */
-TM_USB_MSCHOST_Result_t TM_USB_MSCHOST_Init(void);
+USB_MSCHOST_Result_t USB_MSCHOST_Init(void);
 
 /**
  * @brief  Deinitializes USB MSC HOST
  * @param  None
- * @retval Status. A member of @ref TM_USB_MSCHOST_Result_t
+ * @retval Status. A member of @ref USB_MSCHOST_Result_t
  */
-TM_USB_MSCHOST_Result_t TM_USB_MSCHOST_DeInit(void);
+USB_MSCHOST_Result_t USB_MSCHOST_DeInit(void);
 
 /**
  * This function has to be called periodically. 
@@ -177,17 +177,17 @@ TM_USB_MSCHOST_Result_t TM_USB_MSCHOST_DeInit(void);
  * 
  * It handles USB device
  * 
- * Returns TM_USB_MSCHOST_Result_t typedef member
+ * Returns USB_MSCHOST_Result_t typedef member
  */
-void TM_USB_MSCHOST_Process(void);
+void USB_MSCHOST_Process(void);
 
 /**
  * @brief  Checks device status
  * @param  None
- * @retval Device status. A member of @ref TM_USB_MSCHOST_Result_t
- * @note   If TM_USB_MSCHOST_Result_Connected is returned, then you can do stuff using FATFS functions
+ * @retval Device status. A member of @ref USB_MSCHOST_Result_t
+ * @note   If USB_MSCHOST_Result_Connected is returned, then you can do stuff using FATFS functions
  */
-TM_USB_MSCHOST_Result_t TM_USB_MSCHOST_Device(void);
+USB_MSCHOST_Result_t USB_MSCHOST_Device(void);
 
 /**
  * @}

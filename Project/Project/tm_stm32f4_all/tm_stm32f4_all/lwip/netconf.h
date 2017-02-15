@@ -34,7 +34,7 @@
  extern "C" {
 #endif
 	 
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_ethernet.h"
 
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/

@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_KEYPAD_H
-#define TM_KEYPAD_H 200
+#ifndef KEYPAD_H
+#define KEYPAD_H 200
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_KEYPAD
+ * @defgroup KEYPAD
  * @brief    Matrix keyboard for STM32F4xx device - http://stm32f4-discovery.com/2014/09/library-32-matrix-keypad-on-stm32f4xx
  * @{
  *
@@ -114,11 +114,11 @@ R4			PC5				Row 4
  */
 #include "stm32f4xx.h"
 #include "defines.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_gpio.h"
 
 
 /**
- * @defgroup TM_KEYPAD_Macros
+ * @defgroup KEYPAD_Macros
  * @brief    Library defines
  * @{
  */
@@ -180,7 +180,7 @@ R4			PC5				Row 4
  */
  
 /**
- * @defgroup TM_KEYPAD_Typedefs
+ * @defgroup KEYPAD_Typedefs
  * @brief    Library Typedefs
  * @{
  */
@@ -189,56 +189,56 @@ R4			PC5				Row 4
  * @brief  Keypad button enumeration
  */
 typedef enum {
-	TM_KEYPAD_Button_0 = 0x00,                     /*!< Button 0 code */
-	TM_KEYPAD_Button_1 = 0x01,                     /*!< Button 1 code */
-	TM_KEYPAD_Button_2 = 0x02,                     /*!< Button 2 code */
-	TM_KEYPAD_Button_3 = 0x03,                     /*!< Button 3 code */
-	TM_KEYPAD_Button_4 = 0x04,                     /*!< Button 4 code */
-	TM_KEYPAD_Button_5 = 0x05,                     /*!< Button 5 code */
-	TM_KEYPAD_Button_6 = 0x06,                     /*!< Button 6 code */
-	TM_KEYPAD_Button_7 = 0x07,                     /*!< Button 7 code */
-	TM_KEYPAD_Button_8 = 0x08,                     /*!< Button 8 code */
-	TM_KEYPAD_Button_9 = 0x09,                     /*!< Button 9 code */
-	TM_KEYPAD_Button_STAR = 0x0A,                  /*!< Button START code */
-	TM_KEYPAD_Button_HASH = 0x0B,                  /*!< Button HASH code */
-	TM_KEYPAD_Button_A = 0x0C,	                   /*!< Button A code. Only on large size */
-	TM_KEYPAD_Button_B = 0x0D,	                   /*!< Button B code. Only on large size */
-	TM_KEYPAD_Button_C = 0x0E,	                   /*!< Button C code. Only on large size */
-	TM_KEYPAD_Button_D = 0x0F,	                   /*!< Button D code. Only on large size */
-	TM_KEYPAD_Button_NOPRESSED = KEYPAD_NO_PRESSED /*!< No button pressed */
-} TM_KEYPAD_Button_t;
+	KEYPAD_Button_0 = 0x00,                     /*!< Button 0 code */
+	KEYPAD_Button_1 = 0x01,                     /*!< Button 1 code */
+	KEYPAD_Button_2 = 0x02,                     /*!< Button 2 code */
+	KEYPAD_Button_3 = 0x03,                     /*!< Button 3 code */
+	KEYPAD_Button_4 = 0x04,                     /*!< Button 4 code */
+	KEYPAD_Button_5 = 0x05,                     /*!< Button 5 code */
+	KEYPAD_Button_6 = 0x06,                     /*!< Button 6 code */
+	KEYPAD_Button_7 = 0x07,                     /*!< Button 7 code */
+	KEYPAD_Button_8 = 0x08,                     /*!< Button 8 code */
+	KEYPAD_Button_9 = 0x09,                     /*!< Button 9 code */
+	KEYPAD_Button_STAR = 0x0A,                  /*!< Button START code */
+	KEYPAD_Button_HASH = 0x0B,                  /*!< Button HASH code */
+	KEYPAD_Button_A = 0x0C,	                   /*!< Button A code. Only on large size */
+	KEYPAD_Button_B = 0x0D,	                   /*!< Button B code. Only on large size */
+	KEYPAD_Button_C = 0x0E,	                   /*!< Button C code. Only on large size */
+	KEYPAD_Button_D = 0x0F,	                   /*!< Button D code. Only on large size */
+	KEYPAD_Button_NOPRESSED = KEYPAD_NO_PRESSED /*!< No button pressed */
+} KEYPAD_Button_t;
 
 /**
  * @brief  Keypad size enumeration
  */
 typedef enum {
-	TM_KEYPAD_Type_Large = 0x00, /*!< Keypad 4x4 size */
-	TM_KEYPAD_Type_Small         /*!< Keypad 3x4 size */
-} TM_KEYPAD_Type_t;
+	KEYPAD_Type_Large = 0x00, /*!< Keypad 4x4 size */
+	KEYPAD_Type_Small         /*!< Keypad 3x4 size */
+} KEYPAD_Type_t;
 
 /**
  * @}
  */
 
 /**
- * @defgroup TM_KEYPAD_Functions
+ * @defgroup KEYPAD_Functions
  * @brief    Library Functions
  * @{
  */
  
 /**
  * @brief  Initializes keypad functionality
- * @param  type: Keypad type you will use. This parameter can be a value of @ref TM_KEYPAD_Type_t enumeration
+ * @param  type: Keypad type you will use. This parameter can be a value of @ref KEYPAD_Type_t enumeration
  * @retval None
  */
-void TM_KEYPAD_Init(TM_KEYPAD_Type_t type);
+void KEYPAD_Init(KEYPAD_Type_t type);
 
 /**
  * @brief  Reads keypad data
  * @param  None
- * @retval Button status. This parameter will be a value of @ref TM_KEYPAD_Button_t enumeration
+ * @retval Button status. This parameter will be a value of @ref KEYPAD_Button_t enumeration
  */
-TM_KEYPAD_Button_t TM_KEYPAD_Read(void);
+KEYPAD_Button_t KEYPAD_Read(void);
 
 /**
  * @brief  Updates keypad
@@ -246,7 +246,7 @@ TM_KEYPAD_Button_t TM_KEYPAD_Read(void);
  * @param  None
  * @retval None
  */
-void TM_KEYPAD_Update(void);
+void KEYPAD_Update(void);
 
 /**
  * @}

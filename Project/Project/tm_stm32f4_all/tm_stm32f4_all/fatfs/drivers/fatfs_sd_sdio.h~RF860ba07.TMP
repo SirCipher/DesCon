@@ -41,9 +41,9 @@
 #include "stm32f4xx_gpio.h"
 #include "defines.h"
 
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_fatfs.h"
-#include "tm_stm32f4_gpio.h"
+#include "stm32f4_delay.h"
+#include "stm32f4_fatfs.h"
+#include "stm32f4_gpio.h"
 
 #ifndef FATFS_USE_DETECT_PIN
 #define FATFS_USE_DETECT_PIN				0

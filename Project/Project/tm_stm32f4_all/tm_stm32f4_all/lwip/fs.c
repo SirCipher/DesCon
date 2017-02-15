@@ -34,7 +34,7 @@
 #include "fs.h"
 #include "fsdata.h"
 #include <string.h>
-#include "tm_stm32f4_ethernet.h"
+#include "stm32f4_ethernet.h"
 
 /** Set this to 1 to include "fsdata_custom.c" instead of "fsdata.c" for the
  * file system (to prevent changing the file included in CVS) */
@@ -101,7 +101,7 @@ struct fs_file * fs_open(const char *name) {
 #if LWIP_HTTPD_CUSTOM_FILES
 	if (strlen(name) < ETHERNET_SERVER_MAX_CUSTOM_FILENAME) {
 		/* Call user function */
-		if (TM_ETHERNETSERVER_OpenFileCallback(file, name)) {
+		if (ETHERNETSERVER_OpenFileCallback(file, name)) {
 			/* Set settings */
 			file->is_custom_file = 1;
 			file->http_header_included = 0;
@@ -154,7 +154,7 @@ void fs_close(struct fs_file *file) {
 #if LWIP_HTTPD_CUSTOM_FILES
 	if (file->is_custom_file) {				
 		/* Call user function */
-		TM_ETHERNETSERVER_CloseFileCallback(file);
+		ETHERNETSERVER_CloseFileCallback(file);
 	}
 #endif /* LWIP_HTTPD_CUSTOM_FILES */
 #if LWIP_HTTPD_FILE_STATE
@@ -169,7 +169,7 @@ int fs_read(struct fs_file *file, char *buffer, int count) {
 		if (file->is_custom_file) {
 		/* Read custom file */
 		/* Call user function */
-		read = TM_ETHERNETSERVER_ReadFileCallback(file, buffer, count);
+		read = ETHERNETSERVER_ReadFileCallback(file, buffer, count);
 		/* Increase index value */
 		file->index += read;
 		/* Return number of read characters */

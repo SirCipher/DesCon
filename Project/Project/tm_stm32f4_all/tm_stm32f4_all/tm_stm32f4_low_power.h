@@ -27,8 +27,8 @@
    ----------------------------------------------------------------------
 @endverbatim
  */
-#ifndef TM_LOWPOWER_H
-#define TM_LOWPOWER_H 120
+#ifndef LOWPOWER_H
+#define LOWPOWER_H 120
 
 /* C++ detection */
 #ifdef __cplusplus
@@ -36,12 +36,12 @@ extern "C" {
 #endif
 
 /**
- * @addtogroup TM_STM32F4xx_Libraries
+ * @addtogroup STM32F4xx_Libraries
  * @{
  */
 
 /**
- * @defgroup TM_LOWPOWER
+ * @defgroup LOWPOWER
  * @brief    Low power library for STM32F4xx devices - http://stm32f4-discovery.com/2014/10/library-39-power-consumption-modes-for-stm32f4
  * @{
  *
@@ -52,8 +52,8 @@ extern "C" {
  * - Cortex-M4 core is stopped
  * - Peripherals kept running
  * - How to enter this mode?
- *    - Use TM_LOWPOWER_SleepUntilInterrupt() or
- *    - Use TM_LOWPOWER_SleepUntilEvent();
+ *    - Use LOWPOWER_SleepUntilInterrupt() or
+ *    - Use LOWPOWER_SleepUntilEvent();
  * - How to exit this mode?
  *    - Any peripheral interrupt acknowledged by the nested vectored interrupt controller (NVIC)
  *
@@ -64,8 +64,8 @@ extern "C" {
  * - Internal SRAM and register contents are preserved
  * - Voltage regulator in low-power mode
  * - How to enter this mode?
- *    - Use TM_LOWPOWER_StopUntilEvent() or
- *    - Use TM_LOWPOWER_StopUntilInterrupt()
+ *    - Use LOWPOWER_StopUntilEvent() or
+ *    - Use LOWPOWER_StopUntilInterrupt()
  * - How to exit this mode?
  *    - Any EXTI Line (Internal or External) configured in Interrupt/Event mode
  *
@@ -77,7 +77,7 @@ extern "C" {
  * - PLL, HSI and HSE RC oscillators disabled
  * - SRAM and register contents are lost except for the RTC registers, RTC backup registers, backup SRAM and Standby circuitry
  * - How to enter this mode?
- *    - Use TM_LOWPOWER_Standby() function
+ *    - Use LOWPOWER_Standby() function
  * - How to exit this mode?
  *    - Wakeup pin rising edge
  *    - RTC alarm (Alarm A and B) and wakeup
@@ -94,7 +94,7 @@ extern "C" {
   
  Version 1.1
   - October 18, 2014
-  - Added TM_LOWPOWER_StandbyReset(). This allows you to check if system was reset from standby wakeup
+  - Added LOWPOWER_StandbyReset(). This allows you to check if system was reset from standby wakeup
 
  Version 1.0
   - First release
@@ -115,10 +115,10 @@ extern "C" {
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_pwr.h"
 #include "defines.h"
-#include "tm_stm32f4_delay.h"
+#include "stm32f4_delay.h"
 
 /**
- * @defgroup TM_LOWPOWER_Macros
+ * @defgroup LOWPOWER_Macros
  * @brief    Library macros
  * @{
  */
@@ -128,25 +128,25 @@ extern "C" {
  */
  
 /**
- * @defgroup TM_LOWPOWER_Typedefs
+ * @defgroup LOWPOWER_Typedefs
  * @brief    Library typedefs
  * @{
  */
 
 typedef enum {
-	TM_LOWPOWERMODE_SleepUntilInterrupt = 0x00, /*!< Sleep mode until any interrupt in NVIC occurs */
-	TM_LOWPOWERMODE_SleepUntilEvent,            /*!< Sleep mode until any event occurs */
-	TM_LOWPOWERMODE_StopUntilInterrupt,         /*!< Stop mode until interrupt in EXTI line occurs */
-	TM_LOWPOWERMODE_StopUntilEvent,             /*!< Stop mode until event occurs */
-	TM_LOWPOWERMODE_Standby                     /*!< Standby mode until any interrupt occurs */
-} TM_LOWPOWERMODE_t;
+	LOWPOWERMODE_SleepUntilInterrupt = 0x00, /*!< Sleep mode until any interrupt in NVIC occurs */
+	LOWPOWERMODE_SleepUntilEvent,            /*!< Sleep mode until any event occurs */
+	LOWPOWERMODE_StopUntilInterrupt,         /*!< Stop mode until interrupt in EXTI line occurs */
+	LOWPOWERMODE_StopUntilEvent,             /*!< Stop mode until event occurs */
+	LOWPOWERMODE_Standby                     /*!< Standby mode until any interrupt occurs */
+} LOWPOWERMODE_t;
 
 /**
  * @}
  */
  
 /**
- * @defgroup TM_LOWPOWER_Functions
+ * @defgroup LOWPOWER_Functions
  * @brief    Library Functions
  *
  *           All functions for sleep mode configuration
@@ -164,7 +164,7 @@ typedef enum {
  * @param  delay_timer: Set to > 0 and delay timer will be disabled or set to 0 and it will stay as is
  * @retval None
  */
-void TM_LOWPOWER_SleepUntilInterrupt(uint8_t delay_timer);
+void LOWPOWER_SleepUntilInterrupt(uint8_t delay_timer);
 
 /**
  * @brief  Put device into sleep mode
@@ -172,28 +172,28 @@ void TM_LOWPOWER_SleepUntilInterrupt(uint8_t delay_timer);
  * @param  None
  * @retval None
  */
-void TM_LOWPOWER_SleepUntilEvent(void);
+void LOWPOWER_SleepUntilEvent(void);
 
 /**
  * @brief  Go to STOP mode with "Wait For Interrupt" instruction
  * @param  None
  * @retval None
  */
-void TM_LOWPOWER_StopUntilInterrupt(void);
+void LOWPOWER_StopUntilInterrupt(void);
 
 /**
  * @brief  Go to STOP mode with "Wait For Event" instruction
  * @param  None
  * @retval None
  */
-void TM_LOWPOWER_StopUntilEvent(void);
+void LOWPOWER_StopUntilEvent(void);
 
 /**
  * @brief  To go Standby mode
  * @param  None
  * @retval None
  */
-void TM_LOWPOWER_Standby(void);
+void LOWPOWER_Standby(void);
 
 /**
  * @brief  Checks if system was reset because of wakeup from standby mode
@@ -201,7 +201,7 @@ void TM_LOWPOWER_Standby(void);
  * @retval 0: System was not reset because of wake up from standby mode
  *         1: System was reset because of wake up from standby mode
  */
-uint8_t TM_LOWPOWER_StandbyReset(void);
+uint8_t LOWPOWER_StandbyReset(void);
 
 /**
  * @brief  Enables Wakeup pin, fixed pin, PA0
@@ -210,7 +210,7 @@ uint8_t TM_LOWPOWER_StandbyReset(void);
  * @param  None
  * @retval None
  */
-void TM_LOWPOWER_EnableWakeUpPin(void);
+void LOWPOWER_EnableWakeUpPin(void);
 
 /**
  * @brief  Disables Wakeup pin
@@ -218,7 +218,7 @@ void TM_LOWPOWER_EnableWakeUpPin(void);
  * @param  None
  * @retval None
  */
-void TM_LOWPOWER_DisableWakeUpPin(void);
+void LOWPOWER_DisableWakeUpPin(void);
 
 /**
  * @}

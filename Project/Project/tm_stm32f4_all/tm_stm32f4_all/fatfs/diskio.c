@@ -29,8 +29,8 @@
 #endif
 
 /* Set in defines.h file if you want it */
-#ifndef TM_FATFS_CUSTOM_FATTIME
-	#define TM_FATFS_CUSTOM_FATTIME		0
+#ifndef FATFS_CUSTOM_FATTIME
+	#define FATFS_CUSTOM_FATTIME		0
 #endif
 
 /* Defined in defines.h */
@@ -81,46 +81,46 @@
 DISKIO_LowLevelDriver_t FATFS_LowLevelDrivers[_VOLUMES] = {
 	{
 #if FATFS_USE_SDIO == 1
-		TM_FATFS_SD_SDIO_disk_initialize,
-		TM_FATFS_SD_SDIO_disk_status,
-		TM_FATFS_SD_SDIO_disk_ioctl,
-		TM_FATFS_SD_SDIO_disk_write,
-		TM_FATFS_SD_SDIO_disk_read
+		FATFS_SD_SDIO_disk_initialize,
+		FATFS_SD_SDIO_disk_status,
+		FATFS_SD_SDIO_disk_ioctl,
+		FATFS_SD_SDIO_disk_write,
+		FATFS_SD_SDIO_disk_read
 #else
-		TM_FATFS_SD_disk_initialize,
-		TM_FATFS_SD_disk_status,
-		TM_FATFS_SD_disk_ioctl,
-		TM_FATFS_SD_disk_write,
-		TM_FATFS_SD_disk_read
+		FATFS_SD_disk_initialize,
+		FATFS_SD_disk_status,
+		FATFS_SD_disk_ioctl,
+		FATFS_SD_disk_write,
+		FATFS_SD_disk_read
 #endif
 	},
 	{
-		TM_FATFS_USB_disk_initialize,
-		TM_FATFS_USB_disk_status,
-		TM_FATFS_USB_disk_ioctl,
-		TM_FATFS_USB_disk_write,
-		TM_FATFS_USB_disk_read
+		FATFS_USB_disk_initialize,
+		FATFS_USB_disk_status,
+		FATFS_USB_disk_ioctl,
+		FATFS_USB_disk_write,
+		FATFS_USB_disk_read
 	},
 	{
-		TM_FATFS_SDRAM_disk_initialize,
-		TM_FATFS_SDRAM_disk_status,
-		TM_FATFS_SDRAM_disk_ioctl,
-		TM_FATFS_SDRAM_disk_write,
-		TM_FATFS_SDRAM_disk_read
+		FATFS_SDRAM_disk_initialize,
+		FATFS_SDRAM_disk_status,
+		FATFS_SDRAM_disk_ioctl,
+		FATFS_SDRAM_disk_write,
+		FATFS_SDRAM_disk_read
 	},
 	{
-		TM_FATFS_SPI_FLASH_disk_initialize,
-		TM_FATFS_SPI_FLASH_disk_status,
-		TM_FATFS_SPI_FLASH_disk_ioctl,
-		TM_FATFS_SPI_FLASH_disk_write,
-		TM_FATFS_SPI_FLASH_disk_read
+		FATFS_SPI_FLASH_disk_initialize,
+		FATFS_SPI_FLASH_disk_status,
+		FATFS_SPI_FLASH_disk_ioctl,
+		FATFS_SPI_FLASH_disk_write,
+		FATFS_SPI_FLASH_disk_read
 	}
 };
 
-void TM_FATFS_AddDriver(DISKIO_LowLevelDriver_t* Driver, TM_FATFS_Driver_t DriverName) {
+void FATFS_AddDriver(DISKIO_LowLevelDriver_t* Driver, FATFS_Driver_t DriverName) {
 	if (
-		DriverName != TM_FATFS_Driver_USER1 &&
-		DriverName != TM_FATFS_Driver_USER2
+		DriverName != FATFS_Driver_USER1 &&
+		DriverName != FATFS_Driver_USER2
 	) {
 		/* Return */
 		return;
@@ -253,32 +253,32 @@ __weak DWORD get_fattime(void) {
 }
 
 /* Function declarations to prevent link errors if functions are not found */
-__weak DSTATUS TM_FATFS_SD_SDIO_disk_initialize(void) {return RES_ERROR;}
-__weak DSTATUS TM_FATFS_SD_disk_initialize(void) {return RES_ERROR;}
-__weak DSTATUS TM_FATFS_USB_disk_initialize(void) {return RES_ERROR;}
-__weak DSTATUS TM_FATFS_SDRAM_disk_initialize(void) {return RES_ERROR;}
-__weak DSTATUS TM_FATFS_SPI_FLASH_disk_initialize(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_SD_SDIO_disk_initialize(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_SD_disk_initialize(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_USB_disk_initialize(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_SDRAM_disk_initialize(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_SPI_FLASH_disk_initialize(void) {return RES_ERROR;}
 
-__weak DSTATUS TM_FATFS_SD_SDIO_disk_status(void) {return RES_ERROR;}
-__weak DSTATUS TM_FATFS_SD_disk_status(void) {return RES_ERROR;}
-__weak DSTATUS TM_FATFS_USB_disk_status(void) {return RES_ERROR;}
-__weak DSTATUS TM_FATFS_SDRAM_disk_status(void) {return RES_ERROR;}
-__weak DSTATUS TM_FATFS_SPI_FLASH_disk_status(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_SD_SDIO_disk_status(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_SD_disk_status(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_USB_disk_status(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_SDRAM_disk_status(void) {return RES_ERROR;}
+__weak DSTATUS FATFS_SPI_FLASH_disk_status(void) {return RES_ERROR;}
 
-__weak DRESULT TM_FATFS_SD_SDIO_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_SD_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_USB_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_SDRAM_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_SPI_FLASH_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SD_SDIO_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SD_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_USB_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SDRAM_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SPI_FLASH_disk_ioctl(BYTE cmd, void *buff) {return (DRESULT)STA_NOINIT;}
 
-__weak DRESULT TM_FATFS_SD_SDIO_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_SD_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_USB_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_SDRAM_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_SPI_FLASH_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SD_SDIO_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SD_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_USB_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SDRAM_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SPI_FLASH_disk_read(BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
 
-__weak DRESULT TM_FATFS_SD_SDIO_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_SD_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_USB_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_SDRAM_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
-__weak DRESULT TM_FATFS_SPI_FLASH_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SD_SDIO_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SD_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_USB_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SDRAM_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}
+__weak DRESULT FATFS_SPI_FLASH_disk_write(const BYTE *buff, DWORD sector, UINT count) {return (DRESULT)STA_NOINIT;}

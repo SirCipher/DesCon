@@ -67,7 +67,7 @@ can be set here.
 #include "GUIDRV_Lin.h"
 #include "global_includes.h"
 
-/* External variable, declared in tm_stm32f4_emwin.c file */
+/* External variable, declared in stm32f4_emwin.c file */
 extern uint32_t EMWIN_LCD_DRIVER_CB_CALLED;
 
 /*********************************************************************

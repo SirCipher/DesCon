@@ -16,12 +16,12 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_fatfs.h"
+#include "stm32f4_fatfs.h"
 
 /* Private functions */
-static FRESULT scan_files(char* path, uint16_t tmp_buffer_size, TM_FATFS_Search_t* FindStructure);
+static FRESULT scan_files(char* path, uint16_t tmp_buffer_size, FATFS_Search_t* FindStructure);
 
-FRESULT TM_FATFS_GetDriveSize(char* str, TM_FATFS_Size_t* SizeStruct) {
+FRESULT FATFS_GetDriveSize(char* str, FATFS_Size_t* SizeStruct) {
 	FATFS *fs;
     DWORD fre_clust;
 	FRESULT res;
@@ -40,7 +40,7 @@ FRESULT TM_FATFS_GetDriveSize(char* str, TM_FATFS_Size_t* SizeStruct) {
 	return FR_OK;
 }
 
-FRESULT TM_FATFS_DriveSize(uint32_t* total, uint32_t* free) {
+FRESULT FATFS_DriveSize(uint32_t* total, uint32_t* free) {
 	FATFS *fs;
     DWORD fre_clust;
 	FRESULT res;
@@ -59,7 +59,7 @@ FRESULT TM_FATFS_DriveSize(uint32_t* total, uint32_t* free) {
 	return FR_OK;
 }
 
-FRESULT TM_FATFS_USBDriveSize(uint32_t* total, uint32_t* free) {
+FRESULT FATFS_USBDriveSize(uint32_t* total, uint32_t* free) {
 	FATFS *fs;
     DWORD fre_clust;
 	FRESULT res;
@@ -78,7 +78,7 @@ FRESULT TM_FATFS_USBDriveSize(uint32_t* total, uint32_t* free) {
 	return FR_OK;
 }
 
-FRESULT TM_FATFS_TruncateBeginning(FIL* fil, uint32_t index) {
+FRESULT FATFS_TruncateBeginning(FIL* fil, uint32_t index) {
 	uint8_t Buffer[FATFS_TRUNCATE_BUFFER_SIZE];				/* Buffer for temporary data */
 
 	uint32_t FileSize = f_size(fil);						/* Size of file */
@@ -129,11 +129,11 @@ FRESULT TM_FATFS_TruncateBeginning(FIL* fil, uint32_t index) {
 	return f_lseek(fil, 0);									/* Move pointer to the beginning */
 }
 
-uint8_t TM_FATFS_CheckCardDetectPin(void) {
+uint8_t FATFS_CheckCardDetectPin(void) {
 	uint8_t status = 1;
 	
 #if FATFS_USE_DETECT_PIN > 0
-	if (TM_GPIO_GetInputPinValue(FATFS_USE_DETECT_PIN_PORT, FATFS_USE_DETECT_PIN_PIN) != 0) {
+	if (GPIO_GetInputPinValue(FATFS_USE_DETECT_PIN_PORT, FATFS_USE_DETECT_PIN_PIN) != 0) {
 		status = 0;
 	}
 #endif
@@ -142,7 +142,7 @@ uint8_t TM_FATFS_CheckCardDetectPin(void) {
 	return status;
 }
 
-FRESULT TM_FATFS_Search(char* Folder, char* tmp_buffer, uint16_t tmp_buffer_size, TM_FATFS_Search_t* FindStructure) {
+FRESULT FATFS_Search(char* Folder, char* tmp_buffer, uint16_t tmp_buffer_size, FATFS_Search_t* FindStructure) {
 	uint8_t malloc_used = 0;
 	FRESULT res;
 	
@@ -188,9 +188,9 @@ FRESULT TM_FATFS_Search(char* Folder, char* tmp_buffer, uint16_t tmp_buffer_size
 /*******************************************************************/
 /*                      FATFS SEARCH CALLBACK                      */
 /*******************************************************************/
-__weak uint8_t TM_FATFS_SearchCallback(char* path, uint8_t is_file, TM_FATFS_Search_t* FindStructure) {
+__weak uint8_t FATFS_SearchCallback(char* path, uint8_t is_file, FATFS_Search_t* FindStructure) {
 	/* NOTE: This function Should not be modified, when the callback is needed,
-             the TM_FATFS_SearchCallback could be implemented in the user file
+             the FATFS_SearchCallback could be implemented in the user file
 	*/
 	
 	/* Allow next search */
@@ -200,7 +200,7 @@ __weak uint8_t TM_FATFS_SearchCallback(char* path, uint8_t is_file, TM_FATFS_Sea
 /*******************************************************************/
 /*                    FATFS PRIVATE FUNCTIONS                      */
 /*******************************************************************/
-static FRESULT scan_files(char* path, uint16_t tmp_buffer_size, TM_FATFS_Search_t* FindStructure) {
+static FRESULT scan_files(char* path, uint16_t tmp_buffer_size, FATFS_Search_t* FindStructure) {
 	FRESULT res;
 	FILINFO fno;
 	DIR dir;
@@ -253,7 +253,7 @@ static FRESULT scan_files(char* path, uint16_t tmp_buffer_size, TM_FATFS_Search_
 				FindStructure->FoldersCount++;
 
 				/* Call user function */
-				gonext = TM_FATFS_SearchCallback(path, 0, FindStructure);
+				gonext = FATFS_SearchCallback(path, 0, FindStructure);
 
 				/* Stop execution if user wants that */
 				if (gonext) {
@@ -272,7 +272,7 @@ static FRESULT scan_files(char* path, uint16_t tmp_buffer_size, TM_FATFS_Search_
 				FindStructure->FilesCount++;
 
 				/* Call user function */
-				gonext = TM_FATFS_SearchCallback(path, 1, FindStructure);
+				gonext = FATFS_SearchCallback(path, 1, FindStructure);
 			}
 			
 			/* Set path back */

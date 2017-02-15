@@ -16,19 +16,19 @@
  * | along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * |----------------------------------------------------------------------
  */
-#include "tm_stm32f4_servo.h"
+#include "stm32f4_servo.h"
 
-TM_SERVO_Result_t TM_SERVO_Init(TM_SERVO_t* ServoStruct, TIM_TypeDef* TIMx, TM_PWM_Channel_t PWMChannel, TM_PWM_PinsPack_t Pinspack) {
+SERVO_Result_t SERVO_Init(SERVO_t* ServoStruct, TIM_TypeDef* TIMx, PWM_Channel_t PWMChannel, PWM_PinsPack_t Pinspack) {
 	/* Initialize timer with 50Hz frequency for PWM */
-	if (TM_PWM_InitTimer(TIMx, &ServoStruct->PWM, 50) != TM_PWM_Result_Ok) {
+	if (PWM_InitTimer(TIMx, &ServoStruct->PWM, 50) != PWM_Result_Ok) {
 		/* Return error */
-		return TM_SERVO_Result_Error;
+		return SERVO_Result_Error;
 	}
 	
 	/* Initialize channel */
-	if (TM_PWM_InitChannel(&ServoStruct->PWM, PWMChannel, Pinspack) != TM_PWM_Result_Ok) {
+	if (PWM_InitChannel(&ServoStruct->PWM, PWMChannel, Pinspack) != PWM_Result_Ok) {
 		/* Return Error */
-		return TM_SERVO_Result_Error;
+		return SERVO_Result_Error;
 	}
 	
 	/* Fill settings */
@@ -37,17 +37,17 @@ TM_SERVO_Result_t TM_SERVO_Init(TM_SERVO_t* ServoStruct, TIM_TypeDef* TIMx, TM_P
 	ServoStruct->Pinspack = Pinspack;
 	
 	/* Return OK */
-	return TM_SERVO_Result_Ok;
+	return SERVO_Result_Ok;
 }
 
-TM_SERVO_Result_t TM_SERVO_SetDegrees(TM_SERVO_t* ServoStruct, float degrees) {
+SERVO_Result_t SERVO_SetDegrees(SERVO_t* ServoStruct, float degrees) {
 	/* Set PWM value */
 	uint16_t micros;
 	
 	/* Filter */
 	if (degrees < 0 || degrees > 180) {
 		/* Return error */
-		return TM_SERVO_Result_Error;
+		return SERVO_Result_Error;
 	}
 	
 	/* Generate micros value from degrees */
@@ -58,24 +58,24 @@ TM_SERVO_Result_t TM_SERVO_SetDegrees(TM_SERVO_t* ServoStruct, float degrees) {
 	ServoStruct->Degrees = degrees;
 	
 	/* Set micros */
-	TM_PWM_SetChannelMicros(
+	PWM_SetChannelMicros(
 		&ServoStruct->PWM,
 		ServoStruct->Channel,
 		micros
 	);
 	
 	/* Return OK */
-	return TM_SERVO_Result_Ok;
+	return SERVO_Result_Ok;
 }
 
-TM_SERVO_Result_t TM_SERVO_SetMicros(TM_SERVO_t* ServoStruct, uint16_t micros) {
+SERVO_Result_t SERVO_SetMicros(SERVO_t* ServoStruct, uint16_t micros) {
 	/* Set PWM value */
 	float degrees;
 	
 	/* Filter */
 	if (micros < SERVO_MICROS_MIN || micros > SERVO_MICROS_MAX) {
 		/* Return error */
-		return TM_SERVO_Result_Error;
+		return SERVO_Result_Error;
 	}
 	
 	/* Generate micros value from degrees */
@@ -86,12 +86,12 @@ TM_SERVO_Result_t TM_SERVO_SetMicros(TM_SERVO_t* ServoStruct, uint16_t micros) {
 	ServoStruct->Degrees = degrees;
 	
 	/* Set micros */
-	TM_PWM_SetChannelMicros(
+	PWM_SetChannelMicros(
 		&ServoStruct->PWM,
 		ServoStruct->Channel,
 		micros
 	);
 	
 	/* Return OK */
-	return TM_SERVO_Result_Ok;	
+	return SERVO_Result_Ok;	
 }
