@@ -381,7 +381,7 @@ void LCD_ClearRow2(){
 
 void LCD_PutSCenter(const char * str, unsigned int y){
 		unsigned int str_len = String_Len(str);
-		// LCD is 16 characters across                                                                                                                                                       
+		// LCD is 16 characters across 
 	  if(str_len > 16){
 			LCD_GotoXY(0,y);
 			LCD_PutS(str);
@@ -391,3 +391,4 @@ void LCD_PutSCenter(const char * str, unsigned int y){
 			LCD_PutS(str);
 		}
 }
+

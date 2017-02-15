@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "STM32F4xx.h"
+#include ".\tm_stm32f4_all\tm_stm32f4_all\tm_stm32f4_usart.h"
 #include "LED.h"
 #include "SWT.h"
 #include "LCD.h"
@@ -31,7 +32,6 @@
 #define CURRENT read_ADC2()
 
 
-// Including string.h causes LCD to misbehave.
 #include <string.h>
 
 
@@ -68,6 +68,7 @@ void Board_init(){
 	ADC2_init();
 	serial_init();
 }
+
 
 unsigned int GetWordLength(const char* str, int start){
 	return 0;
@@ -147,7 +148,7 @@ int main (void) {
 			LCD_ClearRow2();
 			LCD_PutSCenter(message,1);
 		}		
-		
+
 	}
 		
 }

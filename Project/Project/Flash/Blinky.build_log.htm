@@ -28,26 +28,43 @@ Project File Date:  02/14/2017
 *** Using Compiler 'V5.06 update 2 (build 183)', folder: 'C:\KEIL_V5\ARM\ARMCC\Bin'
 Rebuild target 'STM32F407 Flash'
 compiling SWT.c...
-compiling LCD.c...
 compiling LED.c...
-compiling Utility.c...
+compiling LCD.c...
 compiling ADC.c...
+compiling Utility.c...
 compiling project.c...
-project.c(92): warning:  #177-D: variable "count" was declared but never referenced
+project.c(93): warning:  #177-D: variable "count" was declared but never referenced
   	unsigned int count = 0;
-project.c(158): warning:  #223-D: function "USART_GetITStatus" declared implicitly
-      if (USART_GetITStatus(USART2, USART_IT_RXNE)) {
-project.c(158): error:  #20: identifier "USART_IT_RXNE" is undefined
-      if (USART_GetITStatus(
-SART2, USART_IT_RXNE)) {
-project.c(162): warning:  #223-D: function "USART_ClearITPendingBit" declared implicitly
-          USART_ClearITPendingBit(USART2, USART_IT_RXNE);
-project.c: 3 warnings, 1 error
-assembling startup_stm32f407xx.s...
-compiling serial.c...
+project.c: 1 warning, 0 errors
 compiling retarget.c...
+compiling serial.c...
+assembling startup_stm32f407xx.s...
+compiling misc.c...
+..\..\PICKIT_DEMO\PICKIT_DEMO\STM32F4xx_StdPeriph_Driver\misc.c(121): warning:  #223-D: function "assert_param" declared implicitly
+    assert_param(IS_NVIC_PRIORITY_GROUP(NVIC_PriorityGroup));
+..\..\PICKIT_DEMO\PICKIT_DEMO\STM32F4xx_StdPeriph_Driver\misc.c(141): warning:  #223-D: function "assert_param" declared implicitly
+    assert_param(IS_FUNCTIONAL_STATE(NVIC_InitStruct->NVIC_IRQChannelCmd));
+..\..\PICKIT_DEMO\PICKIT_DEMO\STM32F4xx_StdPeriph_Driver\misc.c(183): warning:  #223-D: function "assert_param" declared implicitly
+    assert_param(IS_NVIC_VECTTAB(NVIC_VectTab));
+..\..\PICKIT_DEMO\PICKIT_DEMO\STM32F4xx_StdPeriph_Driver\misc.c(202): warning:  #223-D: function "assert_param" declared implicitly
+    assert_param(IS_NVIC_LP(LowPowerMode));
+..\..\PICKIT_DEMO\PICKIT_DEMO\STM32F4xx_StdPeriph_Driver\misc.c(226): warning:  #223-D: function "assert_param" declared implicitly
+    assert_param(IS_SYSTICK_CLK_SOURCE(SysTick_CLKSource));
+..\..\PICKIT_DEMO\PICKIT_DEMO\STM32F4xx_StdPeriph_Driver\misc.c: 5 warnings, 0 errors
+compiling tm_stm32f4_usart.c...
+tm_stm32f4_all\tm_stm32f4_all\tm_stm32f4_usart.c(752): warning:  #177-D: function "TM_USART_INT_Init" was declared but never referenced
+  static void TM_USART_INT_Init(
+tm_stm32f4_all\tm_stm32f4_all\tm_stm32f4_usart.c: 1 warning, 0 errors
 compiling system_stm32f4xx.c...
-".\Flash\Blinky.axf" - 1 Error(s), 3 Warning(s).
+linking...
+.\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_ClearITPendingBit (referred from project.o).
+.\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_GetITStatus (referred from project.o).
+.\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_DeInit (referred from tm_stm32f4_usart.o).
+.\Flash\Blinky.axf: Error: L6218E: Undefined symbol USART_Init (referred from tm_stm32f4_usart.o).
+.\Flash\Blinky.axf: Error: L6218E: Undefined symbol assert_param (referred from misc.o).
+Not enough information to list image symbols.
+Finished: 1 information, 0 warning and 5 error messages.
+".\Flash\Blinky.axf" - 5 Error(s), 7 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -79,7 +96,7 @@ Package Vendor: Keil
       Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f407xx.s
       Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c
 Target not created.
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

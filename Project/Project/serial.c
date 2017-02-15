@@ -1,6 +1,6 @@
 #include "stm32f4xx.h"
 #include "serial.h"
-//#include "stm32f4xx_usart.h"
+#include "tm_stm32f4_usart.h"
 
 static void _configUSART2(uint32_t BAUD, uint32_t fosc)
 {

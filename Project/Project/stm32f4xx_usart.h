@@ -198,7 +198,6 @@ UART8        |PE1    PE0     |-      -       |-      -
  - TM GPIO
 @endverbatim
  */
-#include "misc.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_rcc.h"
 #include "stm32f4xx_gpio.h"
