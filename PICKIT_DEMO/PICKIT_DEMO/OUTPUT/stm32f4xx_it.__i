@@ -1,5 +1,0 @@
--c --cpu Cortex-M4.fp -g -O1 --apcs=interwork 
--I C:\Keil\ARM\RV31\INC 
--I C:\Keil\ARM\CMSIS\Include 
--I C:\Keil\ARM\Inc\ST\STM32F4xx 
--D__FPU_PRESENT="1" -DUSE_STDPERIPH_DRIVER -o ".\OUTPUT\stm32f4xx_it.o" --omf_browse ".\OUTPUT\stm32f4xx_it.crf" --depend ".\OUTPUT\stm32f4xx_it.d" "Startup\stm32f4xx_it.c"
