@@ -1,1 +1,11 @@
 *.bat
+# Some random file that uVision adds when you close a project
+*.uvguix.*
+*.o
+*.swp
+*.d
+*.crf
+*.dep
+*.lnp
+*.htm
+*.axf

@@ -6,6 +6,7 @@
 #include "utils.h"
 
 void ADC1_init(void);
+void ADC2_init(void);
 
 /* function to read ADCs and retun value */
 unsigned int read_ADC1 (void);

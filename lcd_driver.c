@@ -43,16 +43,26 @@ void lcd_init(int lines, int cursor, int blink, int buffer_size) {
 	lcd_write(LCD_WRITE_COMMAND, 0x06, 0); /*Set entry mode with "increment counter"*/
 }
 
-void lcd_write_string(char *string, int line, int offset) {
+void lcd_write_string(char *string, int line, int offset, int* lastlength) {
 	/* Splits a string into 
 	 * individual chars and
 	 * puts them on the buffer */
 	
 	int done = 0;
 	int place = 0;
+	int length = 0;
+	char* p = string;
+	while(*p++){
+		length++;
+	}
+	lcd_move_cursor(line, offset);
+	if(*lastlength > length){
+		for(int i = 0; i < *lastlength; i++)
+			lcd_write(LCD_WRITE_DATA,' ',0);
+		lcd_move_cursor(line, offset);
+	}
 	
 	/*go to place x chars in on row y*/
-	lcd_move_cursor(line, offset);
 	/*Loop through string and add to buffer until reach termination char*/
 	while (!done) {
 		if (string[place] == '\0') {
@@ -62,6 +72,7 @@ void lcd_write_string(char *string, int line, int offset) {
 		}
 		place++;
 	}
+	*lastlength = length;
 }
 
 void lcd_write(int cmd, uint16_t byte, uint16_t time_delay) {

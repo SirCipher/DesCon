@@ -1,5 +1,6 @@
 #include "stm32f4xx.h"
 #include "serial.h"
+#include "utility.h"
 
 static void _configUSART2(uint32_t BAUD, uint32_t fosc)
 {
@@ -55,7 +56,7 @@ void USART2_IRQHandler(void) {
 		//Check if interrupt was because data is received
     if (USART_GetITStatus(USART2, USART_IT_RXNE)) {
         lcd_clear_display();
-				lcd_write_string("Data received",0,0);
+				lcd_write_string("Data received",0,0,0);
 				Delay(500);
 				
 				//Clear interrupt flag
