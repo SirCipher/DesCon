@@ -136,10 +136,18 @@ int main (void) {
 
 	init_board();
 
+	
+	while(1){
+		USART3->DR = 'l';
+		
+		Delay(100);
+		
+	}
+	
 	lcd_clear_display();
 	lcd_write_string("You're a", 0, 0, &last_write_length1);
 	lcd_write_string("Multimeter Harry", 1, 0, &last_write_length2);
-	printf("You're a multimeter Harry\n");
+
 	Delay(1000);
 	lcd_clear_display();
 	
