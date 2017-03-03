@@ -159,7 +159,8 @@ int main (void) {
     while (1);                                  /* Capture error              */
   }
 
-	init_board();
+	
+	init_board(); //
 	
 	lcd_clear_display();
 	lcd_write_string("You're a", 0, 0, &last_write_length1);
