@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "lcd_buffer.h"
 #include "lcd_driver.h"
@@ -75,11 +76,11 @@ int check_state_changed(unsigned int *state){
 char* get_units(int state){
 	switch(state){
 		case 1:
-			return "Volts";
+			return " Volts\n";
 		case 2:
-			return "Amps";
+			return " Amps\n";
 		case 3:
-			return "Ohms";
+			return " Ohms\n";
 	}
 	return "\0";
 }
@@ -107,22 +108,46 @@ void main_functionality(void){
 	char* message = (char*)malloc(16*sizeof(char));
 	unsigned int state = 1;
 	float value = 0;
+	float oldValue = 0;
 	char* unit = malloc(6*sizeof(char)); // Max word length + 1 for null char (possible words Volts, Amps, Ohms)
 	int last_write_length1 = 0, last_write_length2 = 0;
-	unit = "Volts";
+	unit = " Volts\n";
 	
 	while(1){
 		if(check_state_changed(&state)){
 			unit = get_units(state);
 		}
-		value = read_value(state);
-		sprintf(message,"%.2f", value);
-		printf("%.2f %c\n", value, unit[0]);
+		oldValue = read_value(state);
+		value = mapValue(oldValue, 0,65536,0,10);
+		
+		sprintf(message,"%.2f Old value is %.2f", value, oldValue);
+		
+//	printf("%.2f %c\n", value, unit[0]);
 		lcd_write_string(message, 1, 0,&last_write_length1);
+		
+		strcat(message, unit);
+				
+		send_String(USART3, message);
+		lcd_clear_display();
 		lcd_write_string(unit, 0, 0, &last_write_length2);
 	}
 }
 
+float mapValue(float x, float in_min, float in_max, float out_min, float out_max){
+	  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;	
+}
+
+void send_Char(USART_TypeDef* USARTx, uint8_t ch){
+		while(!(USARTx->SR & USART_SR_TXE));
+		USARTx->DR = ch;
+}
+
+void send_String(USART_TypeDef* USARTx, char * str){
+	while(*str != 0){
+		send_Char(USARTx, *str);
+		str++;
+	}
+}
 
 /*----------------------------------------------------------------------------
   MAIN function
@@ -135,14 +160,6 @@ int main (void) {
   }
 
 	init_board();
-
-	
-	while(1){
-		USART3->DR = 'l';
-		
-		Delay(100);
-		
-	}
 	
 	lcd_clear_display();
 	lcd_write_string("You're a", 0, 0, &last_write_length1);

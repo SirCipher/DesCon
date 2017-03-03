@@ -18,5 +18,8 @@ void set_cont_ADC1(void);
 unsigned int read_cont_ADC1 (void);
 
 double calibrate_ADC1(void);
+void send_String(USART_TypeDef* USARTx, char * str);
+void send_Char(USART_TypeDef* USARTx, uint8_t ch);
+float mapValue(float x, float in_min, float in_max, float out_min, float out_max);
 
 #endif /*_ADC_H_*/
