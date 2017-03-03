@@ -1,6 +1,7 @@
 *.bat
 # Some random file that uVision adds when you close a project
 *.uvguix.*
+*.uvgui.*
 *.o
 *.swp
 *.d
