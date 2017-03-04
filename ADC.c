@@ -52,14 +52,14 @@ unsigned int read_ADC1 (void) {
 	ADC1->CR2 |= (1UL << 30)	;		/* set SWSTART to 1 to start conversion */
 	Delay(100);
 	
-	return (ADC1->DR << 0);
+	return (ADC1->DR << 4 & 0xFF00); // Unsure about the left-shift and ANDing. It is done in the example ADC_LEDs project
 }
 
 unsigned int read_ADC2 (void) {
 	ADC2->CR2 |= (1UL << 30)	;		/* set SWSTART to 1 to start conversion */
 	Delay(100);
 	
-	return (ADC2->DR << 0 );
+	return (ADC2->DR << 4  & 0xFF00 ); // Unsure about the left-shift and ANDing. It is done in the example ADC_LEDs project
 }
 
 void set_cont_ADC1(void){
