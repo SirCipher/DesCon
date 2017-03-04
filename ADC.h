@@ -4,6 +4,20 @@
 
 #include "STM32F4xx.h"
 #include "utils.h"
+#include "lcd_buffer.h"
+#include "lcd_driver.h"
+#include "LED.h"
+#include "ADC.h"
+#include "serial.h"
+#include "utils.h"
+#include "sig_gen.h"
+#include "SWT.h"
+#include "ADC.h"
+#include "utility.h"
+#include "stm32f4xx.h"
+#include "stm32f4xx_exti.h"
+#include "stm32f4xx_syscfg.h"
+#include "misc.h"
 
 void ADC1_init(void);
 void ADC2_init(void);
