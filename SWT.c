@@ -21,59 +21,59 @@ const unsigned long SWT_mask[] = {1UL << 8, 1UL << 9, 1UL << 10, 1UL << 11, 1UL 
 /*----------------------------------------------------------------------------
   initialize SWT Pins
  *----------------------------------------------------------------------------*/
-void SWT_Init (void) {
+void SWT_Init(void) {
 
-  RCC->AHB1ENR    |=  ((1UL <<  4)    );   /* Enable GPIOE clock              */
+    RCC->AHB1ENR |= ((1UL << 4));   /* Enable GPIOE clock              */
 
-  GPIOE->MODER    &= ~((3UL << 2* 8) |
-                       (3UL << 2* 9) |
-                       (3UL << 2*10) |
-                       (3UL << 2*11) |
-                       (3UL << 2*12) |
-                       (3UL << 2*13) |
-                       (3UL << 2*14) |
-                       (3UL << 2*15)  );   /* PE.8..15 is input               */
-  GPIOE->OSPEEDR  &= ~((3UL << 2* 8) |
-                       (3UL << 2* 9) |
-                       (3UL << 2*10) |
-                       (3UL << 2*11) |
-                       (3UL << 2*12) |
-                       (3UL << 2*13) |
-                       (3UL << 2*14) |
-                       (3UL << 2*15)  );   /* PE.8..15 is 50MHz Fast          */
-  GPIOE->OSPEEDR  |=  ((2UL << 2* 8) |
-                       (2UL << 2* 9) | 
-                       (2UL << 2*10) | 
-                       (2UL << 2*11) | 
-                       (2UL << 2*12) | 
-                       (2UL << 2*13) | 
-                       (2UL << 2*14) | 
-                       (2UL << 2*15)  ); 
-  GPIOE->PUPDR    &= ~((3UL << 2* 8) |
-                       (3UL << 2* 9) |
-                       (3UL << 2*10) |
-                       (3UL << 2*11) |
-                       (3UL << 2*12) |
-                       (3UL << 2*13) |
-                       (3UL << 2*14) |
-                       (3UL << 2*15)  );   /* PE.8..15 is no Pull up             */
+    GPIOE->MODER &= ~((3UL << 2 * 8) |
+                      (3UL << 2 * 9) |
+                      (3UL << 2 * 10) |
+                      (3UL << 2 * 11) |
+                      (3UL << 2 * 12) |
+                      (3UL << 2 * 13) |
+                      (3UL << 2 * 14) |
+                      (3UL << 2 * 15));   /* PE.8..15 is input               */
+    GPIOE->OSPEEDR &= ~((3UL << 2 * 8) |
+                        (3UL << 2 * 9) |
+                        (3UL << 2 * 10) |
+                        (3UL << 2 * 11) |
+                        (3UL << 2 * 12) |
+                        (3UL << 2 * 13) |
+                        (3UL << 2 * 14) |
+                        (3UL << 2 * 15));   /* PE.8..15 is 50MHz Fast          */
+    GPIOE->OSPEEDR |= ((2UL << 2 * 8) |
+                       (2UL << 2 * 9) |
+                       (2UL << 2 * 10) |
+                       (2UL << 2 * 11) |
+                       (2UL << 2 * 12) |
+                       (2UL << 2 * 13) |
+                       (2UL << 2 * 14) |
+                       (2UL << 2 * 15));
+    GPIOE->PUPDR &= ~((3UL << 2 * 8) |
+                      (3UL << 2 * 9) |
+                      (3UL << 2 * 10) |
+                      (3UL << 2 * 11) |
+                      (3UL << 2 * 12) |
+                      (3UL << 2 * 13) |
+                      (3UL << 2 * 14) |
+                      (3UL << 2 * 15));   /* PE.8..15 is no Pull up             */
 }
 
 /*----------------------------------------------------------------------------
   Function that reads Switch states
  *----------------------------------------------------------------------------*/
-uint32_t SWT_Get (void) {
+uint32_t SWT_Get(void) {
 
-  return (GPIOE->IDR);
+    return (GPIOE->IDR);
 }
 
 /*----------------------------------------------------------------------------
   Function that checks the state of requested switch
  *----------------------------------------------------------------------------*/
-int SWT_Check (unsigned int num) {
-	
-	if ( num > SWT_NUM )
-		return 0;
-	else
-		return ( GPIOE->IDR & SWT_mask[num] );
+int SWT_Check(unsigned int num) {
+
+    if (num > SWT_NUM)
+        return 0;
+    else
+        return (GPIOE->IDR & SWT_mask[num]);
 }

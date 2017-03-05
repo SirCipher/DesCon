@@ -10,3 +10,5 @@
 *.lnp
 *.htm
 *.axf
+.idea
+cmake-build-debug/

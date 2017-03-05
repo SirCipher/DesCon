@@ -15,6 +15,7 @@ typedef struct ringbuffer_t *ringbuffer_t;
  * Create a new ring buffer that has the given size, (size is maximum number of BUFFERTYPE it can hold)
  */
 ringbuffer_t ringbuffer_new(size_t size);
+
 /*
  * Deletes a ringbuffer and frees up the memory it was using
  */
@@ -33,6 +34,7 @@ BUFFERTYPE ringbuffer_head(ringbuffer_t buffer);
  * retrieves the tail of the buffer
  */
 BUFFERTYPE ringbuffer_tail(ringbuffer_t buffer);
+
 /*
  * Counts the actual number of items in the buffer
  */
@@ -53,6 +55,7 @@ BUFFERTYPE ringbuffer_shift(ringbuffer_t buffer);
  * Returns whether the buffer
  */
 int ringbuffer_is_full(ringbuffer_t buffer);
+
 /*
  * Returns whether the buffer is empty
  */

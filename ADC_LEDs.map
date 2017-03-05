@@ -817,7 +817,7 @@ Image Symbol Table
     get_units                                0x080003d1   Thumb Code    32  adc_leds.o(.text)
     read_value                               0x080003f1   Thumb Code    90  adc_leds.o(.text)
     mapValue                                 0x0800044b   Thumb Code    30  adc_leds.o(.text)
-    main_functionality                       0x08000469   Thumb Code   184  adc_leds.o(.text)
+    main_loop                       0x08000469   Thumb Code   184  adc_leds.o(.text)
     main                                     0x08000521   Thumb Code   146  adc_leds.o(.text)
     SWT_Init                                 0x08000629   Thumb Code    52  swt.o(.text)
     SWT_Get                                  0x0800065d   Thumb Code     6  swt.o(.text)

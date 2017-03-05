@@ -28,6 +28,8 @@
 #define _LCD_STAGE_3_TIME 7000
 #define _LCD_SCROLLING_COMMAND_DATA_WORD 0x18
 
+#define LCD_NUM_CHARS 16
+
 /*Function prototypes*/
 
 /* Change the settings. Can turn the LCD on or off, turn the cursor on 
@@ -78,7 +80,9 @@ void lcd_write_string(char *string, int line, int offset, int *lastlength);
 
 /* Internal functions you don't need to use */
 void lcd_setup_GPIO(void);
+
 void lcd_setup_timer(void);
+
 void lcd_write(int cmd, uint16_t byte, uint16_t time_delay);
 
 /*Create buffer*/

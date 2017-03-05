@@ -55,31 +55,30 @@ int ringbuffer_push(ringbuffer_t buffer, BUFFERTYPE item) {
         return 0;
     }
     *buffer->tail++ = item;
-    if(buffer->tail >= buffer->end){
+    if (buffer->tail >= buffer->end) {
         buffer->tail = buffer->buffer;
     }
     buffer->count++;
     return 1;
 }
 
-BUFFERTYPE ringbuffer_shift(ringbuffer_t buffer){
-    if(ringbuffer_is_empty(buffer))
-    {
+BUFFERTYPE ringbuffer_shift(ringbuffer_t buffer) {
+    if (ringbuffer_is_empty(buffer)) {
         return NULL;
     }
     buffer->count--;
     BUFFERTYPE output = *buffer->head++;
-    if(buffer->head >= buffer->end){
+    if (buffer->head >= buffer->end) {
         buffer->head = buffer->buffer;
     }
     return output;
 }
 
-int ringbuffer_is_full(ringbuffer_t buffer){
+int ringbuffer_is_full(ringbuffer_t buffer) {
     return buffer->count == buffer->size;
 }
 
-int ringbuffer_is_empty(ringbuffer_t buffer){
+int ringbuffer_is_empty(ringbuffer_t buffer) {
     return buffer->count == 0;
 }
 

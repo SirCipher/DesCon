@@ -18,29 +18,31 @@
 /* Redirect output via USART2 - AJP 2013 */
 /* Calls block on USART2 TX buffer availability */
 int sendchar(int c) {
-	while (!(USART2->SR & USART_SR_TXE));
-	return (USART2->DR = c);
+    while (!(USART2->SR & USART_SR_TXE));
+    return (USART2->DR = c);
 }
 
-struct __FILE { int handle; /* Add whatever you need here */ };
+struct __FILE {
+    int handle; /* Add whatever you need here */ };
 FILE __stdout;
 
 int fputc(int ch, FILE *f) {
-  return (sendchar(ch));
+    return (sendchar(ch));
 }
 
 
 int ferror(FILE *f) {
-  /* Your implementation of ferror */
-  return EOF;
+    /* Your implementation of ferror */
+    return EOF;
 }
 
 
 void _ttywrch(int ch) {
-  sendchar(ch);
+    sendchar(ch);
 }
 
 
 void _sys_exit(int return_code) {
-label:  goto label;  /* endless loop */
+    label:
+    goto label;  /* endless loop */
 }

@@ -20,7 +20,9 @@
 #define SWT_NUM     8                        /* Number of user Switches       */
 
 extern void SWT_Init(void);
-extern uint32_t SWT_Get (void);
-extern int SWT_Check (unsigned int num);
+
+extern uint32_t SWT_Get(void);
+
+extern int SWT_Check(unsigned int num);
 
 #endif
