@@ -17,8 +17,9 @@
 #include "misc.h"
 
 void ADC1_init(void);
-
 void ADC2_init(void);
+
+void init_board(void);
 
 /* function to read ADCs and retun value */
 unsigned int read_ADC1(void);

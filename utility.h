@@ -8,6 +8,6 @@ void Delay(uint32_t dlyTicks);
 
 void SysTick_Handler(void);
 
-double map(double x, double in_min, double in_max, double out_min, double out_max);
+double scale(double x, double in_min, double in_max, double out_min, double out_max);
 
 #endif /*_UTILITY_H_*/

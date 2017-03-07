@@ -82,7 +82,7 @@ void lcd_write_center(char *string, int line, int *lastlength){
     if(stringLength < LCD_NUM_CHARS) {
         offset = (LCD_NUM_CHARS - stringLength) / 2;
     }
-    lcd_write_string(string, line, offset,&lastlength);
+    lcd_write_string(string, line, offset,lastlength);
 }
 
 void lcd_write(int cmd, uint16_t byte, uint16_t time_delay) {
