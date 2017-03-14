@@ -14,6 +14,9 @@
 #define VOLTAGE_OUTPUT_MIN 0
 #define VOLTAGE_OUTPUT_MAX 10
 
+
+ringbuffer_t ringbuffer;
+
 // TODO: (Re)Move this?
 /*----------------------------------------------------------------------------
   Function that read Button pins

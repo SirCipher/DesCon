@@ -1,6 +1,19 @@
 #include "stm32f4xx.h"
 #include "serial.h"
 #include "utility.h"
+#include "ringbuffer.h"
+
+
+extern ringbuffer;
+
+// TODO: Move this
+
+
+void handle_interrupt(ringbuffer_t rb, ){
+    while(!ringbuffer_is_full(rb) && USART_ReceiveData(USART3)){
+        ringbuffer_shift(*data++)
+    }
+}
 
 static void _configUSART3(uint32_t BAUD, uint32_t fosc) {
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
@@ -52,7 +65,7 @@ void USART3_IRQHandler(void) {
         lcd_clear_display();
         lcd_write_string("Data received", 0, 0, 0);
         Delay(500);
-
+        handle_interrupt(ringbuffer);
         //Clear interrupt flag
         USART_ClearITPendingBit(USART3, USART_IT_RXNE);
     }
@@ -60,5 +73,6 @@ void USART3_IRQHandler(void) {
 
 
 void serial_init(void) {
+    ringbuffer = ringbuffer_new(255);
     _configUSART3(9600, 168000000);
 }

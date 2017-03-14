@@ -1,5 +1,8 @@
 #include "ADC.h"
 #include "board_init.h"
+#include "ringbuffer.h"
+
+
 
 /*----------------------------------------------------------------------------
   Function that initializes Button pins
@@ -100,6 +103,8 @@ void init_board(void) {
     if (SysTick_Config(SystemCoreClock / 1000)) { /* SysTick 1 msec interrupts  */
         while (1);                                  /* Capture error              */
     }
+
+    ringbuffer = ringbuffer_new(255);
 
     GPIO_init();
     ADC1_init();
