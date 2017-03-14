@@ -4,6 +4,7 @@
 #include <string.h>
 #include "ADC.h"
 #include "utility.h"
+#include "ringbuffer.h"
 
 // TODO: rename this file, its not ADC_LEDS, its our project (Not done as it may break keil)
 #define VOLTAGE (float) read_ADC1()

@@ -4,15 +4,18 @@
 #include "ringbuffer.h"
 
 
-extern ringbuffer;
+extern ringbuffer_t ringbuffer;
 
 // TODO: Move this
 
 
-void handle_interrupt(ringbuffer_t rb, ){
-    while(!ringbuffer_is_full(rb) && USART_ReceiveData(USART3)){
-        ringbuffer_shift(*data++)
-    }
+void handle_interrupt(ringbuffer_t rb){
+		uint16_t data;
+    do{
+				data = USART_ReceiveData(USART3);
+				if(data != NULL)
+					ringbuffer_push(rb,(BUFFERTYPE)data);
+    }while(!ringbuffer_is_full(rb) && data);
 }
 
 static void _configUSART3(uint32_t BAUD, uint32_t fosc) {

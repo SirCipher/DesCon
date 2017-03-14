@@ -5,7 +5,8 @@
 
 #ifndef RINGBUFFER_RING_BUFFER_H
 #define RINGBUFFER_RING_BUFFER_H
-
+#include <stdlib.h>
+#include <assert.h>
 // Allows us to change the buffer type easily
 #define BUFFERTYPE char
 

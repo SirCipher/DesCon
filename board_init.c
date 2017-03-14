@@ -2,7 +2,7 @@
 #include "board_init.h"
 #include "ringbuffer.h"
 
-
+extern ringbuffer_t ringbuffer;
 
 /*----------------------------------------------------------------------------
   Function that initializes Button pins
