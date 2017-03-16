@@ -7,14 +7,14 @@
 extern ringbuffer_t ringbuffer;
 
 // TODO: Move this
-void handle_interrupt(ringbuffer_t rb){
-		uint16_t data;
-    do{
-				data = USART_ReceiveData(USART3);
-				if(data != NULL)
-					ringbuffer_push(rb,(BUFFERTYPE)data);
-    }while(!ringbuffer_is_full(rb) && data);
-}
+//void handle_interrupt(ringbuffer_t rb){
+//		uint16_t data;
+//    do{
+//				data = USART_ReceiveData(USART3);
+//				if(data != NULL)
+//					ringbuffer_push(rb,(BUFFERTYPE)data);
+//    }while(!ringbuffer_is_full(rb) && data);
+//}
 
 static void _configUSART3(uint32_t BAUD, uint32_t fosc) {
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
@@ -57,29 +57,47 @@ static void _configUSART3(uint32_t BAUD, uint32_t fosc) {
 }
 
 static void _configUSART2(uint32_t BAUD, uint32_t fosc){
-  uint32_t tmpreg = 0x00, apbclock = 0x00;
-  uint32_t integerdivider = 0x00;
-  uint32_t fractionaldivider = 0x00;
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 
-  apbclock = fosc/16;
-	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
-  RCC->APB1ENR |= RCC_APB1ENR_USART2EN;	/* Enable USART2 Clock */
+  //This is for the GPIO pins used as TX and RX
+  GPIO_InitTypeDef GPIO_InitStruct;
 
-	GPIOA->MODER &= ~GPIO_MODER_MODER2;
-  GPIOA->MODER |=  GPIO_MODER_MODER2_1;		/* Setup TX pin for Alternate Function */
+  /* This sequence sets up the TX and RX pins 
+   * so they work correctly with the USART1 peripheral
+   */
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3; // Pins 2 (TX) and 3 (RX) are used
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF; // the pins are configured as alternate function so the USART peripheral has access to them
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; // this defines the IO speed and has nothing to do with the baudrate!
+  GPIO_InitStruct.GPIO_OType = GPIO_OType_PP; // this defines the output type as push pull mode (as opposed to open drain)
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP; // this activates the pullup resistors on the IO pins
+  GPIO_Init(GPIOA, & GPIO_InitStruct); // now all the values are passed to the GPIO_Init() function which sets the GPIO registers
 
-  GPIOA->AFR[0] |= (7 << (4*2));		/* Setup TX as the Alternate Function */
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2); //
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);
 
-  USART2->CR1 |= USART_CR1_UE;	/* Enable USART */
+  USART_InitTypeDef USART_InitStruct; // this is for the USART2 initilization
 
-  integerdivider = ((25 * apbclock) / (2 * (BAUD)));  
-  tmpreg = (integerdivider / 100) << 4;
-  fractionaldivider = integerdivider - (100 * (tmpreg >> 4));
+  USART_InitStruct.USART_BaudRate = BAUD; // the baudrate is set to the value we passed into this init function
+  USART_InitStruct.USART_WordLength = USART_WordLength_8b; // we want the data frame size to be 8 bits (standard)
+  USART_InitStruct.USART_StopBits = USART_StopBits_1; // we want 1 stop bit (standard)
+  USART_InitStruct.USART_Parity = USART_Parity_No; // we don't want a parity bit (standard)
+  USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None; // we don't want flow control (standard)
+  USART_InitStruct.USART_Mode = USART_Mode_Tx | USART_Mode_Rx; // we want to enable the transmitter and the receiver
+  USART_Init(USART2, & USART_InitStruct); // again all the properties are passed to the USART_Init function which takes care of all the bit setting
 
-  tmpreg |= ((((fractionaldivider * 8) + 50) / 100)) & ((uint8_t)0x07);
+  USART_ITConfig(USART2, USART_IT_RXNE, ENABLE); // enable the USART2 receive interrupt 
 
-  USART2->BRR = (uint16_t)tmpreg;
-  USART2->CR1 |= USART_CR1_TE;	/* Enable Tx */
+  NVIC_InitTypeDef NVIC_InitStructure;
+
+  NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn; // we want to configure the USART2 interrupts
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // this sets the priority group of the USART1 interrupts
+  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; // this sets the subpriority inside the group
+  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; // the USART2 interrupts are globally enabled
+  NVIC_Init( & NVIC_InitStructure); // the properties are passed to the NVIC_Init function which takes care of the low level stuff	
+
+  //Finally this enables the complete USART1 peripheral
+  USART_Cmd(USART2, ENABLE);
 }
 
 /*----------------------------------------------------------------------------
@@ -107,5 +125,5 @@ void serial_init(void) {
   _configUSART3(9600, 168000000);
 	
 	// Config for serial
-	_configUSART3(9600, 168000000);
+	_configUSART2(9600, 168000000);
 }

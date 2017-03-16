@@ -122,12 +122,7 @@ void display_startup_message() {
   MAIN function
  *----------------------------------------------------------------------------*/
 int main(void) {
-    init_board(); //
-	while(1){
-    //display_startup_message();
-		send_String(USART2, "You're a multimeter, Harry.");
-		printf("keekkkkkkkkkk");
-		send_String(USART3, "You're a multimeter, Harry.");
-	}
+  init_board(); 
+  display_startup_message();
 	main_loop();
 }
