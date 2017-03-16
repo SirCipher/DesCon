@@ -1,6 +1,9 @@
 #include "ADC.h"
 #include "board_init.h"
 #include "ringbuffer.h"
+#include "stm32f4xx.h"
+#include "tm_stm32f4_delay.h"
+#include "tm_stm32f4_hd44780.h"
 
 extern ringbuffer_t ringbuffer;
 
@@ -95,6 +98,10 @@ void EXTI15_10_IRQHandler(void) {
    }
  }
 
+void TOM_lcd_init(){
+	TM_HD44780_Init(16, 2);
+}
+
 /*----------------------------------------------------------------------------
   Initialize the components we require on the board
  *----------------------------------------------------------------------------*/
@@ -104,12 +111,13 @@ void init_board(void) {
         while (1);                                  /* Capture error              */
     }
 
-    ringbuffer = ringbuffer_new(255);
+    //ringbuffer = ringbuffer_new(255);
 
     GPIO_init();
     ADC1_init();
     ADC2_init();
     SWT_Init();
     lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 128);
+		TOM_lcd_init();
     serial_init();
 }
