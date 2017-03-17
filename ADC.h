@@ -37,7 +37,7 @@ void send_String(USART_TypeDef *USARTx, char *str);
 
 void send_Char(USART_TypeDef *USARTx, uint8_t ch);
 
-void changeMode(void);
+void setState(char *mode);
 
 
 #endif /*_ADC_H_*/

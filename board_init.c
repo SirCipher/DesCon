@@ -67,34 +67,33 @@ void GPIO_init(void){
 void EXTI9_5_IRQHandler(void) {
 	/* Make sure that interrupt flag is set */
    if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
-			send_String(USART3, "lol8");
-       /* Clear interrupt flag */
-       EXTI_ClearITPendingBit(EXTI_Line8);
+			
+		 EXTI_ClearITPendingBit(EXTI_Line8);
    } else if (EXTI_GetITStatus(EXTI_Line9) != RESET) {
-			send_String(USART3, "lol9");
-       EXTI_ClearITPendingBit(EXTI_Line9);
+
+		 EXTI_ClearITPendingBit(EXTI_Line9);
    } 
  }
 
 void EXTI15_10_IRQHandler(void) {
 	if (EXTI_GetITStatus(EXTI_Line10) != RESET) {
-			send_String(USART3, "lol10");
-			EXTI_ClearITPendingBit(EXTI_Line10);
+
+		EXTI_ClearITPendingBit(EXTI_Line10);
 	} else if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
-			 send_String(USART3, "lol11");
-       EXTI_ClearITPendingBit(EXTI_Line11);
+
+		EXTI_ClearITPendingBit(EXTI_Line11);
    }else if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
-			 send_String(USART3, "lol12");
-       EXTI_ClearITPendingBit(EXTI_Line12);
+
+		 EXTI_ClearITPendingBit(EXTI_Line12);
    }else if (EXTI_GetITStatus(EXTI_Line13) != RESET) {
-			 send_String(USART3, "lol13");
-       EXTI_ClearITPendingBit(EXTI_Line13);
+
+		 EXTI_ClearITPendingBit(EXTI_Line13);
    }else if (EXTI_GetITStatus(EXTI_Line14) != RESET) {
-			 send_String(USART3, "lol14");
-       EXTI_ClearITPendingBit(EXTI_Line14);
+
+		 EXTI_ClearITPendingBit(EXTI_Line14);
    } else if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
-			 send_String(USART3, "lol15");
-       EXTI_ClearITPendingBit(EXTI_Line15);
+
+		 EXTI_ClearITPendingBit(EXTI_Line15);
    }
  }
 

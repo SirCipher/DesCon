@@ -17,6 +17,7 @@
 
 
 ringbuffer_t ringbuffer;
+unsigned int state = 1;
 
 // TODO: (Re)Move this?
 /*----------------------------------------------------------------------------
@@ -89,7 +90,7 @@ void bt_output_value(char* memory, float value, char *unit){
  *----------------------------------------------------------------------------*/
 void main_loop(void) {
     char *string_memory = (char *) malloc(100 * sizeof(char));
-    unsigned int state = 1;
+
     float value = 0;
     float rawValue = 0;
     char *unit = malloc(6 * sizeof(char)); // Max word length + 1 for null char (possible words Volts, Amps, Ohms)
@@ -97,9 +98,8 @@ void main_loop(void) {
     unit = "Volts";
 
     while (1) {
-        if (check_state_changed(&state)) { // We should only be changing units if the state has changed
-            unit = get_units(state);
-        }
+        unit = get_units(state);
+        
         rawValue = read_value(state);
         value = scale(rawValue, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX);
 
@@ -113,14 +113,19 @@ void display_startup_message() {
     lcd_clear_display();
     lcd_write_string("You're a", 0, 0, &last_write_length1);
     lcd_write_string("Multimeter Harry", 1, 0, &last_write_length2);
-
+		send_String(USART3, "You're a multimeter, Harry");
     Delay(1000);
     lcd_clear_display();
 }
 
-void changeMode(){
-	
-	
+void setState(char *mode){
+	if(strcmp(mode, "Volts") == 0){
+		state = 1;
+	} else if(strcmp(mode, "Amps") == 0){
+		state = 2;
+	} else if(strcmp(mode, "Resistance") == 0){
+		state = 3;
+	}
 }
 
 /*----------------------------------------------------------------------------
@@ -129,6 +134,5 @@ void changeMode(){
 int main(void) {
   init_board(); 
   display_startup_message();
-	//main_loop();
-	while(1){}
+	main_loop();
 }

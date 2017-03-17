@@ -113,13 +113,14 @@ void USART3_IRQHandler(void){
   {
     char rx =  USART_ReceiveData(USART3);
 
-    if ((rx == '\r') || (rx == '\n')){ // Is this an end-of-line condition, either will suffice?
+    if ((rx == '\r') || (rx == '\n')){ // Is this an end-of-line condition?
         if (rx_index != 0){ 
-            memcpy((void *)line_buffer, rx_buffer, rx_index); // Copy to static line buffer from dynamic receive buffer
-            line_buffer[rx_index] = 0;
-            send_String(USART3, rx_buffer);    
-            rx_index = 0; // Reset index pointer
-						memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
+          memcpy((void *)line_buffer, rx_buffer, rx_index); // Copy to static line buffer from dynamic receive buffer
+					line_buffer[rx_index] = 0;
+					setState(rx_buffer);
+					send_String(USART3, rx_buffer);    
+					rx_index = 0; // Reset index pointer
+					memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
         }
     }
     else{
