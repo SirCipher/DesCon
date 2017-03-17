@@ -99,6 +99,9 @@ void EXTI15_10_IRQHandler(void) {
 
 void TOM_lcd_init(){
 	TM_HD44780_Init(16, 2);
+	TM_HD44780_Clear();
+	TM_HD44780_Puts(0, 0, "HAI");
+	TM_HD44780_Puts(0, 1, "HAI");
 }
 
 /*----------------------------------------------------------------------------
@@ -116,7 +119,7 @@ void init_board(void) {
     ADC1_init();
     ADC2_init();
     SWT_Init();
-    lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 128);
+    //lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 128);
 		TOM_lcd_init();
     serial_init();
 }

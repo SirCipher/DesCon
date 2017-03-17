@@ -5,6 +5,7 @@
 #include "ADC.h"
 #include "utility.h"
 #include "ringbuffer.h"
+#include <string.h>
 
 // TODO: rename this file, its not ADC_LEDS, its our project (Not done as it may break keil)
 #define VOLTAGE (float) read_ADC1()
@@ -81,8 +82,10 @@ void lcd_output_value(char* memory,float value, char *unit, int *last_write_leng
 
 void bt_output_value(char* memory, float value, char *unit){
     // TODO: change this to follow data pattern
-    sprintf(memory, "%s %s", memory, unit);
-    send_String(USART3, memory);
+		
+	sprintf(memory, "<%.4f> %s",value,unit);
+
+	send_String(USART3, memory);
 }
 
 /*----------------------------------------------------------------------------
