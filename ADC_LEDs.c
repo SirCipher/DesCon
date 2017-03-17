@@ -118,11 +118,17 @@ void display_startup_message() {
     lcd_clear_display();
 }
 
+void changeMode(){
+	
+	
+}
+
 /*----------------------------------------------------------------------------
   MAIN function
  *----------------------------------------------------------------------------*/
 int main(void) {
   init_board(); 
   display_startup_message();
-	main_loop();
+	//main_loop();
+	while(1){}
 }

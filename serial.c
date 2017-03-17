@@ -2,9 +2,12 @@
 #include "serial.h"
 #include "utility.h"
 #include "ringbuffer.h"
+#include "ADC.h"
+#include <string.h>
 
-
+#define MAX_CHARACTERS 15 
 extern ringbuffer_t ringbuffer;
+volatile char line_buffer[MAX_CHARACTERS + 1]; 
 
 // TODO: Move this
 //void handle_interrupt(ringbuffer_t rb){
@@ -15,9 +18,10 @@ extern ringbuffer_t ringbuffer;
 //					ringbuffer_push(rb,(BUFFERTYPE)data);
 //    }while(!ringbuffer_is_full(rb) && data);
 //}
+// GPIO C pin 10/11. 10 RX, 11 TX
 
-static void _configUSART3(uint32_t BAUD, uint32_t fosc) {
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
+static void _configUSART3(uint32_t baudrate, uint32_t fosc) {
+	  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
 
   GPIO_InitTypeDef GPIO_InitStruct;
@@ -35,7 +39,7 @@ static void _configUSART3(uint32_t BAUD, uint32_t fosc) {
 
   USART_InitTypeDef USART_InitStruct;
 
-  USART_InitStruct.USART_BaudRate = BAUD;
+  USART_InitStruct.USART_BaudRate = baudrate;
   USART_InitStruct.USART_WordLength = USART_WordLength_8b;
   USART_InitStruct.USART_StopBits = USART_StopBits_1;
   USART_InitStruct.USART_Parity = USART_Parity_No;
@@ -100,23 +104,33 @@ static void _configUSART2(uint32_t BAUD, uint32_t fosc){
   USART_Cmd(USART2, ENABLE);
 }
 
-/*----------------------------------------------------------------------------
-  USART3 functionality. Currently writes a string to the 
-	LCD whenever data is received
- *----------------------------------------------------------------------------*/
-void USART3_IRQHandler(void) {
+void USART3_IRQHandler(void){
+  static char rx_buffer[MAX_CHARACTERS]; 
+  static int rx_index = 0;
 
-//    //Check if interrupt was because data is received
-//    if (USART_GetITStatus(USART3, USART_IT_RXNE)) {
-//        lcd_clear_display();
-//        lcd_write_string("Data received", 0, 0, 0);
-//        Delay(500);
-//        handle_interrupt(ringbuffer);
-//        //Clear interrupt flag
-//        USART_ClearITPendingBit(USART3, USART_IT_RXNE);
-//    }
+	// Have we received a character?
+  if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) 
+  {
+    char rx =  USART_ReceiveData(USART3);
+
+    if ((rx == '\r') || (rx == '\n')){ // Is this an end-of-line condition, either will suffice?
+        if (rx_index != 0){ 
+            memcpy((void *)line_buffer, rx_buffer, rx_index); // Copy to static line buffer from dynamic receive buffer
+            line_buffer[rx_index] = 0;
+            send_String(USART3, rx_buffer);    
+            rx_index = 0; // Reset index pointer
+						memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
+        }
+    }
+    else{
+				// Have we overflown? Data loss will occur.
+        if (rx_index == MAX_CHARACTERS){ 
+            rx_index = 0;
+				}
+          rx_buffer[rx_index++] = rx; // Copy to buffer and increment
+    }
+	}
 }
-
 
 void serial_init(void) {
   //ringbuffer = ringbuffer_new(255);
