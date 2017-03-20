@@ -100,8 +100,8 @@ void EXTI15_10_IRQHandler(void) {
 void TOM_lcd_init(){
 	TM_HD44780_Init(16, 2);
 	TM_HD44780_Clear();
-	TM_HD44780_Puts(0, 0, "HAI");
-	TM_HD44780_Puts(0, 1, "HAI");
+	TM_HD44780_Puts(0, 0, "Harry, you're a");
+	TM_HD44780_Puts(0, 1, "   multimeter");
 }
 
 /*----------------------------------------------------------------------------
