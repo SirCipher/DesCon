@@ -62,7 +62,7 @@ float reading_get_normalised_value(reading_t reading){
 }
 
 void reading_get_message_form_from_units(char* memory,float val, int scale, char unit){
-    sprint(memory,"%.4f%c%i\n",val, unit, scale);
+    sprintf(memory,"%.4f%c%i\n",val, unit, scale);
 }
 
 void reading_get_message_form(reading_t reading,char *memory){
@@ -73,37 +73,37 @@ void reading_get_message_form(reading_t reading,char *memory){
     reading_get_message_form_from_units(memory,reading->value,reading->unit,reading->scale);
 }
 
-float reading_get_val_prefix(reading_t reading, char prefix){
+float reading_get_val_prefix(reading_t reading, char *prefix){
     float val = reading->value;
     int scale = reading->scale;
-    while(val>= 999 && scale < 9){
+    while(val>= 999.0f && scale < 9){
         scale += 3;
         val /= 1000;
     }
-    while(val<= 0.01 && scale > -9){
+    while(val<= 0.01f && scale > -9){
         scale -= 3;
         val *= 1000;
     }
     if(scale >=9){
-        prefix = SCALE_POS9_SH;
+        *prefix = SCALE_POS9_SH;
     }
     else if(scale >= 6){
-        prefix = SCALE_POS6_SH;
+        *prefix = SCALE_POS6_SH;
     }
     else if(scale >= 3){
-        prefix = SCALE_POS3_SH;
+        *prefix = SCALE_POS3_SH;
     }
     else if(scale >= 0){
-        prefix = ' ';
+        *prefix = ' ';
     }
     else if(scale >= -3){
-        prefix = SCALE_NEG6_SH;
+        *prefix = SCALE_NEG6_SH;
     }
     else if(scale >= 6){
-        prefix = SCALE_NEG6_SH;
+        *prefix = SCALE_NEG6_SH;
     }
     else {
-        prefix = '?';
+        *prefix = '?';
     }
 
     return val;
@@ -124,6 +124,6 @@ int reading_need_scale(reading_t reading, int max, int min){
 
 void reading_get_lcd_string(reading_t reading, char* memory){
     char prefix;
-    float val = reading_get_prefix_value(reading,&prefix);
-    sprint(memory,"%.4f %c%c", val, prefix, reading->unit);
+    float val = reading_get_val_prefix(reading,&prefix);
+    sprintf(memory,"%.4f %c%c", val, prefix, reading->unit);
 }

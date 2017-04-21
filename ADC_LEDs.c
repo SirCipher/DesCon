@@ -122,9 +122,11 @@ reading_t get_display_lcd_reading(int state){
 		return volts;
 	} else if(state == 1){
 		return amps;
-	} else if(state ==2){
+	} /*else if(state ==2){
 		// work on this
-	}
+		
+	}*/
+	return NULL;
 }
 
 /*----------------------------------------------------------------------------
@@ -133,8 +135,6 @@ reading_t get_display_lcd_reading(int state){
 void main_loop(void) {
     char *string_memory = (char *) malloc(100 * sizeof(char));
 
-    float value = 0;
-    float rawValue = 0;
 //    char *unit = malloc(6 * sizeof(char)); // Max word length + 1 for null char (possible words Volts, Amps, Ohms)
     int last_write_length1 = 0, last_write_length2 = 0;
 

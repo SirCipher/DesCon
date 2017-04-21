@@ -119,7 +119,7 @@ void init_board(void) {
     ADC1_init();
     ADC2_init();
     SWT_Init();
-    //lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 128);
-		TOM_lcd_init();
+    lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 128);
+		//TOM_lcd_init();
     serial_init();
 }

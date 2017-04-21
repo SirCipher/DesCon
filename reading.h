@@ -24,6 +24,6 @@ void reading_get_lcd_string(reading_t reading,char* memory);
 void reading_get_message_form_from_units(char* memory,float val, int scale, char unit);
 void reading_get_message_form(reading_t reading, char* memory);
 void reading_get_si(reading_t reading);
-float reading_get_val_prefix(reading_t reading, char prefix);
+float reading_get_val_prefix(reading_t reading, char* prefix);
 
 #endif

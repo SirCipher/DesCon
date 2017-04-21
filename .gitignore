@@ -12,3 +12,4 @@
 *.axf
 .idea
 cmake-build-debug/
+*.tmp
