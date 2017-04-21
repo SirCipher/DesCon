@@ -6,7 +6,7 @@
 typedef struct reading_t *reading_t;
 
 
-reading_t reading_new(int v, int u, int s);
+reading_t reading_new(float v, char u, int s);
 
 float reading_get_value(reading_t reading);
 int reading_get_scale(reading_t reading);
@@ -21,7 +21,7 @@ int reading_need_scale(reading_t reading, int max, int min);
 float reading_get_scaled_value(reading_t reading);
 void reading_get_lcd_string(reading_t reading,char* memory);
 
-void reading_get_message_form_from_units(char* memory,float val, int scale, char unit);
+void reading_get_message_form_from_units(char* memory,float val, char unit,int scale);
 void reading_get_message_form(reading_t reading, char* memory);
 void reading_get_si(reading_t reading);
 float reading_get_val_prefix(reading_t reading, char* prefix);

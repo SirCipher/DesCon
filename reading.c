@@ -10,7 +10,7 @@ struct reading_t {
     float value;
 };
 
-reading_t reading_new(int v, int u, int s){
+reading_t reading_new(float v, char u, int s){
     reading_t reading = NULL;
 
     reading = malloc(sizeof(struct reading_t));
@@ -61,8 +61,8 @@ float reading_get_normalised_value(reading_t reading){
     return val;
 }
 
-void reading_get_message_form_from_units(char* memory,float val, int scale, char unit){
-    sprintf(memory,"%.4f%c%i\n",val, unit, scale);
+void reading_get_message_form_from_units(char* memory,float val, char unit, int scale){
+    sprintf(memory,"%.4f%c%d",val, unit, scale);
 }
 
 void reading_get_message_form(reading_t reading,char *memory){
@@ -125,5 +125,5 @@ int reading_need_scale(reading_t reading, int max, int min){
 void reading_get_lcd_string(reading_t reading, char* memory){
     char prefix;
     float val = reading_get_val_prefix(reading,&prefix);
-    sprintf(memory,"%.4f %c%c", val, prefix, reading->unit);
+    sprintf(memory,"%.4f%c%c", val, prefix, reading->unit);
 }

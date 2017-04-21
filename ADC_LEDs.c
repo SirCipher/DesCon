@@ -19,9 +19,11 @@
 #define VOLTAGE_OUTPUT_MIN 0
 #define VOLTAGE_OUTPUT_MAX 10
 
+#define RESISTANCE_READING reading_get_value(volts) / reading_get_value(amps)  
+
 #define SCALE_LIMITS 128
 // Change this depending on where we want scaling to start
-#define DEFAULT_STAGE 2 
+#define DEFAULT_STAGE 0
 
 
 
@@ -30,6 +32,7 @@ unsigned int state = 1;
 unsigned int scaleState = DEFAULT_STAGE;
 reading_t volts;
 reading_t amps;
+reading_t resistance;
 
 // TODO: (Re)Move this?
 /*----------------------------------------------------------------------------
@@ -69,8 +72,9 @@ void read_value() {
 }
 
 void lcd_output_value(char* memory,reading_t reading, int *last_write_length1, int *last_write_length2){
-    reading_get_lcd_string(reading, memory);
+    // reading_get_lcd_string(reading, memory);
 
+    reading_get_message_form(reading,memory);
     lcd_write_string(memory, 1, 0, last_write_length1);
     // lcd_write_string(unit, 0, 0, last_write_length2);
 }
@@ -80,7 +84,7 @@ void bt_output_value(reading_t reading,char* memory){
 		
 //	sprintf(memory, "<%.4f> %s",value,unit);
     reading_get_message_form(reading,memory);
-	send_String(USART3, memory);
+		send_String(USART3, memory);
 }
 
 
@@ -122,10 +126,10 @@ reading_t get_display_lcd_reading(int state){
 		return volts;
 	} else if(state == 1){
 		return amps;
-	} /*else if(state ==2){
-		// work on this
-		
-	}*/
+	} else if(state ==2){
+		reading_set_value(resistance, RESISTANCE_READING);
+		reading_set_scale(resistance, reading_get_scale(volts) + reading_get_scale(amps));
+	}
 	return NULL;
 }
 
@@ -137,18 +141,26 @@ void main_loop(void) {
 
 //    char *unit = malloc(6 * sizeof(char)); // Max word length + 1 for null char (possible words Volts, Amps, Ohms)
     int last_write_length1 = 0, last_write_length2 = 0;
-
+		 int delta_scale = 0;
     reading_t reading;
 
     while (1) {
         read_value();
         reading = get_display_lcd_reading(state);
-		if(reading_need_scale(reading,VOLTAGE_OUTPUT_MAX,VOLTAGE_OUTPUT_MIN))
-		    continue;
+				delta_scale = reading_need_scale(reading,VOLTAGE_OUTPUT_MAX,VOLTAGE_OUTPUT_MIN);
+				/*
+					We only scale the reading we're displaying
+					this should hopefully allow for faster switching (as hopefully the scale wont change)
+				*/
+				while(delta_scale){
+					reading_set_scale(reading,reading_get_scale(reading) +  delta_scale);
+					delta_scale = reading_need_scale(reading,VOLTAGE_OUTPUT_MAX,VOLTAGE_OUTPUT_MIN);
+					continue;
+				}
 
-        bt_output_value(volts,string_memory);
+        bt_output_value(volts, string_memory);
         bt_output_value(amps, string_memory);
-        lcd_output_value(string_memory,reading, &last_write_length1,&last_write_length2);
+        lcd_output_value(string_memory, reading, &last_write_length1,&last_write_length2);
 
     }
 }
@@ -159,6 +171,7 @@ void main_loop(void) {
 int main(void) {
     volts = reading_new(0,'V',0);
     amps = reading_new(0,'A',0);
+    resistance = reading_new(0,'O',0);
     init_board();
     display_startup_message();
     main_loop();

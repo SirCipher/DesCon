@@ -6,6 +6,7 @@
 #include "tm_stm32f4_hd44780.h"
 
 extern ringbuffer_t ringbuffer;
+extern unsigned int state;
 
 /*----------------------------------------------------------------------------
   Function that initializes Button pins
@@ -67,32 +68,32 @@ void GPIO_init(void){
 void EXTI9_5_IRQHandler(void) {
 	/* Make sure that interrupt flag is set */
    if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
-			
+				state = 0;
 		 EXTI_ClearITPendingBit(EXTI_Line8);
    } else if (EXTI_GetITStatus(EXTI_Line9) != RESET) {
-
+		state = 1;
 		 EXTI_ClearITPendingBit(EXTI_Line9);
    } 
  }
 
 void EXTI15_10_IRQHandler(void) {
 	if (EXTI_GetITStatus(EXTI_Line10) != RESET) {
-
+send_String(USART3, "Fuck3");
 		EXTI_ClearITPendingBit(EXTI_Line10);
 	} else if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
-
+send_String(USART3, "Fuck4");
 		EXTI_ClearITPendingBit(EXTI_Line11);
    }else if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
-
+send_String(USART3, "Fuck5");
 		 EXTI_ClearITPendingBit(EXTI_Line12);
    }else if (EXTI_GetITStatus(EXTI_Line13) != RESET) {
-
+send_String(USART3, "Faggot6");
 		 EXTI_ClearITPendingBit(EXTI_Line13);
    }else if (EXTI_GetITStatus(EXTI_Line14) != RESET) {
-
+send_String(USART3, "Fuck7");
 		 EXTI_ClearITPendingBit(EXTI_Line14);
    } else if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
-
+send_String(USART3, "Fuck8");
 		 EXTI_ClearITPendingBit(EXTI_Line15);
    }
  }
