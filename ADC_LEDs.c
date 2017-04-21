@@ -72,9 +72,8 @@ void read_value() {
 }
 
 void lcd_output_value(char* memory,reading_t reading, int *last_write_length1, int *last_write_length2){
-    // reading_get_lcd_string(reading, memory);
+    reading_get_lcd_string(reading, memory);
 
-    reading_get_message_form(reading,memory);
     lcd_write_string(memory, 1, 0, last_write_length1);
     // lcd_write_string(unit, 0, 0, last_write_length2);
 }
