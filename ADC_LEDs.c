@@ -109,15 +109,6 @@ void transform_scale_to_hardware_pins(){
 	// scaleStates -> pins, agree with Hardware on what these need to be
 }
 
-void setState(char *mode){
-	if(strcmp(mode, "Volts") == 0){
-		state = 1;
-	} else if(strcmp(mode, "Amps") == 0){
-		state = 2;
-	} else if(strcmp(mode, "Resistance") == 0){
-		state = 3;
-	}
-}
 
 
 reading_t get_display_lcd_reading(int state){
@@ -128,6 +119,7 @@ reading_t get_display_lcd_reading(int state){
 	} else if(state ==2){
 		reading_set_value(resistance, RESISTANCE_READING);
 		reading_set_scale(resistance, reading_get_scale(volts) + reading_get_scale(amps));
+		return resistance;
 	}
 	return NULL;
 }
