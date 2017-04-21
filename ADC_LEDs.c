@@ -5,7 +5,10 @@
 #include "ADC.h"
 #include "utility.h"
 #include "ringbuffer.h"
+#include "reading.h"
+#include "unit_dict.h"
 #include <string.h>
+
 
 // TODO: rename this file, its not ADC_LEDS, its our project (Not done as it may break keil)
 #define VOLTAGE (float) read_ADC1()
@@ -25,6 +28,8 @@
 ringbuffer_t ringbuffer;
 unsigned int state = 1;
 unsigned int scaleState = DEFAULT_STAGE;
+reading_t volts;
+reading_t amps;
 
 // TODO: (Re)Move this?
 /*----------------------------------------------------------------------------
@@ -52,66 +57,29 @@ int check_state_changed(unsigned int *state) {
   Returns the correct units based on state
  *----------------------------------------------------------------------------*/
 char *get_units(int state, int scaleState) {
-		char* prefix  = malloc(10*sizeof(prefix));
-		switch(scaleState){
-			case 0: 
-				prefix = "micro";
-				break;
-			case 1:
-				prefix = "milli";
-				break;
-			case 2:
-				prefix = "";
-				break;
-			case 3:
-				prefix = "kilo";
-				break;
-			case 4:
-				prefix = "mega";
-				break;
-		}
-		// note: we may want to make a new struct to store the prefix and the units seperately
-		// this will mean we can transform them later to things like mV or whatever easier
-		// dependant on context
-    switch (state) {
-        case 1:
-            return strcat(prefix,"Volts");
-        case 2:
-            return strcat(prefix,"Amps");
-        case 3:
-            return strcat(prefix,"Ohms");
-    }
     return "\0";
 }
 
 /*----------------------------------------------------------------------------
-  Returns the correct value dependant on state
+  Reads values from pins and stores them in reading
  *----------------------------------------------------------------------------*/
-float read_value(int state) {
-    switch (state) {
-        case 1:
-            return VOLTAGE;
-        case 2:
-            return CURRENT;
-        case 3:
-            return RESISTANCE;
-        default:
-            return 0;
-    }
+void read_value() {
+    reading_set_value(volts, scale(VOLTAGE, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
+    reading_set_value(amps, scale(CURRENT, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
 }
 
-void lcd_output_value(char* memory,float value, char *unit, int *last_write_length1, int *last_write_length2){
-    sprintf(memory, "%.2f", value);
+void lcd_output_value(char* memory,reading_t reading, int *last_write_length1, int *last_write_length2){
+    reading_get_lcd_string(reading, memory);
 
     lcd_write_string(memory, 1, 0, last_write_length1);
-    lcd_write_string(unit, 0, 0, last_write_length2);
+    // lcd_write_string(unit, 0, 0, last_write_length2);
 }
 
-void bt_output_value(char* memory, float value, char *unit){
+void bt_output_value(reading_t reading,char* memory){
     // TODO: change this to follow data pattern
 		
-	sprintf(memory, "<%.4f> %s",value,unit);
-
+//	sprintf(memory, "<%.4f> %s",value,unit);
+    reading_get_message_form(reading,memory);
 	send_String(USART3, memory);
 }
 
@@ -120,25 +88,18 @@ void bt_output_value(char* memory, float value, char *unit){
 void display_startup_message() {
     int last_write_length1 = 0, last_write_length2 = 0;
     lcd_clear_display();
-    lcd_write_string("You're a", 0, 0, &last_write_length1);
-    lcd_write_string("Multimeter Harry", 1, 0, &last_write_length2);
-		send_String(USART3, "You're a multimeter, Harry");
+    lcd_write_string("Digital", 0, 0, &last_write_length1);
+    lcd_write_string("Multimeter", 1, 0, &last_write_length2);
+		send_String(USART3, "Digital Multimeter");
     Delay(1000);
     lcd_clear_display();
 }
 
-void auto_scale_hardware(int rawValue){
+
+// TODO: SCALE DOWN AND UP
+int auto_scale_hardware(int rawValue){
 	// Will limitting these be required?
-	if(rawValue < SCALE_LIMITS){
-		scaleState++;
-		//write to pin increase
-		// transform_scale_to_hardware_pins()
-	}
-	else if(rawValue > (VOLTAGE_INPUT_MAX-SCALE_LIMITS)){
-		scaleState--;
-		//write to pin decrease
-		// transform_scale_to_hardware_pins()
-	}
+	
 }
 
 void transform_scale_to_hardware_pins(){
@@ -156,6 +117,16 @@ void setState(char *mode){
 }
 
 
+reading_t get_display_lcd_reading(int state){
+	if(state == 0){
+		return volts;
+	} else if(state == 1){
+		return amps;
+	} else if(state ==2){
+		// work on this
+	}
+}
+
 /*----------------------------------------------------------------------------
   Function shows current/voltage/resistance
  *----------------------------------------------------------------------------*/
@@ -164,19 +135,21 @@ void main_loop(void) {
 
     float value = 0;
     float rawValue = 0;
-    char *unit = malloc(6 * sizeof(char)); // Max word length + 1 for null char (possible words Volts, Amps, Ohms)
+//    char *unit = malloc(6 * sizeof(char)); // Max word length + 1 for null char (possible words Volts, Amps, Ohms)
     int last_write_length1 = 0, last_write_length2 = 0;
-    unit = "Volts";
+
+    reading_t reading;
 
     while (1) {
-        rawValue = read_value(state);
-				auto_scale_hardware(rawValue);
-				
-        unit = get_units(state,scaleState);
-        value = scale(rawValue, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX);
+        read_value();
+        reading = get_display_lcd_reading(state);
+		if(reading_need_scale(reading,VOLTAGE_OUTPUT_MAX,VOLTAGE_OUTPUT_MIN))
+		    continue;
 
-        lcd_output_value(string_memory,value,unit, &last_write_length1,&last_write_length2);
-        bt_output_value(string_memory,value,unit);
+        bt_output_value(volts,string_memory);
+        bt_output_value(amps, string_memory);
+        lcd_output_value(string_memory,reading, &last_write_length1,&last_write_length2);
+
     }
 }
 
@@ -184,7 +157,9 @@ void main_loop(void) {
   MAIN function
  *----------------------------------------------------------------------------*/
 int main(void) {
-  init_board(); 
-  display_startup_message();
-	main_loop();
+    volts = reading_new(0,'V',0);
+    amps = reading_new(0,'A',0);
+    init_board();
+    display_startup_message();
+    main_loop();
 }
