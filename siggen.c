@@ -4,12 +4,10 @@
 #include <stdlib.h>
 #include <math.h>
 
-float* generate_sin(int amplitude, int frequency){
-    float out[10000];
-    for(int i = 0; i < 10000; i++){
-        out[i] = amplitude * ( sin((2 * PI) * i * frequency) );
+void generate_sin(int amplitude, int frequency,float* mem, int memLength){
+    for(int i = 0; i < memLength; i++){
+        mem[i] = amplitude * ( sin((2 * PI) * i * frequency) );
     }
-    return out;
 }
 
 

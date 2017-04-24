@@ -4,7 +4,7 @@
 #define FREQ 1 //default frequency for sig gen
 #define PI 3.14159265359
 
-float* generate_sin(int amplitude, int frequency);
+void generate_sin(int amplitude, int frequency);
 float* generate_square(int amplitude, int frequency);
 float* generate_triangle(int amplitude, int frequency);
 

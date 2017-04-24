@@ -25,6 +25,7 @@
 // Change this depending on where we want scaling to start
 #define DEFAULT_STAGE 0
 
+#define SIGNALCACHESIZE 255
 
 ringbuffer_t ringbuffer;
 unsigned int state = 1;
@@ -33,7 +34,8 @@ reading_t volts;
 reading_t amps;
 reading_t resistance;
 
-float* sine;
+float* signalCache;
+
 int sendSignal;
 
 // TODO: (Re)Move this?
@@ -153,7 +155,7 @@ void main_loop(void) {
             We only scale the reading we're displaying
             this should hopefully allow for faster switching (as hopefully the scale wont change)
         */
-        while (delta_scale) {
+        while (delta_scale && 0) {
             reading_set_scale(reading, reading_get_scale(reading) + delta_scale);
             delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
             continue;
@@ -174,7 +176,8 @@ int main(void) {
     amps = reading_new(0, 'A', 0);
     resistance = reading_new(0, 'O', 0);
     // Cache Sine signal values
-    sine = generate_sin(10,10000); // tweak
+    signalCache = malloc(sizeof(float)*SIGNALCACHESIZE);
+    sine = generate_sin(10,10000,&signalCache,SIGNALCACHESIZE); // tweak
     init_board();
     display_startup_message();
     main_loop();
