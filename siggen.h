@@ -2,9 +2,9 @@
 #define _SIGGEN_H_
 #define AMPLITUDE 1 //default amplitude for sig gen
 #define FREQ 1 //default frequency for sig gen
-#define PI 3.14159265359
+#define PI 3.14159265359f
 
-void generate_sin(int amplitude, int frequency);
+void generate_sin(int amplitude, int frequency,float* mem, int memLength);
 float* generate_square(int amplitude, int frequency);
 float* generate_triangle(int amplitude, int frequency);
 

@@ -25,7 +25,7 @@
 // Change this depending on where we want scaling to start
 #define DEFAULT_STAGE 0
 
-#define SIGNALCACHESIZE 255
+#define SIGNALCACHESIZE 10000
 
 ringbuffer_t ringbuffer;
 unsigned int state = 1;
@@ -90,6 +90,7 @@ void bt_output_value(reading_t reading, char *memory) {
 //	sprintf(memory, "<%.4f> %s",value,unit);
     reading_get_message_form(reading, memory);
     send_String(USART3, memory);
+		printf("%s\n", memory);
 }
 
 
@@ -130,10 +131,16 @@ reading_t get_display_lcd_reading(int state) {
 
 void outputSine(){
     int i = 0;
-    while(sendSignal){
+		reading_t ready_yates = reading_new(0,'A',0);
+	  char* willy = malloc(sizeof(char)*100);
+		
+	  while(1){
         //GPIOE->PINNAME = sine[i++];
-        i%=10000;
+				reading_set_value(ready_yates,signalCache[i++]);
+				printf("%.4f\n", signalCache[i]);
+				i%=SIGNALCACHESIZE;
     }
+		free(willy);
 }
 
 /*----------------------------------------------------------------------------
@@ -147,9 +154,11 @@ void main_loop(void) {
     int delta_scale = 0;
     reading_t reading;
 
+		outputSine();
+	
     while (1) {
         read_value();
-        reading - get_display_lcd_reading(state);
+        reading = get_display_lcd_reading(state);
         delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
          /*
             We only scale the reading we're displaying
@@ -168,6 +177,8 @@ void main_loop(void) {
     }
 }
 
+
+
 /*----------------------------------------------------------------------------
   MAIN function
  *----------------------------------------------------------------------------*/
@@ -177,7 +188,8 @@ int main(void) {
     resistance = reading_new(0, 'O', 0);
     // Cache Sine signal values
     signalCache = malloc(sizeof(float)*SIGNALCACHESIZE);
-    sine = generate_sin(10,10000,&signalCache,SIGNALCACHESIZE); // tweak
+	
+    generate_sin(1,1,signalCache,SIGNALCACHESIZE); // tweak
     init_board();
     display_startup_message();
     main_loop();
