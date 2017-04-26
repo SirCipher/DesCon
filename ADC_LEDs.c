@@ -276,44 +276,44 @@ void choose_mode(){
 	lcd_clear_display();
 }
 
-int main(void){
-	volts = reading_new(0, 'V', 0);
-	amps = reading_new(0, 'A', 0);
-	resistance = reading_new(0, 'O', 0);
-	
-	init_board();
-	
-	
-	display_startup_message();
-
-	if(startup){
-		set_mode_menu(MODE_VOLTAGE, MODE_DISPLAY);
-		startup = 0;
-	}
-	
-	choose_mode();
-	while(1) {
-		menu();	
-	}
-}
-
-/*----------------------------------------------------------------------------
-  MAIN functions
- *----------------------------------------------------------------------------*/
-//int main(void) {
+//int main(void){
 //	volts = reading_new(0, 'V', 0);
 //	amps = reading_new(0, 'A', 0);
 //	resistance = reading_new(0, 'O', 0);
-//	// Cache Sine signal values
-//	//signalCache = malloc(sizeof(float)*SIGNALCACHESIZE);
+//	
+//	init_board();
+//	
+//	
+//	display_startup_message();
 
 //	if(startup){
 //		set_mode_menu(MODE_VOLTAGE, MODE_DISPLAY);
 //		startup = 0;
 //	}
 //	
-//	//generate_sin(1,1,signalCache,SIGNALCACHESIZE); // tweak
-//	init_board();
-//	display_startup_message();
-//	main_loop();
+//	choose_mode();
+//	while(1) {
+//		menu();	
+//	}
 //}
+
+/*----------------------------------------------------------------------------
+  MAIN functions
+ *----------------------------------------------------------------------------*/
+int main(void) {
+	volts = reading_new(0, 'V', 0);
+	amps = reading_new(0, 'A', 0);
+	resistance = reading_new(0, 'O', 0);
+	// Cache Sine signal values
+	//signalCache = malloc(sizeof(float)*SIGNALCACHESIZE);
+
+	if(startup){
+		set_mode_menu(MODE_VOLTAGE, MODE_DISPLAY);
+		startup = 0;
+	}
+	
+	//generate_sin(1,1,signalCache,SIGNALCACHESIZE); // tweak
+	init_board();
+	display_startup_message();
+	main_loop();
+}
