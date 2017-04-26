@@ -38,13 +38,21 @@ float *signalCache;
 
 int sendSignal;
 
-int menuCount = 3;
 char* menuItems[] ={
         "Voltage",
         "Current",
         "Resistance",
+        'Light',
+        'Continuinity',
+        'Transistor',
+        'Diode',
+        'Capacitor',
+        'Inductor',
+        'Rms',
+        'Frequency',
 };
 
+int menuCount = 11;
 // TODO: (Re)Move this?
 /*----------------------------------------------------------------------------
   Function that read Button pins
@@ -98,6 +106,10 @@ void bt_output_value(reading_t reading, char *memory) {
     reading_get_message_form(reading, memory);
     send_String(USART3, memory);
     printf("%s\n", memory);
+}
+
+int is_continuity(int val){
+    return val > CONTINUITY_RAW_CAP;
 }
 
 

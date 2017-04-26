@@ -6,7 +6,7 @@
 
 void generate_sin(int amplitude, int frequency,float* mem, int memLength){
     for(int i = 0; i < memLength; i++){
-        mem[i] = (float)(amplitude * ( sinf((2 * PI) * i * frequency) ));
+        mem[i] = (float)(amplitude * ( sinf((2 * PI) * i/ frequency) ));
     }
 }
 
