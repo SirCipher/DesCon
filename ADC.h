@@ -45,6 +45,7 @@ void send_Char(USART_TypeDef *USARTx, uint8_t ch);
 void setState(char *mode);
 
 void adc_reading(int mode);
+void continuity();
 
 void TOM_lcd_send_string(int line, char* message);
 

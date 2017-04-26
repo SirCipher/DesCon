@@ -20,6 +20,7 @@
 #define VOLTAGE_OUTPUT_MAX 10
 
 #define RESISTANCE_READING reading_get_value(volts) / reading_get_value(amps)
+#define LIGHT_READING ADCTWO
 
 #define SCALE_LIMITS 128
 // Change this depending on where we want scaling to start
@@ -33,6 +34,7 @@ unsigned int scaleState = DEFAULT_STAGE;
 reading_t volts;
 reading_t amps;
 reading_t resistance;
+reading_t light;
 
 float *signalCache;
 
@@ -86,13 +88,17 @@ char *get_units(int menuState, int scaleState) {
   Reads values from pins and stores them in reading
  *----------------------------------------------------------------------------*/
 void read_value() {
+		if(menuState < 3){
     reading_set_value(volts, scale(ADCONE, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
     reading_set_value(amps, scale(ADCTWO, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
+		}
+		else if(menuState ==3){
+			reading_set_value(light,scale(LIGHT_READING, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
+	}
 }
 
 void lcd_output_value(char *memory, reading_t reading, int *last_write_length1, int *last_write_length2) {
     reading_get_lcd_string(reading, memory);
-
     lcd_write_string(memory, 1, 0, last_write_length1);
     // lcd_write_string(unit, 0, 0, last_write_length2);
 }
@@ -142,7 +148,9 @@ reading_t get_display_lcd_reading(int menuState) {
         reading_set_value(resistance, RESISTANCE_READING);
         reading_set_scale(resistance, reading_get_scale(volts) + reading_get_scale(amps));
         return resistance;
-    }
+    } else if (menuState == 3){
+				return light;
+		}
     return NULL;
 }
 
@@ -188,7 +196,7 @@ void check_string_set_mode(char rx_buffer[]) {
 void adc_reading(int mode) {
     char *string_memory = (char *) malloc(64 * sizeof(char));
 
-    int last_write_length1 = 0, last_write_length2 = 0;
+    int last_write_length1 = 16, last_write_length2 = 16;
     int delta_scale = 0;
     reading_t reading;
 
@@ -205,33 +213,18 @@ void adc_reading(int mode) {
             delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
             continue;
         }
-        bt_output_value(volts, string_memory);
-        bt_output_value(amps, string_memory);
+				if(mode < 3){
+					bt_output_value(volts, string_memory);
+					bt_output_value(amps, string_memory);
+				}
+				else {
+					bt_output_value(light, string_memory);
+				}
         lcd_output_value(string_memory, reading, &last_write_length1, &last_write_length2);
     }
     free(string_memory);
-
 }
 
-void set_mode_menu() {
-    int last_write_length1 = 16, last_write_length2 = 16;
-    if(!menu_confirm_exit){
-        lcd_write_string(menuItems[menuState],1,0,&last_write_length1);
-				Delay(500);
-    } else {
-			if(menuState < 3 ){
-        adc_reading(menuState);
-			} else if (menuState > 3){
-				if(menuState == 4){
-					int isCont = is_continuity(ADCONE);
-					char* truth = (char*) malloc(sizeof(char)*32);
-					sprintf(truth, "Da truth is %d", isCont);
-					send_String(USART3, truth);
-					free(truth);
-				}
-			}
-		}
-}
 
 void choose_mode() {
     int last_write_length1 = 0, last_write_length2 = 0;
@@ -239,18 +232,55 @@ void choose_mode() {
     lcd_write_string("Choose a mode", 0, 0, &last_write_length1);
     TOM_lcd_send_string(0, "Choose a mode");
     send_String(USART3, "Choose a mode");
-    Delay(1000);
-    lcd_clear_display();
+    
 }
+
+void set_mode_menu() {
+    int last_write_length1 = 16, last_write_length2 = 16;
+	choose_mode();
+    while(!menu_confirm_exit){
+        lcd_write_string(menuItems[menuState],1,0,&last_write_length1);
+				Delay(500);
+    }
+		
+			lcd_clear_display();
+		while(menu_confirm_exit){
+			if(menuState < 4 ){
+        adc_reading(menuState);
+			} else {
+				if(menuState == 4) continuity();
+			}
+		}
+}
+
+void set_mux(int mux){
+	// GPIOX->PINNAME = mux; // || do da funky m4f
+}
+
+void set_buzz(int buzz){
+	//GPIOX->PINNAME = buzz>0;
+}
+
+void continuity(int state){
+	// output to mux
+	set_mux(10);
+	
+	while(menu_confirm_exit){
+		while(is_continuity(ADCONE)) set_buzz(1);
+		set_buzz(0);
+	}
+}
+
+
 
 int main(void) {
     volts = reading_new(0, 'V', 0);
     amps = reading_new(0, 'A', 0);
+		light = reading_new(0, 'L', 0);
     resistance = reading_new(0, 'O', 0);
 
     init_board();
     display_startup_message();
-    choose_mode();
 
     while (1) {
         set_mode_menu();
