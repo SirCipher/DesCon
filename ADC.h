@@ -16,6 +16,7 @@
 #include "stm32f4xx_syscfg.h"
 #include "misc.h"
 #include "defines.h"
+#include "app.h"
 
 void ADC1_init(void);
 

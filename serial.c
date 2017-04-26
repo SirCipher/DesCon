@@ -122,7 +122,6 @@ void USART3_IRQHandler(void){
         if (rx_index != 0){ 
           memcpy((void *)line_buffer, rx_buffer, rx_index); // Copy to static line buffer from dynamic receive buffer
 					line_buffer[rx_index] = 0;
-					send_String(USART3, rx_buffer);    
 					rx_index = 0; // Reset index pointer
 					check_string_set_mode(rx_buffer);
 					memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
@@ -133,7 +132,7 @@ void USART3_IRQHandler(void){
         if (rx_index == MAX_CHARACTERS){ 
             rx_index = 0;
 				}
-          rx_buffer[rx_index++] = rx; // Copy to buffer and increment
+				rx_buffer[rx_index++] = rx; // Copy to buffer and increment
     }
 	}
 }

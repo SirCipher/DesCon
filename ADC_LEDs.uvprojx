@@ -540,6 +540,16 @@
               <FileType>5</FileType>
               <FilePath>.\defines.h</FilePath>
             </File>
+            <File>
+              <FileName>app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app.c</FilePath>
+            </File>
+            <File>
+              <FileName>app.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\app.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

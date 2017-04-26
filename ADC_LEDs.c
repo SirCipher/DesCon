@@ -145,21 +145,34 @@ void outputSine() {
 }
 
 void check_string_set_mode(char rx_buffer[]) {
-	if (strcmp(rx_buffer, STRING_AMPS) == 0) current_mode = MODE_CURRENT;
-	if (strcmp(rx_buffer, STRING_VOLTAGE) == 0) current_mode = MODE_VOLTAGE;
-	if (strcmp(rx_buffer, STRING_RESISTANCE) == 0) current_mode = MODE_RESISTANCE;
-	if (strcmp(rx_buffer, STRING_LIGHT) == 0) current_mode = MODE_LIGHT;
-	if (strcmp(rx_buffer, STRING_CONTINUITY) == 0) current_mode = MODE_CONTINUITY;
-	if (strcmp(rx_buffer, STRING_TRANSISTOR) == 0) current_mode = MODE_TRANSISTOR;
-	if (strcmp(rx_buffer, STRING_DIODE) == 0) current_mode = MODE_DIODE;
-	if (strcmp(rx_buffer, STRING_CAPACITOR) == 0) current_mode = MODE_CAPACITOR;
-	if (strcmp(rx_buffer, STRING_INDUCTOR) == 0) current_mode = MODE_INDUCTOR;
-	if (strcmp(rx_buffer, STRING_RMS) == 0) current_mode = MODE_RMS;
-	if (strcmp(rx_buffer, STRING_FREQUENCY) == 0) current_mode = MODE_FREQUENCY;
+	int new_mode;
+	if (strcmp(rx_buffer, STRING_AMPS) == 0) new_mode = MODE_CURRENT;
+	if (strcmp(rx_buffer, STRING_VOLTAGE) == 0) new_mode = MODE_VOLTAGE;
+	if (strcmp(rx_buffer, STRING_RESISTANCE) == 0) new_mode = MODE_RESISTANCE;
+	if (strcmp(rx_buffer, STRING_LIGHT) == 0) new_mode = MODE_LIGHT;
+	if (strcmp(rx_buffer, STRING_CONTINUITY) == 0) new_mode = MODE_CONTINUITY;
+	if (strcmp(rx_buffer, STRING_TRANSISTOR) == 0) new_mode = MODE_TRANSISTOR;
+	if (strcmp(rx_buffer, STRING_DIODE) == 0) new_mode = MODE_DIODE;
+	if (strcmp(rx_buffer, STRING_CAPACITOR) == 0) new_mode = MODE_CAPACITOR;
+	if (strcmp(rx_buffer, STRING_INDUCTOR) == 0) new_mode = MODE_INDUCTOR;
+	if (strcmp(rx_buffer, STRING_RMS) == 0) new_mode = MODE_RMS;
+	if (strcmp(rx_buffer, STRING_FREQUENCY) == 0) new_mode = MODE_FREQUENCY;
 	if (strcmp(rx_buffer, STRING_TOGGLE) == 0) {
 			if (menu_confirm_exit) menu_confirm_exit = 0;
 			else menu_confirm_exit = 1;
 	}
+	
+	if(current_mode != new_mode){
+		current_mode = new_mode;
+	}
+	
+	char *string_memory = (char *) malloc(16 * sizeof(char));
+	strcpy(string_memory, "New mode:");
+	strcpy(string_memory, menuItems[current_mode]);
+	send_String(USART3, string_memory);
+	free(string_memory);
+	
+	menu_confirm_exit = 0;
 }
 
 void adc_reading(uint8_t mode) {
@@ -212,6 +225,7 @@ void menu() {
 	}
 	
 	set_leds();
+	app_set_mode(menuState);
 	
 	lcd_clear_display();
 	while (menu_confirm_exit) {
@@ -259,7 +273,6 @@ void light_led(uint8_t led) {
 }
 
 void flash_led(uint8_t led){
-	
 	for(int i =0;i < 32; i++){
 		GPIOD->ODR &= 0x00FF;
 		GPIOD->ODR |= (led << 8);
