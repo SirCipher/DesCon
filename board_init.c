@@ -4,6 +4,7 @@
 #include "stm32f4xx.h"
 #include "tm_stm32f4_delay.h"
 #include "tm_stm32f4_hd44780.h"
+#include <stdio.h>
 
 extern ringbuffer_t ringbuffer;
 extern unsigned int state;
@@ -45,7 +46,7 @@ void GPIO_init(void){
     /* Interrupt mode */
     EXTI_InitStruct.EXTI_Mode = EXTI_Mode_Interrupt;
     /* Triggers on rising and falling edge */
-    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+    EXTI_InitStruct.EXTI_Trigger = EXTI_Trigger_Rising;
     /* Add to EXTI */
     EXTI_Init(&EXTI_InitStruct);
 
@@ -65,44 +66,91 @@ void GPIO_init(void){
     NVIC_Init(&NVIC_InitStruct);
 }
 
+int button_selected = 0;
+extern int current_mode;
+extern int set_selection;
+extern int menu_confirm_exit;
+
 void EXTI9_5_IRQHandler(void) {
-	/* Make sure that interrupt flag is set */
-   if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
-				state = 0;
-		 EXTI_ClearITPendingBit(EXTI_Line8);
+	// Menu left screen
+	if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
+		current_mode--;
+		if(current_mode < 0) current_mode = 0;
+		
+		char* message;
+		sprintf(message, "%i", current_mode);
+		int last_write_length1 = 0, last_write_length2 = 0;
+		lcd_clear_display();
+		lcd_write_string("Current mode is", 0, 0, &last_write_length1);;
+		lcd_write_string(message, 1, 0, &last_write_length1);
+		Delay(1000);
+		
+		EXTI_ClearITPendingBit(EXTI_Line8);
+		
    } else if (EXTI_GetITStatus(EXTI_Line9) != RESET) {
-		state = 1;
-		 EXTI_ClearITPendingBit(EXTI_Line9);
+		menu_confirm_exit = MENU_CONFIRM_EXIT ? MENU_CONFIRM : MENU_EXIT;
+		 
+		char* message;
+		sprintf(message, "%i", current_mode);
+		int last_write_length1 = 0, last_write_length2 = 0;
+		lcd_clear_display();
+		lcd_write_string("Current mode is", 0, 0, &last_write_length1);;
+		lcd_write_string(message, 1, 0, &last_write_length1);
+		 
+		 		 		Delay(1000);
+
+		EXTI_ClearITPendingBit(EXTI_Line9);
    } 
- }
+}
 
 void EXTI15_10_IRQHandler(void) {
 	if (EXTI_GetITStatus(EXTI_Line10) != RESET) {
-send_String(USART3, "Fuck3");
+		current_mode++;
+		if(current_mode > 10) current_mode = 10;
 		EXTI_ClearITPendingBit(EXTI_Line10);
+		
+		char* message;
+		sprintf(message, "%i", current_mode);
+		int last_write_length1 = 0, last_write_length2 = 0;
+		lcd_clear_display();
+		lcd_write_string("Current mode is", 0, 0, &last_write_length1);;
+		lcd_write_string(message, 1, 0, &last_write_length1);
+				Delay(1000);
+
 	} else if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
-send_String(USART3, "Fuck4");
+
 		EXTI_ClearITPendingBit(EXTI_Line11);
    }else if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
-send_String(USART3, "Fuck5");
+
 		 EXTI_ClearITPendingBit(EXTI_Line12);
    }else if (EXTI_GetITStatus(EXTI_Line13) != RESET) {
-send_String(USART3, "Faggot6");
+
 		 EXTI_ClearITPendingBit(EXTI_Line13);
    }else if (EXTI_GetITStatus(EXTI_Line14) != RESET) {
-send_String(USART3, "Fuck7");
+
 		 EXTI_ClearITPendingBit(EXTI_Line14);
    } else if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
-send_String(USART3, "Fuck8");
+
 		 EXTI_ClearITPendingBit(EXTI_Line15);
    }
  }
 
+// LCD Function's for Tom's LCD screen.
 void TOM_lcd_init(){
 	TM_HD44780_Init(16, 2);
 	TM_HD44780_Clear();
 	TM_HD44780_Puts(0, 0, "Harry, you're a");
 	TM_HD44780_Puts(0, 1, "   multimeter");
+}
+
+void TOM_lcd_send_string(int line, char* message){
+	TM_HD44780_Clear();
+	Delay(1000);
+	TM_HD44780_Puts(0, line, message);
+}
+
+void init_leds(){
+	RCC->AHB1ENR	|= RCC_AHB1ENR_GPIODEN | RCC_AHB1ENR_GPIOEEN;
 }
 
 /*----------------------------------------------------------------------------
@@ -116,11 +164,12 @@ void init_board(void) {
 
     //ringbuffer = ringbuffer_new(255);
 
+		//init_leds();
     GPIO_init();
     ADC1_init();
     ADC2_init();
     SWT_Init();
     lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 128);
-		//TOM_lcd_init();
+		TOM_lcd_init();
     serial_init();
 }

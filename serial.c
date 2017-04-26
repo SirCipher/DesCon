@@ -100,46 +100,39 @@ static void _configUSART2(uint32_t BAUD, uint32_t fosc) {
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // this sets the priority group of the USART1 interrupts
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; // this sets the subpriority inside the group
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; // the USART2 interrupts are globally enabled
-    NVIC_Init(
-            &NVIC_InitStructure); // the properties are passed to the NVIC_Init function which takes care of the low level stuff
+    NVIC_Init(&NVIC_InitStructure); // the properties are passed to the NVIC_Init function which takes care of the low level stuff
 
     //Finally this enables the complete USART1 peripheral
     USART_Cmd(USART2, ENABLE);
 }
 
-void USART3_IRQHandler(void) {
-//  static char rx_buffer[MAX_CHARACTERS];
-//  static int rx_index = 0;
+void USART3_IRQHandler(void){
+  static char rx_buffer[MAX_CHARACTERS]; 
+  static int rx_index = 0;
 
-    // Have we received a character?
-    if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) {
-        char rx = USART_ReceiveData(USART3);
+	// Have we received a character?
+  if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) 
+  {
+    char rx =  USART_ReceiveData(USART3);
 
-        if ((rx == '\r') || (rx == '\n')) { // Is this an end-of-line condition?
-            if (ringbuffer_is_empty(ringbuffer) != 0) {
-                int maxCount = ringbuffer_count(ringbuffer);
-                int i = 0;
-                for(int i = 0; i < maxCount; i++){
-                    line_buffer[i] = ringbuffer_shift(ringbuffer);
-                }
-
-                
-                line_buffer[i] = '\0';
-								//setState((char *)line_buffer);
-
-//                memcpy((void *) line_buffer, rx_buffer,
-//                       rx_index); // Copy to static line buffer from dynamic receive buffer
-//                line_buffer[rx_index] = 0;
-//                setState(rx_buffer);
-//                send_String(USART3, rx_buffer);
-//                rx_index = 0; // Reset index pointer
-//                memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
-            }
-        } else {
-            // Have we overflown? Data loss will occur.
-            ringbuffer_push(ringbuffer,rx);
+    if ((rx == '\r') || (rx == '\n')){ // Is this an end-of-line condition?
+        if (rx_index != 0){ 
+          memcpy((void *)line_buffer, rx_buffer, rx_index); // Copy to static line buffer from dynamic receive buffer
+					line_buffer[rx_index] = 0;
+					send_String(USART3, rx_buffer);    
+					rx_index = 0; // Reset index pointer
+					memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
+					TOM_lcd_send_string(0, rx_buffer);
         }
     }
+    else{
+				// Have we overflown? Data loss will occur.
+        if (rx_index == MAX_CHARACTERS){ 
+            rx_index = 0;
+				}
+          rx_buffer[rx_index++] = rx; // Copy to buffer and increment
+    }
+	}
 }
 
 void serial_init(void) {
