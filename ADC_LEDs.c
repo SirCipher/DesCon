@@ -28,15 +28,22 @@
 #define SIGNALCACHESIZE 10000
 
 ringbuffer_t ringbuffer;
-unsigned int state = 1;
+unsigned int menuState = 0;
 unsigned int scaleState = DEFAULT_STAGE;
 reading_t volts;
 reading_t amps;
 reading_t resistance;
 
-float* signalCache;
+float *signalCache;
 
 int sendSignal;
+
+int menuCount = 3;
+char* menuItems[] ={
+        "Voltage",
+        "Current",
+        "Resistance",
+};
 
 // TODO: (Re)Move this?
 /*----------------------------------------------------------------------------
@@ -48,12 +55,12 @@ uint32_t BTN_Get(void) {
 }
 
 /*----------------------------------------------------------------------------
-  Checks buttons and returns whether the state has changed or not
+  Checks buttons and returns whether the menuState has changed or not
  *----------------------------------------------------------------------------*/
-int check_state_changed(unsigned int *state) {
+int check_state_changed(unsigned int *menuState) {
     for (int i = 0; i < 3; i++) {
-        if (SWT_Check(i) && *state != i + 1) {
-            *state = i + 1;
+        if (SWT_Check(i) && *menuState != i + 1) {
+            *menuState = i + 1;
             return 1;
         }
     }
@@ -61,9 +68,9 @@ int check_state_changed(unsigned int *state) {
 }
 
 /*----------------------------------------------------------------------------
-  Returns the correct units based on state
+  Returns the correct units based on menuState
  *----------------------------------------------------------------------------*/
-char *get_units(int state, int scaleState) {
+char *get_units(int menuState, int scaleState) {
     return "\0";
 }
 
@@ -90,7 +97,7 @@ void bt_output_value(reading_t reading, char *memory) {
 //	sprintf(memory, "<%.4f> %s",value,unit);
     reading_get_message_form(reading, memory);
     send_String(USART3, memory);
-		printf("%s\n", memory);
+    printf("%s\n", memory);
 }
 
 
@@ -116,12 +123,12 @@ void transform_scale_to_hardware_pins() {
 }
 
 
-reading_t get_display_lcd_reading(int state) {
-    if (state == 0) {
+reading_t get_display_lcd_reading(int menuState) {
+    if (menuState == 0) {
         return volts;
-    } else if (state == 1) {
+    } else if (menuState == 1) {
         return amps;
-    } else if (state == 2) {
+    } else if (menuState == 2) {
         reading_set_value(resistance, RESISTANCE_READING);
         reading_set_scale(resistance, reading_get_scale(volts) + reading_get_scale(amps));
         return resistance;
@@ -129,18 +136,18 @@ reading_t get_display_lcd_reading(int state) {
     return NULL;
 }
 
-void outputSine(){
+void outputSine() {
     int i = 0;
-		reading_t ready_yates = reading_new(0,'A',0);
-	  char* willy = malloc(sizeof(char)*100);
-		
-	  while(1){
+    reading_t ready_yates = reading_new(0, 'A', 0);
+    char *willy = malloc(sizeof(char) * 100);
+
+    while (1) {
         //GPIOE->PINNAME = sine[i++];
-				reading_set_value(ready_yates,signalCache[i++]);
-				printf("%.4f\n", signalCache[i]);
-				i%=SIGNALCACHESIZE;
+        reading_set_value(ready_yates, signalCache[i++]);
+        printf("%.4f\n", signalCache[i]);
+        i %= SIGNALCACHESIZE;
     }
-		free(willy);
+    free(willy);
 }
 
 /*----------------------------------------------------------------------------
@@ -154,16 +161,16 @@ void main_loop(void) {
     int delta_scale = 0;
     reading_t reading;
 
-		//outputSine();
-	
+    //outputSine();
+
     while (1) {
         read_value();
-        reading = get_display_lcd_reading(state);
+        reading = get_display_lcd_reading(menuState);
         delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
-         /*
-            We only scale the reading we're displaying
-            this should hopefully allow for faster switching (as hopefully the scale wont change)
-        */
+        /*
+           We only scale the reading we're displaying
+           this should hopefully allow for faster switching (as hopefully the scale wont change)
+       */
         while (delta_scale && 0) {
             reading_set_scale(reading, reading_get_scale(reading) + delta_scale);
             delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
@@ -173,7 +180,7 @@ void main_loop(void) {
         bt_output_value(volts, string_memory);
         bt_output_value(amps, string_memory);
         lcd_output_value(string_memory, reading, &last_write_length1, &last_write_length2);
-				TOM_lcd_send_string(1, string_memory);
+        TOM_lcd_send_string(1, string_memory);
     }
 }
 
@@ -183,146 +190,96 @@ int startup = 1;
 int set_selection = 0;
 int menu_confirm_exit = 0;
 
-void check_string_set_mode(char rx_buffer[]){
-	if(strcmp(rx_buffer, STRING_AMPS) == 0) current_mode = MODE_CURRENT;
-	if(strcmp(rx_buffer, STRING_VOLTAGE) == 0) current_mode = MODE_VOLTAGE;
-	if(strcmp(rx_buffer, STRING_RESISTANCE) == 0) current_mode = MODE_RESISTANCE;
-	if(strcmp(rx_buffer, STRING_LIGHT) == 0) current_mode = MODE_LIGHT;
-	if(strcmp(rx_buffer, STRING_CONTINUITY) == 0) current_mode = MODE_CONTINUITY;
-	if(strcmp(rx_buffer, STRING_TRANSISTOR) == 0) current_mode = MODE_TRANSISTOR;
-	if(strcmp(rx_buffer, STRING_DIODE) == 0) current_mode = MODE_DIODE;
-	if(strcmp(rx_buffer, STRING_CAPACITOR) == 0) current_mode = MODE_CAPACITOR;
-	if(strcmp(rx_buffer, STRING_INDUCTOR) == 0) current_mode = MODE_INDUCTOR;
-	if(strcmp(rx_buffer, STRING_RMS) == 0) current_mode = MODE_RMS;
-	if(strcmp(rx_buffer, STRING_FREQUENCY) == 0) current_mode = MODE_FREQUENCY;
-	if(strcmp(rx_buffer, STRING_TOGGLE) ==0){ 
-		if(menu_confirm_exit) menu_confirm_exit = 0;
-		else menu_confirm_exit = 1;
-	}
-	
-	char* message;
-	sprintf(message, "Set mode %i", current_mode);
-	send_String(USART3, message);
-	
-	sprintf(message, "MCE %i", menu_confirm_exit);
-	send_String(USART3, message);
+void check_string_set_mode(char rx_buffer[]) {
+    if (strcmp(rx_buffer, STRING_AMPS) == 0) current_mode = MODE_CURRENT;
+    if (strcmp(rx_buffer, STRING_VOLTAGE) == 0) current_mode = MODE_VOLTAGE;
+    if (strcmp(rx_buffer, STRING_RESISTANCE) == 0) current_mode = MODE_RESISTANCE;
+    if (strcmp(rx_buffer, STRING_LIGHT) == 0) current_mode = MODE_LIGHT;
+    if (strcmp(rx_buffer, STRING_CONTINUITY) == 0) current_mode = MODE_CONTINUITY;
+    if (strcmp(rx_buffer, STRING_TRANSISTOR) == 0) current_mode = MODE_TRANSISTOR;
+    if (strcmp(rx_buffer, STRING_DIODE) == 0) current_mode = MODE_DIODE;
+    if (strcmp(rx_buffer, STRING_CAPACITOR) == 0) current_mode = MODE_CAPACITOR;
+    if (strcmp(rx_buffer, STRING_INDUCTOR) == 0) current_mode = MODE_INDUCTOR;
+    if (strcmp(rx_buffer, STRING_RMS) == 0) current_mode = MODE_RMS;
+    if (strcmp(rx_buffer, STRING_FREQUENCY) == 0) current_mode = MODE_FREQUENCY;
+    if (strcmp(rx_buffer, STRING_TOGGLE) == 0) {
+        if (menu_confirm_exit) menu_confirm_exit = 0;
+        else menu_confirm_exit = 1;
+    }
+
+    char *message;
+    sprintf(message, "Set mode %i", current_mode);
+    send_String(USART3, message);
+
+    sprintf(message, "MCE %i", menu_confirm_exit);
+    send_String(USART3, message);
 }
 
 
-void adc_reading(int mode){
-	    char *string_memory = (char *) malloc(100 * sizeof(char));
+void adc_reading(int mode) {
+    char *string_memory = (char *) malloc(100 * sizeof(char));
 
-//    char *unit = malloc(6 * sizeof(char)); // Max word length + 1 for null char (possible words Volts, Amps, Ohms)
     int last_write_length1 = 0, last_write_length2 = 0;
     int delta_scale = 0;
     reading_t reading;
-	
+
     while (menu_confirm_exit) {
         read_value();
         reading = get_display_lcd_reading(mode);
         delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
-         /*
-            We only scale the reading we're displaying
-            this should hopefully allow for faster switching (as hopefully the scale wont change)
-        */
+        /*
+           We only scale the reading we're displaying
+           this should hopefully allow for faster switching (as hopefully the scale wont change)
+       */
         while (delta_scale && 0) {
             reading_set_scale(reading, reading_get_scale(reading) + delta_scale);
             delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
             continue;
         }
-				
-				bt_output_value(volts, string_memory);
-				bt_output_value(amps, string_memory);
-				lcd_output_value(string_memory, reading, &last_write_length1,&last_write_length2);
-			}
-		free(string_memory);
-			
+        bt_output_value(volts, string_memory);
+        bt_output_value(amps, string_memory);
+        lcd_output_value(string_memory, reading, &last_write_length1, &last_write_length2);
+    }
+    free(string_memory);
+
 }
 
-void set_mode_menu(){
-	int last_write_length1 = 0, last_write_length2 = 0;
-	lcd_clear_display();
-	Delay(500);
-	
-	switch(current_mode){
-		case MODE_VOLTAGE:
-			if(!menu_confirm_exit) {
-				lcd_write_string("Voltage", 1, 0, &last_write_length1);
-				Delay(1000);
-			}
-			else {
-				adc_reading(MODE_VOLTAGE);
-			}
-			break;
-		
-		case MODE_CURRENT:
-			if(!menu_confirm_exit) {
-				lcd_write_string("Current", 1, 0, &last_write_length1);
-				Delay(1000);
-			}
-			else {
-				adc_reading(MODE_CURRENT);
-			}
-			break;
-		
-		case MODE_RESISTANCE:
-			break;
-		
-		case MODE_LIGHT:
-			break;
-		
-		case MODE_CONTINUITY:
-			break;
-		
-		case MODE_TRANSISTOR:
-			break;
-		
-		case MODE_DIODE:
-			break;
-		
-		case MODE_CAPACITOR:
-			break;
-		
-		case MODE_INDUCTOR:
-			break;
-		
-		case MODE_RMS:
-			break;
-		
-		case MODE_FREQUENCY:
-			break;
-		
-		default:
-			break;		
-	}
-	
-	char* message;
-	sprintf(message, "Set mode %i", current_mode);
-	send_String(USART3, message);
-	sprintf(message, "CE %i", menu_confirm_exit);
-	send_String(USART3, message);
+void set_mode_menu() {
+    int last_write_length1 = 16, last_write_length2 = 16;
+    if(!menu_confirm_exit){
+        lcd_write_string(menuItems[menuState],1,0,&last_write_length1);
+				Delay(500);
+    } else {
+        adc_reading(menuState);
+    }
+
+    char *message;
+    sprintf(message, "Set mode %i", current_mode);
+    send_String(USART3, message);
+    sprintf(message, "CE %i", menu_confirm_exit);
+    send_String(USART3, message);
 }
 
-void choose_mode(){
-	int last_write_length1 = 0, last_write_length2 = 0;
-	lcd_clear_display();
-	lcd_write_string("Choose a mode", 0, 0, &last_write_length1);
-	TOM_lcd_send_string(0, "Choose a mode");
-	send_String(USART3, "Choose a mode");
-	Delay(1000);
-	lcd_clear_display();
+void choose_mode() {
+    int last_write_length1 = 0, last_write_length2 = 0;
+    lcd_clear_display();
+    lcd_write_string("Choose a mode", 0, 0, &last_write_length1);
+    TOM_lcd_send_string(0, "Choose a mode");
+    send_String(USART3, "Choose a mode");
+    Delay(1000);
+    lcd_clear_display();
 }
 
-int main(void){
-	volts = reading_new(0, 'V', 0);
-	amps = reading_new(0, 'A', 0);
-	resistance = reading_new(0, 'O', 0);
-	
-	init_board();
-	display_startup_message();
-	choose_mode();
-	
-	while(1) {
-		set_mode_menu();
-	}
+int main(void) {
+    volts = reading_new(0, 'V', 0);
+    amps = reading_new(0, 'A', 0);
+    resistance = reading_new(0, 'O', 0);
+
+    init_board();
+    display_startup_message();
+    choose_mode();
+
+    while (1) {
+        set_mode_menu();
+    }
 }

@@ -62,5 +62,5 @@ int ringbuffer_is_full(ringbuffer_t buffer);
  */
 int ringbuffer_is_empty(ringbuffer_t buffer);
 
-
+BUFFERTYPE* ringbuffer_shift_all(ringbuffer_t buffer);
 #endif //RINGBUFFER_RING_BUFFER_H

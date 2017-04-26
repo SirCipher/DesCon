@@ -83,3 +83,12 @@ int ringbuffer_is_empty(ringbuffer_t buffer) {
 }
 
 
+BUFFERTYPE* ringbuffer_shift_all(ringbuffer_t rb){
+    BUFFERTYPE buffer[rb->count];
+    int x = 0;
+    for(;!ringbuffer_is_empty(rb);){
+        buffer[x] = ringbuffer_shift(rb);
+    }
+    return buffer;
+}
+
