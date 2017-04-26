@@ -17,12 +17,11 @@
 #include "misc.h"
 #include "defines.h"
 
-
-
-
 void ADC1_init(void);
+
 void ADC2_init(void);
-void set_mode_menu();
+
+void set_mode_menu(void);
 
 void init_board(void);
 
@@ -44,12 +43,16 @@ void send_Char(USART_TypeDef *USARTx, uint8_t ch);
 
 void setState(char *mode);
 
-void adc_reading(int mode);
-void continuity();
+void adc_reading(uint8_t mode);
+
+void continuity(void);
+
 void welcome_sequence(void);
 
-void TOM_lcd_send_string(int line, char* message);
+void TOM_lcd_send_string(uint8_t line, char* message);
 
 void check_string_set_mode(char rx_buffer[]);
+
+void set_mux(uint8_t mux);
 
 #endif /*_ADC_H_*/

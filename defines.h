@@ -14,6 +14,7 @@
 #define MODE_INDUCTOR 8
 #define MODE_RMS 9
 #define MODE_FREQUENCY 10
+#define MODE_SIGGEN 11
 #define MODE_DISPLAY 0
 #define MODE_SET 1
 

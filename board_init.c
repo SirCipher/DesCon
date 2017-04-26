@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 extern ringbuffer_t ringbuffer;
-extern unsigned int state;
+extern uint8_t state;
 
 /*----------------------------------------------------------------------------
   Function that initializes Button pins
@@ -68,35 +68,35 @@ void GPIO_init(void) {
     NVIC_Init(&NVIC_InitStruct);
 }
 
-int button_selected = 0;
-extern int menuState;
-extern int menuCount;
-extern int set_selection;
-extern int menu_confirm_exit;
+uint8_t button_selected = 0;
+extern uint8_t menuState;
+extern uint8_t menuCount;
+extern uint8_t set_selection;
+extern uint8_t menu_confirm_exit;
 
 void EXTI9_5_IRQHandler(void) {
     // Menu left screen
     if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
-        if (!menu_confirm_exit) {
-            menuState += menuCount - 1;
-            menuState %= menuCount;
-        }
-        EXTI_ClearITPendingBit(EXTI_Line8);
+			if (!menu_confirm_exit) {
+					menuState += menuCount - 1;
+					menuState %= menuCount;
+			}
+			EXTI_ClearITPendingBit(EXTI_Line8);
 
     } else if (EXTI_GetITStatus(EXTI_Line9) != RESET) {
-        if (menu_confirm_exit) menu_confirm_exit = 0;
-        else if (!menu_confirm_exit) menu_confirm_exit = 1;
-        EXTI_ClearITPendingBit(EXTI_Line9);
+			if (menu_confirm_exit) menu_confirm_exit = 0;
+			else if (!menu_confirm_exit) menu_confirm_exit = 1;
+			EXTI_ClearITPendingBit(EXTI_Line9);
     }
 }
 
 void EXTI15_10_IRQHandler(void) {
     if (EXTI_GetITStatus(EXTI_Line10) != RESET) {
-        if (!menu_confirm_exit) {
-            menuState++;
-            menuState %= menuCount;
-        }
-        EXTI_ClearITPendingBit(EXTI_Line10);
+			if (!menu_confirm_exit) {
+					menuState++;
+					menuState %= menuCount;
+			}
+			EXTI_ClearITPendingBit(EXTI_Line10);
 
     } else if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
 
@@ -124,7 +124,7 @@ void TOM_lcd_init() {
     TM_HD44780_Puts(0, 1, "   multimeter");
 }
 
-void TOM_lcd_send_string(int line, char *message) {
+void TOM_lcd_send_string(uint8_t line, char *message) {
     TM_HD44780_Clear();
     Delay(1000);
     TM_HD44780_Puts(0, line, message);
