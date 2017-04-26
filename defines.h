@@ -29,3 +29,6 @@
 #define STRING_RMS "Rms"
 #define STRING_FREQUENCY "Freq"
 #define STRING_TOGGLE "Tog"
+
+#define ADC_VOLTAGE
+#define ADC_CURRENT

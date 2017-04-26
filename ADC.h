@@ -22,7 +22,7 @@
 
 void ADC1_init(void);
 void ADC2_init(void);
-void set_mode_menu(int mode, int set_mode);
+void set_mode_menu();
 
 void init_board(void);
 
@@ -43,6 +43,8 @@ void send_String(USART_TypeDef *USARTx, char *str);
 void send_Char(USART_TypeDef *USARTx, uint8_t ch);
 
 void setState(char *mode);
+
+void adc_reading(int mode);
 
 void TOM_lcd_send_string(int line, char* message);
 

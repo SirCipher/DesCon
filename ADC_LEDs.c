@@ -208,30 +208,61 @@ void check_string_set_mode(char rx_buffer[]){
 	send_String(USART3, message);
 }
 
-void menu(){
-	switch(current_mode){
-		case MENU_LEFT:
-			set_mode_menu(current_mode, menu_confirm_exit);
-			break;
-		
-		case MENU_RIGHT:
-			set_mode_menu(current_mode, menu_confirm_exit);
-			break;
-		
-		default:
-			set_mode_menu(current_mode, MODE_DISPLAY);
-			break;
-	}
+
+void adc_reading(int mode){
+	    char *string_memory = (char *) malloc(100 * sizeof(char));
+
+//    char *unit = malloc(6 * sizeof(char)); // Max word length + 1 for null char (possible words Volts, Amps, Ohms)
+    int last_write_length1 = 0, last_write_length2 = 0;
+    int delta_scale = 0;
+    reading_t reading;
+	
+    while (menu_confirm_exit) {
+        read_value();
+        reading = get_display_lcd_reading(mode);
+        delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
+         /*
+            We only scale the reading we're displaying
+            this should hopefully allow for faster switching (as hopefully the scale wont change)
+        */
+        while (delta_scale && 0) {
+            reading_set_scale(reading, reading_get_scale(reading) + delta_scale);
+            delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
+            continue;
+        }
+				
+				bt_output_value(volts, string_memory);
+				bt_output_value(amps, string_memory);
+				lcd_output_value(string_memory, reading, &last_write_length1,&last_write_length2);
+			}
+		free(string_memory);
+			
 }
 
-void set_mode_menu(int mode, int set_mode){
-
-	switch(mode){
+void set_mode_menu(){
+	int last_write_length1 = 0, last_write_length2 = 0;
+	lcd_clear_display();
+	Delay(500);
+	
+	switch(current_mode){
 		case MODE_VOLTAGE:
-
+			if(!menu_confirm_exit) {
+				lcd_write_string("Voltage", 1, 0, &last_write_length1);
+				Delay(1000);
+			}
+			else {
+				adc_reading(MODE_VOLTAGE);
+			}
 			break;
 		
 		case MODE_CURRENT:
+			if(!menu_confirm_exit) {
+				lcd_write_string("Current", 1, 0, &last_write_length1);
+				Delay(1000);
+			}
+			else {
+				adc_reading(MODE_CURRENT);
+			}
 			break;
 		
 		case MODE_RESISTANCE:
@@ -264,6 +295,12 @@ void set_mode_menu(int mode, int set_mode){
 		default:
 			break;		
 	}
+	
+	char* message;
+	sprintf(message, "Set mode %i", current_mode);
+	send_String(USART3, message);
+	sprintf(message, "CE %i", menu_confirm_exit);
+	send_String(USART3, message);
 }
 
 void choose_mode(){
@@ -276,45 +313,16 @@ void choose_mode(){
 	lcd_clear_display();
 }
 
-//int main(void){
-//	volts = reading_new(0, 'V', 0);
-//	amps = reading_new(0, 'A', 0);
-//	resistance = reading_new(0, 'O', 0);
-//	
-//	init_board();
-//	
-//	
-//	display_startup_message();
-
-//	if(startup){
-//		set_mode_menu(MODE_VOLTAGE, MODE_DISPLAY);
-//		startup = 0;
-//	}
-//	
-//	choose_mode();
-//	while(1) {
-//		menu();	
-//	}
-//}
-
-
-/*----------------------------------------------------------------------------
-  MAIN functions
- *----------------------------------------------------------------------------*/
-int main(void) {
+int main(void){
 	volts = reading_new(0, 'V', 0);
 	amps = reading_new(0, 'A', 0);
 	resistance = reading_new(0, 'O', 0);
-	// Cache Sine signal values
-	//signalCache = malloc(sizeof(float)*SIGNALCACHESIZE);
-
-	if(startup){
-		set_mode_menu(MODE_VOLTAGE, MODE_DISPLAY);
-		startup = 0;
-	}
 	
-	//generate_sin(1,1,signalCache,SIGNALCACHESIZE); // tweak
 	init_board();
 	display_startup_message();
-	main_loop();
+	choose_mode();
+	
+	while(1) {
+		set_mode_menu();
+	}
 }

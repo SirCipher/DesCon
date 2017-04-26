@@ -74,20 +74,25 @@ extern int menu_confirm_exit;
 void EXTI9_5_IRQHandler(void) {
 	// Menu left screen
 	if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
-		current_mode--;
-		if(current_mode < 0) current_mode = 0;
+		if(!menu_confirm_exit){
+			current_mode--;
+			if(current_mode < 0) current_mode = 0;
+		}
 		EXTI_ClearITPendingBit(EXTI_Line8);
 		
    } else if (EXTI_GetITStatus(EXTI_Line9) != RESET) {
-		 menu_confirm_exit = MENU_CONFIRM ? MENU_EXIT : MENU_CONFIRM;
+		 if(menu_confirm_exit) menu_confirm_exit = 0;
+		 else if(!menu_confirm_exit) menu_confirm_exit = 1;
 		 EXTI_ClearITPendingBit(EXTI_Line9);
    } 
 }
 
 void EXTI15_10_IRQHandler(void) {
 	if (EXTI_GetITStatus(EXTI_Line10) != RESET) {
-		current_mode++;
-		if(current_mode > 10) current_mode = 10;
+		if(!menu_confirm_exit){
+			current_mode++;
+			if(current_mode > 10) current_mode = 10;
+		}
 		EXTI_ClearITPendingBit(EXTI_Line10);
 		
 	} else if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
