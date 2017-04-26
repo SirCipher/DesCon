@@ -21,7 +21,7 @@ void ADC1_init(void);
 
 void ADC2_init(void);
 
-void set_mode_menu(void);
+void menu(void);
 
 void init_board(void);
 
@@ -54,5 +54,13 @@ void TOM_lcd_send_string(uint8_t line, char* message);
 void check_string_set_mode(char rx_buffer[]);
 
 void set_mux(uint8_t mux);
+
+void light_led(uint8_t led);
+
+void flash_led(uint8_t led);
+
+void clear_led(void);
+void set_leds(void);
+void start_messages(void);
 
 #endif /*_ADC_H_*/

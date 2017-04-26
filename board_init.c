@@ -75,44 +75,45 @@ extern uint8_t set_selection;
 extern uint8_t menu_confirm_exit;
 
 void EXTI9_5_IRQHandler(void) {
-    // Menu left screen
     if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
 			if (!menu_confirm_exit) {
-					menuState += menuCount - 1;
-					menuState %= menuCount;
-			}
+				menuState += menuCount - 1;
+				menuState %= menuCount;
+			} 
+			
 			EXTI_ClearITPendingBit(EXTI_Line8);
 
     } else if (EXTI_GetITStatus(EXTI_Line9) != RESET) {
-			if (menu_confirm_exit) menu_confirm_exit = 0;
-			else if (!menu_confirm_exit) menu_confirm_exit = 1;
 			EXTI_ClearITPendingBit(EXTI_Line9);
     }
 }
 
 void EXTI15_10_IRQHandler(void) {
     if (EXTI_GetITStatus(EXTI_Line10) != RESET) {
-			if (!menu_confirm_exit) {
-					menuState++;
-					menuState %= menuCount;
-			}
 			EXTI_ClearITPendingBit(EXTI_Line10);
 
     } else if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
-
-        EXTI_ClearITPendingBit(EXTI_Line11);
+			if (menu_confirm_exit) menu_confirm_exit = 0;
+			else if (!menu_confirm_exit) menu_confirm_exit = 1;
+			
+      EXTI_ClearITPendingBit(EXTI_Line11);
+			
     } else if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
-
-        EXTI_ClearITPendingBit(EXTI_Line12);
+			EXTI_ClearITPendingBit(EXTI_Line12);
+			
     } else if (EXTI_GetITStatus(EXTI_Line13) != RESET) {
-
-        EXTI_ClearITPendingBit(EXTI_Line13);
+			EXTI_ClearITPendingBit(EXTI_Line13);
+			
     } else if (EXTI_GetITStatus(EXTI_Line14) != RESET) {
-
-        EXTI_ClearITPendingBit(EXTI_Line14);
+			EXTI_ClearITPendingBit(EXTI_Line14);
+			
     } else if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
-
-        EXTI_ClearITPendingBit(EXTI_Line15);
+			if (!menu_confirm_exit) {
+				menuState++;
+				menuState %= menuCount;
+			}
+			
+			EXTI_ClearITPendingBit(EXTI_Line15);
     }
 }
 

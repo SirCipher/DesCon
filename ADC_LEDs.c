@@ -104,18 +104,6 @@ int is_continuity(int val) {
 	return val > CONTINUITY_RAW_CAP;
 }
 
-
-void display_startup_message() {
-	int last_write_length1 = 0, last_write_length2 = 0;
-	lcd_clear_display();
-	lcd_write_string("Digital", 0, 0, &last_write_length1);
-	lcd_write_string("Multimeter", 1, 0, &last_write_length2);
-	send_String(USART3, "Digital Multimeter");
-	Delay(1000);
-	lcd_clear_display();
-}
-
-
 // TODO: SCALE DOWN AND UP
 int auto_scale_hardware(int rawValue) {
 	// Will limitting these be required?
@@ -204,24 +192,37 @@ void adc_reading(uint8_t mode) {
 	free(string_memory);
 }
 
-
-void choose_mode() {
+void display_startup_message() {
 	int last_write_length1 = 0, last_write_length2 = 0;
 	lcd_clear_display();
+	lcd_write_string("Digital", 0, 0, &last_write_length1);
+	lcd_write_string("Multimeter", 1, 0, &last_write_length2);
+	send_String(USART3, "Digital Multimeter");
+	Delay(1000);
+	lcd_clear_display();
+}
+
+void menu() {
+	int last_write_length1 = 16, last_write_length2 = 16;
+
+	if(startup) {
+		display_startup_message();
+		startup =0;
+	}
+	
 	lcd_write_string("Choose a mode", 0, 0, &last_write_length1);
 	TOM_lcd_send_string(0, "Choose a mode");
 	send_String(USART3, "Choose a mode");
 
-}
-
-void set_mode_menu() {
-	int last_write_length1 = 16, last_write_length2 = 16;
-	choose_mode();
+	set_leds();
+	
 	while (!menu_confirm_exit) {
 		lcd_write_string(menuItems[menuState], 1, 0, &last_write_length1);
 		Delay(500);
 	}
-
+	
+	set_leds();
+	
 	lcd_clear_display();
 	while (menu_confirm_exit) {
 		if (menuState < 4) {
@@ -235,6 +236,14 @@ void set_mode_menu() {
 	}
 }
 
+void set_leds(){
+	if(!menu_confirm_exit){
+		light_led(0x89);
+	} else{
+		light_led(0x8);
+	}
+}
+
 void set_mux(uint8_t mux) {
     // GPIOX->PINNAME = mux; // || do da funky m4f
 }
@@ -244,16 +253,30 @@ void set_buzz(uint8_t buzz) {
 }
 
 void continuity() {
-
 	while (menu_confirm_exit) {
 			while (is_continuity(ADCONE)) set_buzz(1);
 			set_buzz(0);
 	}
 }
 
-// led is which led to light. Flash or toggle
-void light_led(uint8_t led, uint8_t flash) {
+void clear_led(){
+	GPIOD->ODR &= 0x00FF;
+}
 
+void light_led(uint8_t led) {
+	GPIOD->ODR &= 0x00FF;
+	GPIOD->ODR |= (led << 8);
+}
+
+void flash_led(uint8_t led){
+	
+	for(int i =0;i < 32; i++){
+		GPIOD->ODR &= 0x00FF;
+		GPIOD->ODR |= (led << 8);
+		Delay(300);
+	}
+	
+	GPIOD->ODR &= 0x00FF;
 }
 
 // Welcome LED sequence
@@ -273,6 +296,7 @@ void welcome_sequence(void) {
 			GPIOD->ODR |= (led2light << 8);
 			Delay(20);
 	}
+	GPIOD->ODR &= 0x00FF;
 }
 
 int main(void) {
@@ -283,9 +307,8 @@ int main(void) {
 
 	init_board();
 	welcome_sequence();
-	display_startup_message();
 
 	while (1) {
-			set_mode_menu();
+			menu();
 	}
 }
