@@ -106,6 +106,9 @@ static void _configUSART2(uint32_t BAUD, uint32_t fosc) {
     USART_Cmd(USART2, ENABLE);
 }
 
+
+
+
 void USART3_IRQHandler(void){
   static char rx_buffer[MAX_CHARACTERS]; 
   static int rx_index = 0;
@@ -121,8 +124,9 @@ void USART3_IRQHandler(void){
 					line_buffer[rx_index] = 0;
 					send_String(USART3, rx_buffer);    
 					rx_index = 0; // Reset index pointer
-					memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
+					check_string_set_mode(rx_buffer);
 					TOM_lcd_send_string(0, rx_buffer);
+					memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
         }
     }
     else{

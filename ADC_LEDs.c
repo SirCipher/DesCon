@@ -183,6 +183,31 @@ int startup = 1;
 int set_selection = 0;
 int menu_confirm_exit = 0;
 
+void check_string_set_mode(char rx_buffer[]){
+	if(strcmp(rx_buffer, STRING_AMPS) == 0) current_mode = MODE_CURRENT;
+	if(strcmp(rx_buffer, STRING_VOLTAGE) == 0) current_mode = MODE_VOLTAGE;
+	if(strcmp(rx_buffer, STRING_RESISTANCE) == 0) current_mode = MODE_RESISTANCE;
+	if(strcmp(rx_buffer, STRING_LIGHT) == 0) current_mode = MODE_LIGHT;
+	if(strcmp(rx_buffer, STRING_CONTINUITY) == 0) current_mode = MODE_CONTINUITY;
+	if(strcmp(rx_buffer, STRING_TRANSISTOR) == 0) current_mode = MODE_TRANSISTOR;
+	if(strcmp(rx_buffer, STRING_DIODE) == 0) current_mode = MODE_DIODE;
+	if(strcmp(rx_buffer, STRING_CAPACITOR) == 0) current_mode = MODE_CAPACITOR;
+	if(strcmp(rx_buffer, STRING_INDUCTOR) == 0) current_mode = MODE_INDUCTOR;
+	if(strcmp(rx_buffer, STRING_RMS) == 0) current_mode = MODE_RMS;
+	if(strcmp(rx_buffer, STRING_FREQUENCY) == 0) current_mode = MODE_FREQUENCY;
+	if(strcmp(rx_buffer, STRING_TOGGLE) ==0){ 
+		if(menu_confirm_exit) menu_confirm_exit = 0;
+		else menu_confirm_exit = 1;
+	}
+	
+	char* message;
+	sprintf(message, "Set mode %i", current_mode);
+	send_String(USART3, message);
+	
+	sprintf(message, "MCE %i", menu_confirm_exit);
+	send_String(USART3, message);
+}
+
 void menu(){
 	switch(current_mode){
 		case MENU_LEFT:
@@ -197,14 +222,6 @@ void menu(){
 			set_mode_menu(current_mode, MODE_DISPLAY);
 			break;
 	}
-		
-	char* message;
-	sprintf(message, "%i", current_mode);
-	int last_write_length1 = 0, last_write_length2 = 0;
-	lcd_clear_display();
-	lcd_write_string("Current mode is", 0, 0, &last_write_length1);;
-	lcd_write_string(message, 1, 0, &last_write_length1);
-	Delay(1000);
 }
 
 void set_mode_menu(int mode, int set_mode){
@@ -259,42 +276,44 @@ void choose_mode(){
 	lcd_clear_display();
 }
 
-//int main(void){
-//	volts = reading_new(0, 'V', 0);
-//	amps = reading_new(0, 'A', 0);
-//	resistance = reading_new(0, 'O', 0);
-//	
-//	init_board();
-//	display_startup_message();
-
-//	if(startup){
-//		set_mode_menu(MODE_VOLTAGE, MODE_DISPLAY);
-//		startup = 0;
-//	}
-//	
-//	choose_mode();
-//	while(1) {
-//		menu();	
-//	}
-//}
-
-/*----------------------------------------------------------------------------
-  MAIN functions
- *----------------------------------------------------------------------------*/
-int main(void) {
+int main(void){
 	volts = reading_new(0, 'V', 0);
 	amps = reading_new(0, 'A', 0);
 	resistance = reading_new(0, 'O', 0);
-	// Cache Sine signal values
-	//signalCache = malloc(sizeof(float)*SIGNALCACHESIZE);
+	
+	init_board();
+	
+	
+	display_startup_message();
 
 	if(startup){
 		set_mode_menu(MODE_VOLTAGE, MODE_DISPLAY);
 		startup = 0;
 	}
 	
-	//generate_sin(1,1,signalCache,SIGNALCACHESIZE); // tweak
-	init_board();
-	display_startup_message();
-	main_loop();
+	choose_mode();
+	while(1) {
+		menu();	
+	}
 }
+
+/*----------------------------------------------------------------------------
+  MAIN functions
+ *----------------------------------------------------------------------------*/
+//int main(void) {
+//	volts = reading_new(0, 'V', 0);
+//	amps = reading_new(0, 'A', 0);
+//	resistance = reading_new(0, 'O', 0);
+//	// Cache Sine signal values
+//	//signalCache = malloc(sizeof(float)*SIGNALCACHESIZE);
+
+//	if(startup){
+//		set_mode_menu(MODE_VOLTAGE, MODE_DISPLAY);
+//		startup = 0;
+//	}
+//	
+//	//generate_sin(1,1,signalCache,SIGNALCACHESIZE); // tweak
+//	init_board();
+//	display_startup_message();
+//	main_loop();
+//}

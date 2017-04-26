@@ -534,6 +534,11 @@
               <FileType>1</FileType>
               <FilePath>.\siggen.c</FilePath>
             </File>
+            <File>
+              <FileName>defines.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\defines.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

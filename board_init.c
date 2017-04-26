@@ -76,30 +76,11 @@ void EXTI9_5_IRQHandler(void) {
 	if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
 		current_mode--;
 		if(current_mode < 0) current_mode = 0;
-		
-		char* message;
-		sprintf(message, "%i", current_mode);
-		int last_write_length1 = 0, last_write_length2 = 0;
-		lcd_clear_display();
-		lcd_write_string("Current mode is", 0, 0, &last_write_length1);;
-		lcd_write_string(message, 1, 0, &last_write_length1);
-		Delay(1000);
-		
 		EXTI_ClearITPendingBit(EXTI_Line8);
 		
    } else if (EXTI_GetITStatus(EXTI_Line9) != RESET) {
-		menu_confirm_exit = MENU_CONFIRM_EXIT ? MENU_CONFIRM : MENU_EXIT;
-		 
-		char* message;
-		sprintf(message, "%i", current_mode);
-		int last_write_length1 = 0, last_write_length2 = 0;
-		lcd_clear_display();
-		lcd_write_string("Current mode is", 0, 0, &last_write_length1);;
-		lcd_write_string(message, 1, 0, &last_write_length1);
-		 
-		 		 		Delay(1000);
-
-		EXTI_ClearITPendingBit(EXTI_Line9);
+		 menu_confirm_exit = MENU_CONFIRM ? MENU_EXIT : MENU_CONFIRM;
+		 EXTI_ClearITPendingBit(EXTI_Line9);
    } 
 }
 
@@ -109,14 +90,6 @@ void EXTI15_10_IRQHandler(void) {
 		if(current_mode > 10) current_mode = 10;
 		EXTI_ClearITPendingBit(EXTI_Line10);
 		
-		char* message;
-		sprintf(message, "%i", current_mode);
-		int last_write_length1 = 0, last_write_length2 = 0;
-		lcd_clear_display();
-		lcd_write_string("Current mode is", 0, 0, &last_write_length1);;
-		lcd_write_string(message, 1, 0, &last_write_length1);
-				Delay(1000);
-
 	} else if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
 
 		EXTI_ClearITPendingBit(EXTI_Line11);
