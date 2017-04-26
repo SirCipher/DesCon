@@ -11,8 +11,8 @@
 #include "siggen.h"
 
 // TODO: rename this file, its not ADC_LEDS, its our project (Not done as it may break keil)
-#define VOLTAGE (float) read_ADC1()
-#define CURRENT (float) read_ADC2()
+#define ADCONE (float) read_ADC1()
+#define ADCTWO (float) read_ADC2()
 #define RESISTANCE VOLTAGE/CURRENT
 #define VOLTAGE_INPUT_MIN 0
 #define VOLTAGE_INPUT_MAX 65536
@@ -42,14 +42,14 @@ char* menuItems[] ={
         "Voltage",
         "Current",
         "Resistance",
-        'Light',
-        'Continuinity',
-        'Transistor',
-        'Diode',
-        'Capacitor',
-        'Inductor',
-        'Rms',
-        'Frequency',
+        "Light",
+        "Continuinity",
+        "Transistor",
+        "Diode",
+        "Capacitor",
+        "Inductor",
+        "Rms",
+        "Frequency",
 };
 
 int menuCount = 11;
@@ -86,10 +86,8 @@ char *get_units(int menuState, int scaleState) {
   Reads values from pins and stores them in reading
  *----------------------------------------------------------------------------*/
 void read_value() {
-    reading_set_value(volts,
-                      scale(VOLTAGE, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
-    reading_set_value(amps,
-                      scale(CURRENT, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
+    reading_set_value(volts, scale(ADCONE, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
+    reading_set_value(amps, scale(ADCTWO, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX, VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
 }
 
 void lcd_output_value(char *memory, reading_t reading, int *last_write_length1, int *last_write_length2) {
@@ -162,40 +160,6 @@ void outputSine() {
     free(willy);
 }
 
-/*----------------------------------------------------------------------------
-  Function shows current/voltage/resistance
- *----------------------------------------------------------------------------*/
-void main_loop(void) {
-    char *string_memory = (char *) malloc(100 * sizeof(char));
-
-//    char *unit = malloc(6 * sizeof(char)); // Max word length + 1 for null char (possible words Volts, Amps, Ohms)
-    int last_write_length1 = 0, last_write_length2 = 0;
-    int delta_scale = 0;
-    reading_t reading;
-
-    //outputSine();
-
-    while (1) {
-        read_value();
-        reading = get_display_lcd_reading(menuState);
-        delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
-        /*
-           We only scale the reading we're displaying
-           this should hopefully allow for faster switching (as hopefully the scale wont change)
-       */
-        while (delta_scale && 0) {
-            reading_set_scale(reading, reading_get_scale(reading) + delta_scale);
-            delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
-            continue;
-        }
-
-        bt_output_value(volts, string_memory);
-        bt_output_value(amps, string_memory);
-        lcd_output_value(string_memory, reading, &last_write_length1, &last_write_length2);
-        TOM_lcd_send_string(1, string_memory);
-    }
-}
-
 int board_is_reading = 0;
 int current_mode = 0;
 int startup = 1;
@@ -218,18 +182,11 @@ void check_string_set_mode(char rx_buffer[]) {
         if (menu_confirm_exit) menu_confirm_exit = 0;
         else menu_confirm_exit = 1;
     }
-
-    char *message;
-    sprintf(message, "Set mode %i", current_mode);
-    send_String(USART3, message);
-
-    sprintf(message, "MCE %i", menu_confirm_exit);
-    send_String(USART3, message);
 }
 
 
 void adc_reading(int mode) {
-    char *string_memory = (char *) malloc(100 * sizeof(char));
+    char *string_memory = (char *) malloc(64 * sizeof(char));
 
     int last_write_length1 = 0, last_write_length2 = 0;
     int delta_scale = 0;
@@ -262,14 +219,18 @@ void set_mode_menu() {
         lcd_write_string(menuItems[menuState],1,0,&last_write_length1);
 				Delay(500);
     } else {
+			if(menuState < 3 ){
         adc_reading(menuState);
-    }
-
-    char *message;
-    sprintf(message, "Set mode %i", current_mode);
-    send_String(USART3, message);
-    sprintf(message, "CE %i", menu_confirm_exit);
-    send_String(USART3, message);
+			} else if (menuState > 3){
+				if(menuState == 4){
+					int isCont = is_continuity(ADCONE);
+					char* truth = (char*) malloc(sizeof(char)*32);
+					sprintf(truth, "Da truth is %d", isCont);
+					send_String(USART3, truth);
+					free(truth);
+				}
+			}
+		}
 }
 
 void choose_mode() {

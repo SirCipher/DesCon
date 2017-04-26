@@ -32,3 +32,4 @@
 
 #define ADC_VOLTAGE
 #define ADC_CURRENT
+#define CONTINUITY_RAW_CAP 45675
