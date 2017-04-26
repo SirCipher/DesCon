@@ -131,7 +131,8 @@ void TOM_lcd_send_string(int line, char *message) {
 }
 
 void init_leds() {
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN | RCC_AHB1ENR_GPIOEEN;
+	RCC->AHB1ENR	|= RCC_AHB1ENR_GPIODEN;
+	GPIOD->MODER	|= (0x5555UL << 16);
 }
 
 /*----------------------------------------------------------------------------
@@ -145,8 +146,8 @@ void init_board(void) {
 
     //ringbuffer = ringbuffer_new(255);
 
-    //init_leds();
     GPIO_init();
+		init_leds();
     ADC1_init();
     ADC2_init();
     SWT_Init();

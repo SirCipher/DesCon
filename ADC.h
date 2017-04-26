@@ -46,6 +46,7 @@ void setState(char *mode);
 
 void adc_reading(int mode);
 void continuity();
+void welcome_sequence(void);
 
 void TOM_lcd_send_string(int line, char* message);
 

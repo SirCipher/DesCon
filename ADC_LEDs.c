@@ -271,7 +271,30 @@ void continuity(int state){
 	}
 }
 
+// led is which led to light. Flash or toggle
+void light_led(int led, int flash){
+	
+	
+}
 
+// Welcome LED sequence
+void welcome_sequence(void){
+  int led2light, i;
+	
+    for (i = 0; i < 8; i++){
+			led2light = (int) pow(2,i);
+			GPIOD->ODR &= 0x00FF;
+			GPIOD->ODR |= (led2light << 8);
+			Delay(20);
+		}
+    
+    for (i = 7; i >= 0; i--){
+			led2light = (int) pow(2,i);
+			GPIOD->ODR &= 0x00FF;
+			GPIOD->ODR |= (led2light << 8);
+			Delay(20);
+		}
+}
 
 int main(void) {
     volts = reading_new(0, 'V', 0);
@@ -280,6 +303,7 @@ int main(void) {
     resistance = reading_new(0, 'O', 0);
 
     init_board();
+		welcome_sequence();
     display_startup_message();
 
     while (1) {
