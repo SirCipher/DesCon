@@ -5,6 +5,7 @@
 #include "ADC.h"
 #include "utility.h"
 #include "ringbuffer.h"
+#include "board_init.h"
 #include "reading.h"
 #include "unit_dict.h"
 #include <string.h>
@@ -192,16 +193,6 @@ void adc_reading(uint8_t mode) {
 	free(string_memory);
 }
 
-void display_startup_message() {
-	int last_write_length1 = 0, last_write_length2 = 0;
-	lcd_clear_display();
-	lcd_write_string("Digital", 0, 0, &last_write_length1);
-	lcd_write_string("Multimeter", 1, 0, &last_write_length2);
-	send_String(USART3, "Digital Multimeter");
-	Delay(1000);
-	lcd_clear_display();
-}
-
 void menu() {
 	int last_write_length1 = 16, last_write_length2 = 16;
 
@@ -211,7 +202,6 @@ void menu() {
 	}
 	
 	lcd_write_string("Choose a mode", 0, 0, &last_write_length1);
-	TOM_lcd_send_string(0, "Choose a mode");
 	send_String(USART3, "Choose a mode");
 
 	set_leds();
@@ -279,26 +269,6 @@ void flash_led(uint8_t led){
 	GPIOD->ODR &= 0x00FF;
 }
 
-// Welcome LED sequence
-void welcome_sequence(void) {
-	int led2light, i;
-
-	for (i = 0; i < 8; i++) {
-			led2light = (int) pow(2, i);
-			GPIOD->ODR &= 0x00FF;
-			GPIOD->ODR |= (led2light << 8);
-			Delay(20);
-	}
-
-	for (i = 7; i >= 0; i--) {
-			led2light = (int) pow(2, i);
-			GPIOD->ODR &= 0x00FF;
-			GPIOD->ODR |= (led2light << 8);
-			Delay(20);
-	}
-	GPIOD->ODR &= 0x00FF;
-}
-
 int main(void) {
 	volts = reading_new(0, 'V', 0);
 	amps = reading_new(0, 'A', 0);
@@ -306,7 +276,6 @@ int main(void) {
 	resistance = reading_new(0, 'O', 0);
 
 	init_board();
-	welcome_sequence();
 
 	while (1) {
 			menu();

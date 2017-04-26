@@ -49,7 +49,6 @@ void continuity(void);
 
 void welcome_sequence(void);
 
-void TOM_lcd_send_string(uint8_t line, char* message);
 
 void check_string_set_mode(char rx_buffer[]);
 

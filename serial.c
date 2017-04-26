@@ -125,7 +125,6 @@ void USART3_IRQHandler(void){
 					send_String(USART3, rx_buffer);    
 					rx_index = 0; // Reset index pointer
 					check_string_set_mode(rx_buffer);
-					TOM_lcd_send_string(0, rx_buffer);
 					memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
         }
     }

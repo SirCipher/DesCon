@@ -2,9 +2,10 @@
 #include "board_init.h"
 #include "ringbuffer.h"
 #include "stm32f4xx.h"
-#include "tm_stm32f4_delay.h"
-#include "tm_stm32f4_hd44780.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include "utility.h"
 
 extern ringbuffer_t ringbuffer;
 extern uint8_t state;
@@ -117,23 +118,39 @@ void EXTI15_10_IRQHandler(void) {
     }
 }
 
-// LCD Function's for Tom's LCD screen.
-void TOM_lcd_init() {
-    TM_HD44780_Init(16, 2);
-    TM_HD44780_Clear();
-    TM_HD44780_Puts(0, 0, "Harry, you're a");
-    TM_HD44780_Puts(0, 1, "   multimeter");
-}
-
-void TOM_lcd_send_string(uint8_t line, char *message) {
-    TM_HD44780_Clear();
-    Delay(1000);
-    TM_HD44780_Puts(0, line, message);
-}
-
 void init_leds() {
 	RCC->AHB1ENR	|= RCC_AHB1ENR_GPIODEN;
 	GPIOD->MODER	|= (0x5555UL << 16);
+}
+
+void display_startup_message() {
+	int last_write_length1 = 0, last_write_length2 = 0;
+	lcd_clear_display();
+	lcd_write_string("Digital", 0, 0, &last_write_length1);
+	lcd_write_string("Multimeter", 1, 0, &last_write_length2);
+	send_String(USART3, "Digital Multimeter");
+	Delay(1000);
+	lcd_clear_display();
+}
+
+// Welcome LED sequence
+void welcome_sequence(void) {
+	int led2light, i;
+
+	for (i = 0; i < 8; i++) {
+			led2light = (int) pow(2.0, i);
+			GPIOD->ODR &= 0x00FF;
+			GPIOD->ODR |= (led2light << 8);
+			Delay(40);
+	}
+
+	for (i = 7; i >= 0; i--) {
+			led2light = (int) pow(2, i);
+			GPIOD->ODR &= 0x00FF;
+			GPIOD->ODR |= (led2light << 8);
+			Delay(40);
+	}
+	GPIOD->ODR &= 0x00FF;
 }
 
 /*----------------------------------------------------------------------------
@@ -153,6 +170,6 @@ void init_board(void) {
     ADC2_init();
     SWT_Init();
     lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 128);
-    TOM_lcd_init();
     serial_init();
+		welcome_sequence();
 }
