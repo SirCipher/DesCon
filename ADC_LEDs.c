@@ -253,10 +253,6 @@ void set_leds() {
     }
 }
 
-void set_mux(uint8_t mux) {
-    // GPIOX->PINNAME = mux; // || do da funky m4f
-}
-
 void set_buzz(uint8_t buzz) {
     //GPIOX->PINNAME = buzz>0;
 }
@@ -287,6 +283,19 @@ void flash_led(uint8_t led) {
     GPIOD->ODR &= 0x00FF;
 }
 
+void set_mux(uint8_t mux) {
+	GPIOC->ODR &= (1<13);
+	GPIOC->ODR |= mux<<4;
+}
+
+void mux_test(){
+	for(int i = 0;i<8;i++){
+		GPIOC->ODR &= (1<<13);
+		set_mux(i);
+		Delay(1000);
+	}	
+}
+
 int main(void) {
     volts = reading_new(0, 'V', 0);
     amps = reading_new(0, 'A', 0);
@@ -294,9 +303,8 @@ int main(void) {
     resistance = reading_new(0, 'O', 0);
 
     init_board();
-
-    while (1) {
-				GPIOC->ODR |= 0x2<<4;
-        menu();
+		while (1) {
+		Delay(1000);
+			menu();
     }
 }
