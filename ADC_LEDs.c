@@ -118,8 +118,7 @@ void transform_scale_to_hardware_pins() {
 reading_t get_display_lcd_reading(uint8_t menuState) {
     if (menuState == 0) {
         return volts;
-    } else if (menuState == 1) {Compressing objects: 100% (3/3), done.
-
+    } else if (menuState == 1) {
         return amps;
     } else if (menuState == 2) {
         reading_set_value(resistance, RESISTANCE_READING);
@@ -297,6 +296,7 @@ int main(void) {
     init_board();
 
     while (1) {
+				GPIOC->ODR |= 0x2<<4;
         menu();
     }
 }
