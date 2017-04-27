@@ -118,12 +118,12 @@ void USART3_IRQHandler(void) {
 
         if ((rx == '\r') || (rx == '\n')) { // Is this an end-of-line condition?
             if (!ringbuffer_is_empty(ringbuffer)) {
-                char* s = ringbuffer_shift_all(ringbuffer);
+                char *s = ringbuffer_shift_all(ringbuffer);
                 check_string_set_mode(s);
             }
         } else {
             // Have we overflown? Data loss will occur.
-            ringbuffer_push(ringbuffer,rx); // returns true or false depending on whether or not the item pushed
+            ringbuffer_push(ringbuffer, rx); // returns true or false depending on whether or not the item pushed
         }
     }
 }

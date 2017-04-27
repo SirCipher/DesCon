@@ -5,6 +5,7 @@
 
 #ifndef RINGBUFFER_RING_BUFFER_H
 #define RINGBUFFER_RING_BUFFER_H
+
 #include <stdlib.h>
 #include <assert.h>
 // Allows us to change the buffer type easily
@@ -62,5 +63,6 @@ int ringbuffer_is_full(ringbuffer_t buffer);
  */
 int ringbuffer_is_empty(ringbuffer_t buffer);
 
-BUFFERTYPE* ringbuffer_shift_all(ringbuffer_t buffer);
+BUFFERTYPE *ringbuffer_shift_all(ringbuffer_t buffer);
+
 #endif //RINGBUFFER_RING_BUFFER_H

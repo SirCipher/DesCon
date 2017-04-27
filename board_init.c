@@ -77,80 +77,80 @@ extern uint8_t menu_confirm_exit;
 
 void EXTI9_5_IRQHandler(void) {
     if (EXTI_GetITStatus(EXTI_Line8) != RESET) {
-			if (!menu_confirm_exit) {
-				menuState += menuCount - 1;
-				menuState %= menuCount;
-			} 
-			
-			EXTI_ClearITPendingBit(EXTI_Line8);
+        if (!menu_confirm_exit) {
+            menuState += menuCount - 1;
+            menuState %= menuCount;
+        }
+
+        EXTI_ClearITPendingBit(EXTI_Line8);
 
     } else if (EXTI_GetITStatus(EXTI_Line9) != RESET) {
-			EXTI_ClearITPendingBit(EXTI_Line9);
+        EXTI_ClearITPendingBit(EXTI_Line9);
     }
 }
 
 void EXTI15_10_IRQHandler(void) {
     if (EXTI_GetITStatus(EXTI_Line10) != RESET) {
-			EXTI_ClearITPendingBit(EXTI_Line10);
+        EXTI_ClearITPendingBit(EXTI_Line10);
 
     } else if (EXTI_GetITStatus(EXTI_Line11) != RESET) {
-			if (menu_confirm_exit) menu_confirm_exit = 0;
-			else if (!menu_confirm_exit) menu_confirm_exit = 1;
-			
-      EXTI_ClearITPendingBit(EXTI_Line11);
-			
+        if (menu_confirm_exit) menu_confirm_exit = 0;
+        else if (!menu_confirm_exit) menu_confirm_exit = 1;
+
+        EXTI_ClearITPendingBit(EXTI_Line11);
+
     } else if (EXTI_GetITStatus(EXTI_Line12) != RESET) {
-			EXTI_ClearITPendingBit(EXTI_Line12);
-			
+        EXTI_ClearITPendingBit(EXTI_Line12);
+
     } else if (EXTI_GetITStatus(EXTI_Line13) != RESET) {
-			EXTI_ClearITPendingBit(EXTI_Line13);
-			
+        EXTI_ClearITPendingBit(EXTI_Line13);
+
     } else if (EXTI_GetITStatus(EXTI_Line14) != RESET) {
-			EXTI_ClearITPendingBit(EXTI_Line14);
-			
+        EXTI_ClearITPendingBit(EXTI_Line14);
+
     } else if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
-			if (!menu_confirm_exit) {
-				menuState++;
-				menuState %= menuCount;
-			}
-			
-			EXTI_ClearITPendingBit(EXTI_Line15);
+        if (!menu_confirm_exit) {
+            menuState++;
+            menuState %= menuCount;
+        }
+
+        EXTI_ClearITPendingBit(EXTI_Line15);
     }
 }
 
 void init_leds() {
-	RCC->AHB1ENR	|= RCC_AHB1ENR_GPIODEN;
-	GPIOD->MODER	|= (0x5555UL << 16);
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
+    GPIOD->MODER |= (0x5555UL << 16);
 }
 
 void display_startup_message() {
-	int last_write_length1 = 0, last_write_length2 = 0;
-	lcd_clear_display();
-	lcd_write_string("Digital", 0, 0, &last_write_length1);
-	lcd_write_string("Multimeter", 1, 0, &last_write_length2);
-	send_String(USART3, "Digital Multimeter");
-	Delay(1000);
-	lcd_clear_display();
+    int last_write_length1 = 0, last_write_length2 = 0;
+    lcd_clear_display();
+    lcd_write_string("Digital", 0, 0, &last_write_length1);
+    lcd_write_string("Multimeter", 1, 0, &last_write_length2);
+    send_String(USART3, "Digital Multimeter");
+    Delay(1000);
+    lcd_clear_display();
 }
 
 // Welcome LED sequence
 void welcome_sequence(void) {
-	int led2light, i;
+    int led2light, i;
 
-	for (i = 0; i < 8; i++) {
-			led2light = (int) pow(2.0, i);
-			GPIOD->ODR &= 0x00FF;
-			GPIOD->ODR |= (led2light << 8);
-			Delay(40);
-	}
+    for (i = 0; i < 8; i++) {
+        led2light = (int) pow(2.0, i);
+        GPIOD->ODR &= 0x00FF;
+        GPIOD->ODR |= (led2light << 8);
+        Delay(40);
+    }
 
-	for (i = 7; i >= 0; i--) {
-			led2light = (int) pow(2, i);
-			GPIOD->ODR &= 0x00FF;
-			GPIOD->ODR |= (led2light << 8);
-			Delay(40);
-	}
-	GPIOD->ODR &= 0x00FF;
+    for (i = 7; i >= 0; i--) {
+        led2light = (int) pow(2, i);
+        GPIOD->ODR &= 0x00FF;
+        GPIOD->ODR |= (led2light << 8);
+        Delay(40);
+    }
+    GPIOD->ODR &= 0x00FF;
 }
 
 /*----------------------------------------------------------------------------
@@ -165,11 +165,11 @@ void init_board(void) {
     //ringbuffer = ringbuffer_new(255);
 
     GPIO_init();
-		init_leds();
+    init_leds();
     ADC1_init();
     ADC2_init();
     SWT_Init();
     lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 128);
     serial_init();
-		welcome_sequence();
+    welcome_sequence();
 }

@@ -59,8 +59,11 @@ void light_led(uint8_t led);
 void flash_led(uint8_t led);
 
 void clear_led(void);
+
 void set_leds(void);
+
 void start_messages(void);
+
 int change_requested(void);
 
 #endif /*_ADC_H_*/
