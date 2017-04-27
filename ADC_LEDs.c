@@ -253,8 +253,6 @@ void set_leds() {
     }
 }
 
-
-
 void set_buzz(uint8_t buzz) {
     //GPIOX->PINNAME = buzz>0;
 }
@@ -287,7 +285,7 @@ void flash_led(uint8_t led) {
 
 void set_mux(uint8_t mux) {
 	GPIOC->ODR &= (1<13);
-	GPIOC->ODR |= (mux-1)<<4;
+	GPIOC->ODR |= mux<<4;
 }
 
 void mux_test(){
@@ -306,6 +304,7 @@ int main(void) {
 
     init_board();
 		while (1) {
+		Delay(1000);
 			menu();
     }
 }
