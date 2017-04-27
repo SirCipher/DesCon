@@ -83,6 +83,20 @@ void GPIOC_init(void) {
     GPIO_Init(GPIOC, &GPIO_InitStruct);
 }
 
+void GPIOA_init(void){
+		/* Enable clock for SYSCFG */
+    GPIO_InitTypeDef GPIO_InitStruct;
+
+    //Initialise GPIOE
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;   // we want to configure PE8-15
+    GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;       
+    GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;    //Polled at 2Mhz (Humans aren't quite fast enough to justify more)
+    GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;    //As push / pull
+    GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;    //With a pulldown resistor, as detecting a high level
+    GPIO_Init(GPIOA, &GPIO_InitStruct);
+}
+
 
 uint8_t button_selected = 0;
 extern uint8_t menuState;
@@ -177,9 +191,8 @@ void init_board(void) {
         while (1);                                  /* Capture error              */
     }
 
-    //ringbuffer = ringbuffer_new(255);
-
     GPIO_init();
+		GPIOA_init();
     init_leds();
     ADC1_init();
     ADC2_init();

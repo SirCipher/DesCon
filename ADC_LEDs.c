@@ -173,7 +173,7 @@ void check_string_set_mode(char ringbuffer[]) {
 }
 
 void adc_reading(uint8_t mode) {
-    char *string_memory = (char *) malloc(64 * sizeof(char));
+    char *string_memory =(char *) malloc(64 * sizeof(char));
 
     int last_write_length1 = 16, last_write_length2 = 16;
     int delta_scale = 0;
@@ -253,39 +253,50 @@ void set_leds() {
     }
 }
 
-void set_buzz(uint8_t buzz) {
-    //GPIOX->PINNAME = buzz>0;
-}
 
 void continuity() {
     while (change_requested()) {
-        while (is_continuity(ADCONE)) set_buzz(1);
+        if (is_continuity(ADCONE)) {
+					set_buzz(1);
+				} else{
         set_buzz(0);
+				}
     }
+		set_buzz(0);
 }
 
 void clear_led() {
-    GPIOD->ODR &= 0x00FF;
+	GPIOD->ODR &= 0x00FF;
 }
 
 void light_led(uint8_t led) {
-    GPIOD->ODR &= 0x00FF;
-    GPIOD->ODR |= (led << 8);
+	GPIOD->ODR &= 0x00FF;
+	GPIOD->ODR |= (led << 8);
 }
 
 void flash_led(uint8_t led) {
-    for (int i = 0; i < 32; i++) {
-        GPIOD->ODR &= 0x00FF;
-        GPIOD->ODR |= (led << 8);
-        Delay(300);
-    }
+	for (int i = 0; i < 32; i++) {
+		GPIOD->ODR &= 0x00FF;
+		GPIOD->ODR |= (led << 8);
+		Delay(300);
+	}
 
-    GPIOD->ODR &= 0x00FF;
+	GPIOD->ODR &= 0x00FF;
 }
 
 void set_mux(uint8_t mux) {
 	GPIOC->ODR &= (1<13);
 	GPIOC->ODR |= mux<<4;
+}
+
+void set_buzz(uint8_t buzz) {
+	if(buzz){
+		//GPIOX->PINNAME = buzz>0;
+		GPIOA->ODR &= ~(1 << 13);
+		GPIOA->ODR |= (1 << 6);
+	} else {
+		GPIOA->ODR &= ~(1 << 6);
+	}
 }
 
 void mux_test(){
@@ -296,15 +307,21 @@ void mux_test(){
 	}	
 }
 
-int main(void) {
-    volts = reading_new(0, 'V', 0);
-    amps = reading_new(0, 'A', 0);
-    light = reading_new(0, 'L', 0);
-    resistance = reading_new(0, 'O', 0);
+void buzz_test(){
+	set_buzz(1);
+	Delay(1000);
+	set_buzz(0);
+}
 
-    init_board();
-		while (1) {
-		Delay(1000);
-			menu();
-    }
+int main(void) {
+	volts = reading_new(0, 'V', 0);
+	amps = reading_new(0, 'A', 0);
+	light = reading_new(0, 'L', 0);
+	resistance = reading_new(0, 'O', 0);
+
+	init_board();
+
+	while (1) {
+		menu();
+	}
 }
