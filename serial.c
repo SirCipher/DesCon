@@ -75,8 +75,7 @@ static void _configUSART2(uint32_t BAUD, uint32_t fosc) {
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz; // this defines the IO speed and has nothing to do with the baudrate!
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP; // this defines the output type as push pull mode (as opposed to open drain)
     GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP; // this activates the pullup resistors on the IO pins
-    GPIO_Init(GPIOA,
-              &GPIO_InitStruct); // now all the values are passed to the GPIO_Init() function which sets the GPIO registers
+    GPIO_Init(GPIOA, &GPIO_InitStruct); // now all the values are passed to the GPIO_Init() function which sets the GPIO registers
 
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2); //
     GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);

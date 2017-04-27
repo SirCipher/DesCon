@@ -296,7 +296,15 @@ int main(void) {
     init_board();
 
     while (1) {
+				GPIOC->ODR |= 0x1<<4;
+				Delay(1000);
+				GPIOC->ODR &= (1<13);
 				GPIOC->ODR |= 0x2<<4;
+				Delay(1000);
+				GPIOC->ODR &= (1<13);
+				GPIOC->ODR |= 0x3<<4;
+				Delay(1000);
+				GPIOC->ODR &= (1<13);
         menu();
     }
 }
