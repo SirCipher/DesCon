@@ -84,11 +84,12 @@ int ringbuffer_is_empty(ringbuffer_t buffer) {
 
 
 BUFFERTYPE* ringbuffer_shift_all(ringbuffer_t rb){
-    BUFFERTYPE buffer[rb->count];
+    BUFFERTYPE* buffer = malloc(sizeof(char)*rb->count+1);
     int x = 0;
     for(;!ringbuffer_is_empty(rb);){
-        buffer[x] = ringbuffer_shift(rb);
+        buffer[x++] = ringbuffer_shift(rb);
     }
+    buffer[x] = '\0';
     return buffer;
 }
 
