@@ -133,7 +133,7 @@ reading_t get_display_lcd_reading(uint8_t menuState) {
 void outputSine() {
 	int i = 0;
 	reading_t ready_yates = reading_new(0, 'A', 0);
-	char *willy = malloc(sizeof(char) * 100);
+	char *willy = (char*) malloc(sizeof(char) * 12);
 
 	while (menu_confirm_exit) {
 		//GPIOE->PINNAME = sine[i++];

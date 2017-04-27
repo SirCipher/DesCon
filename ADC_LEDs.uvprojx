@@ -381,6 +381,11 @@
           <GroupName>Source Files</GroupName>
           <Files>
             <File>
+              <FileName>app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app.c</FilePath>
+            </File>
+            <File>
               <FileName>ADC_LEDs.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\ADC_LEDs.c</FilePath>
@@ -539,11 +544,6 @@
               <FileName>defines.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\defines.h</FilePath>
-            </File>
-            <File>
-              <FileName>app.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\app.c</FilePath>
             </File>
             <File>
               <FileName>app.h</FileName>
