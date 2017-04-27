@@ -100,41 +100,32 @@ static void _configUSART2(uint32_t BAUD, uint32_t fosc) {
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0; // this sets the priority group of the USART1 interrupts
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0; // this sets the subpriority inside the group
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE; // the USART2 interrupts are globally enabled
-    NVIC_Init(&NVIC_InitStructure); // the properties are passed to the NVIC_Init function which takes care of the low level stuff
+    NVIC_Init(
+            &NVIC_InitStructure); // the properties are passed to the NVIC_Init function which takes care of the low level stuff
 
     //Finally this enables the complete USART1 peripheral
     USART_Cmd(USART2, ENABLE);
 }
 
 
+void USART3_IRQHandler(void) {
+    static char rx_buffer[MAX_CHARACTERS];
+    static int rx_index = 0;
 
+    // Have we received a character?
+    if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) {
+        char rx = USART_ReceiveData(USART3);
 
-void USART3_IRQHandler(void){
-  static char rx_buffer[MAX_CHARACTERS]; 
-  static int rx_index = 0;
-
-	// Have we received a character?
-  if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET) 
-  {
-    char rx =  USART_ReceiveData(USART3);
-
-    if ((rx == '\r') || (rx == '\n')){ // Is this an end-of-line condition?
-        if (rx_index != 0){ 
-          memcpy((void *)line_buffer, rx_buffer, rx_index); // Copy to static line buffer from dynamic receive buffer
-					line_buffer[rx_index] = 0;
-					rx_index = 0; // Reset index pointer
-					check_string_set_mode(rx_buffer);
-					memset(rx_buffer, 0, 255); // Clear the buffer after we are done with it.
+        if ((rx == '\r') || (rx == '\n')) { // Is this an end-of-line condition?
+            if (!ringbuffer_is_empty(ringbuffer)) {
+                char* s = ringbuffer_shift_all(ringbuffer);
+                send_String(USART3,s);
+            }
+        } else {
+            // Have we overflown? Data loss will occur.
+            ringbuffer_push(ringbuffer,rx); // returns true or false depending on whether or not the item pushed
         }
     }
-    else{
-				// Have we overflown? Data loss will occur.
-        if (rx_index == MAX_CHARACTERS){ 
-            rx_index = 0;
-				}
-				rx_buffer[rx_index++] = rx; // Copy to buffer and increment
-    }
-	}
 }
 
 void serial_init(void) {
