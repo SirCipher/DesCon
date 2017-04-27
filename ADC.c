@@ -18,7 +18,6 @@ void ADC1_init(void) {
     ADC1->SQR1 = 0x01;
     ADC1->SQR3 = 0x0e;                                /* ADC_IN14 = 0x0e: ADC_IN15 = 0x0f */
     ADC1->CR2 |= (1UL << 0);
-
 }
 
 void ADC2_init(void) {

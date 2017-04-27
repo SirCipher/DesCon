@@ -18,7 +18,7 @@
 #define VOLTAGE_INPUT_MIN 0
 #define VOLTAGE_INPUT_MAX 65536
 #define VOLTAGE_OUTPUT_MIN 0
-#define VOLTAGE_OUTPUT_MAX 10
+#define VOLTAGE_OUTPUT_MAX 6.64
 
 #define RESISTANCE_READING reading_get_value(volts) / reading_get_value(amps)
 #define LIGHT_READING ADCTWO
@@ -230,7 +230,6 @@ void menu() {
 
     set_leds();
     app_set_mode(menuState);
-
     lcd_clear_display();
 
     while (change_requested()) {
@@ -253,16 +252,20 @@ void set_leds() {
     }
 }
 
-
 void continuity() {
-    while (change_requested()) {
-        if (is_continuity(ADCONE)) {
-					set_buzz(1);
-				} else{
-        set_buzz(0);
-				}
-    }
-		set_buzz(0);
+	int last_write_length1 = 16, last_write_length2 = 16;
+	
+	while (change_requested()) {
+			if (is_continuity(ADCONE)) {
+				lcd_write_string("Continuity", 0, 0, &last_write_length1);
+				lcd_write_string("detected", 1, 0, &last_write_length1);
+				set_buzz(1);
+			} else{
+				lcd_clear_display();
+				set_buzz(0);
+			}
+	}
+	set_buzz(0);
 }
 
 void clear_led() {
@@ -291,7 +294,6 @@ void set_mux(uint8_t mux) {
 
 void set_buzz(uint8_t buzz) {
 	if(buzz){
-		//GPIOX->PINNAME = buzz>0;
 		GPIOA->ODR &= ~(1 << 13);
 		GPIOA->ODR |= (1 << 6);
 	} else {
@@ -303,7 +305,7 @@ void mux_test(){
 	for(int i = 0;i<8;i++){
 		GPIOC->ODR &= (1<<13);
 		set_mux(i);
-		Delay(1000);
+		Delay(500);
 	}	
 }
 
@@ -313,6 +315,11 @@ void buzz_test(){
 	set_buzz(0);
 }
 
+void test_board(){
+	//mux_test();
+	buzz_test();
+}
+
 int main(void) {
 	volts = reading_new(0, 'V', 0);
 	amps = reading_new(0, 'A', 0);
@@ -320,7 +327,8 @@ int main(void) {
 	resistance = reading_new(0, 'O', 0);
 
 	init_board();
-
+	test_board();
+	
 	while (1) {
 		menu();
 	}

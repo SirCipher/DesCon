@@ -67,5 +67,9 @@ void start_messages(void);
 int change_requested(void);
 
 void set_buzz(uint8_t buzz);
+void buzz_test(void);
+void test_board(void);
+void mux_test(void);
+
 
 #endif /*_ADC_H_*/

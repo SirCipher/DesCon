@@ -75,7 +75,7 @@ void GPIOC_init(void) {
 
     //Initialise GPIOE
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_4 | GPIO_Pin_5 | GPIO_Pin_6 | GPIO_Pin_7;   // we want to configure PE8-15
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_7 | GPIO_Pin_12 | GPIO_Pin_14 | GPIO_Pin_15;   // we want to configure PE8-15
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;       
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;    //Polled at 2Mhz (Humans aren't quite fast enough to justify more)
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;    //As push / pull
@@ -89,7 +89,7 @@ void GPIOA_init(void){
 
     //Initialise GPIOE
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6;   // we want to configure PE8-15
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_13 | GPIO_Pin_14 ;   // we want to configure PE8-15
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;       
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;    //Polled at 2Mhz (Humans aren't quite fast enough to justify more)
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;    //As push / pull
@@ -193,12 +193,12 @@ void init_board(void) {
 
     GPIO_init();
 		GPIOA_init();
+		GPIOC_init();
     init_leds();
     ADC1_init();
     ADC2_init();
     SWT_Init();
     lcd_init(LCD_LINES_TWO, LCD_CURSOR_OFF, LCD_CBLINK_OFF, 128);
     serial_init();
-		GPIOC_init();
     welcome_sequence();
 }
