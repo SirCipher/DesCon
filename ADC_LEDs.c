@@ -46,6 +46,7 @@ uint8_t current_mode = 0;
 uint8_t startup = 1;
 uint8_t set_selection = 0;
 uint8_t menu_confirm_exit = 0;
+int8_t bt_change_mode = -1;
 
 char *menuItems[] = {
 	"Voltage",
@@ -146,24 +147,24 @@ void outputSine() {
 
 void check_string_set_mode(char rx_buffer[]) {
 	int new_mode;
-	if (strcmp(rx_buffer, STRING_AMPS) == 0) new_mode = MODE_CURRENT;
-	if (strcmp(rx_buffer, STRING_VOLTAGE) == 0) new_mode = MODE_VOLTAGE;
-	if (strcmp(rx_buffer, STRING_RESISTANCE) == 0) new_mode = MODE_RESISTANCE;
-	if (strcmp(rx_buffer, STRING_LIGHT) == 0) new_mode = MODE_LIGHT;
-	if (strcmp(rx_buffer, STRING_CONTINUITY) == 0) new_mode = MODE_CONTINUITY;
-	if (strcmp(rx_buffer, STRING_TRANSISTOR) == 0) new_mode = MODE_TRANSISTOR;
-	if (strcmp(rx_buffer, STRING_DIODE) == 0) new_mode = MODE_DIODE;
-	if (strcmp(rx_buffer, STRING_CAPACITOR) == 0) new_mode = MODE_CAPACITOR;
-	if (strcmp(rx_buffer, STRING_INDUCTOR) == 0) new_mode = MODE_INDUCTOR;
-	if (strcmp(rx_buffer, STRING_RMS) == 0) new_mode = MODE_RMS;
-	if (strcmp(rx_buffer, STRING_FREQUENCY) == 0) new_mode = MODE_FREQUENCY;
+	if (strcmp(rx_buffer, STRING_AMPS) == 0) 				new_mode = MODE_CURRENT;
+	if (strcmp(rx_buffer, STRING_VOLTAGE) == 0) 		new_mode = MODE_VOLTAGE;
+	if (strcmp(rx_buffer, STRING_RESISTANCE) == 0) 	new_mode = MODE_RESISTANCE;
+	if (strcmp(rx_buffer, STRING_LIGHT) == 0) 			new_mode = MODE_LIGHT;
+	if (strcmp(rx_buffer, STRING_CONTINUITY) == 0) 	new_mode = MODE_CONTINUITY;
+	if (strcmp(rx_buffer, STRING_TRANSISTOR) == 0) 	new_mode = MODE_TRANSISTOR;
+	if (strcmp(rx_buffer, STRING_DIODE) == 0) 			new_mode = MODE_DIODE;
+	if (strcmp(rx_buffer, STRING_CAPACITOR) == 0) 	new_mode = MODE_CAPACITOR;
+	if (strcmp(rx_buffer, STRING_INDUCTOR) == 0) 		new_mode = MODE_INDUCTOR;
+	if (strcmp(rx_buffer, STRING_RMS) == 0) 				new_mode = MODE_RMS;
+	if (strcmp(rx_buffer, STRING_FREQUENCY) == 0) 	new_mode = MODE_FREQUENCY;
 	if (strcmp(rx_buffer, STRING_TOGGLE) == 0) {
 			if (menu_confirm_exit) menu_confirm_exit = 0;
 			else menu_confirm_exit = 1;
 	}
 	
 	if(current_mode != new_mode){
-		current_mode = new_mode;
+		bt_change_mode = new_mode;
 	}
 	
 	char *string_memory = (char *) malloc(16 * sizeof(char));
@@ -171,8 +172,6 @@ void check_string_set_mode(char rx_buffer[]) {
 	strcpy(string_memory, menuItems[current_mode]);
 	send_String(USART3, string_memory);
 	free(string_memory);
-	
-	menu_confirm_exit = 0;
 }
 
 void adc_reading(uint8_t mode) {
@@ -182,7 +181,7 @@ void adc_reading(uint8_t mode) {
 	int delta_scale = 0;
 	reading_t reading;
 
-	while (menu_confirm_exit) {
+	while(change_requested()){
 		read_value();
 		reading = get_display_lcd_reading(mode);
 		delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
@@ -206,6 +205,10 @@ void adc_reading(uint8_t mode) {
 	free(string_memory);
 }
 
+int change_requested(){
+	return menu_confirm_exit && !~bt_change_mode ;
+}
+
 void menu() {
 	int last_write_length1 = 16, last_write_length2 = 16;
 
@@ -214,12 +217,15 @@ void menu() {
 		startup =0;
 	}
 	
-	lcd_write_string("Choose a mode", 0, 0, &last_write_length1);
-	send_String(USART3, "Choose a mode");
-
 	set_leds();
 	
-	while (!menu_confirm_exit) {
+	while (!change_requested()) {
+		if(~bt_change_mode){
+			menuState = bt_change_mode;
+			bt_change_mode = -1;
+			menu_confirm_exit = 1;
+		}
+		lcd_write_string("Choose a mode", 0, 0, &last_write_length1);
 		lcd_write_string(menuItems[menuState], 1, 0, &last_write_length1);
 		Delay(500);
 	}
@@ -228,15 +234,16 @@ void menu() {
 	app_set_mode(menuState);
 	
 	lcd_clear_display();
-	while (menu_confirm_exit) {
+	
+	while(change_requested()){
 		if (menuState < 4) {
-				adc_reading(menuState);
+			adc_reading(menuState);
 		} else {
-				if (menuState == 4) {
-					set_mux(10);
-					continuity();
-				}
-		}
+			if (menuState == 4) {
+				set_mux(10);
+				continuity();
+			}
+		}	
 	}
 }
 

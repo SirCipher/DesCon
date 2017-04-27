@@ -50,7 +50,6 @@ void continuity(void);
 
 void welcome_sequence(void);
 
-
 void check_string_set_mode(char rx_buffer[]);
 
 void set_mux(uint8_t mux);
@@ -62,5 +61,6 @@ void flash_led(uint8_t led);
 void clear_led(void);
 void set_leds(void);
 void start_messages(void);
+int change_requested(void);
 
 #endif /*_ADC_H_*/
