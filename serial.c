@@ -119,7 +119,7 @@ void USART3_IRQHandler(void) {
         if ((rx == '\r') || (rx == '\n')) { // Is this an end-of-line condition?
             if (!ringbuffer_is_empty(ringbuffer)) {
                 char* s = ringbuffer_shift_all(ringbuffer);
-                send_String(USART3,s);
+                check_string_set_mode(s);
             }
         } else {
             // Have we overflown? Data loss will occur.
