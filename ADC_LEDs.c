@@ -196,15 +196,14 @@ void check_string_set_mode(char ringbuffer[]) {
         menu_confirm_exit = !menu_confirm_exit;
     }
 
-    if (menuState != new_mode) {
+    if (menuState != new_mode || !menu_confirm_exit) {
         bt_change_mode = new_mode;
+				char *string_memory = (char *) malloc(17 * sizeof(char));
+				sprintf(string_memory, "%s",menuItems[bt_change_mode]);
+				send_String(USART3, string_memory);
+				free(string_memory);
     }
 
-    char *string_memory = (char *) malloc(16 * sizeof(char));
-    strcpy(string_memory, "New mode:");
-    strcpy(string_memory, menuItems[bt_change_mode]);
-    send_String(USART3, string_memory);
-    free(string_memory);
 }
 
 void adc_reading(uint8_t mode) {
