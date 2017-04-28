@@ -86,21 +86,27 @@ float reading_get_val_prefix(reading_t reading, char *prefix){
     float magnitude = log10(scaledValue);
     if(magnitude>=9){
         *prefix = SCALE_POS9_SH;
+        scaledValue/=10**9;
     }
     else if(magnitude>= 6){
         *prefix = SCALE_POS6_SH;
+        scaledValue /= 10**6;
     }
     else if(magnitude>= 3){
         *prefix = SCALE_POS3_SH;
+        scaledValue /= 10**3
     }
     else if(magnitude>= 0){
         *prefix = ' ';
     }
     else if(magnitude>= -3){
         *prefix = SCALE_NEG6_SH;
+        scaledValue *=10**3;
     }
     else if(magnitude>= -6){
         *prefix = SCALE_NEG6_SH;
+
+        scaledValue *=10**6;
     }
     else {
         *prefix = ' ';
