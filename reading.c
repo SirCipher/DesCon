@@ -100,7 +100,7 @@ float reading_get_val_prefix(reading_t reading, char *prefix){
         *prefix = ' ';
     }
     else if(magnitude>= -3){
-        *prefix = SCALE_NEG6_SH;
+        *prefix = SCALE_NEG3_SH;
         scaledValue *=10**3;
     }
     else if(magnitude>= -6){
