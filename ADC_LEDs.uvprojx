@@ -560,6 +560,11 @@
               <FileType>5</FileType>
               <FilePath>.\ADC.h</FilePath>
             </File>
+            <File>
+              <FileName>freq_meter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\freq_meter.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

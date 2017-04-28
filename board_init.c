@@ -89,7 +89,7 @@ void GPIOA_init(void){
 
     //Initialise GPIOE
     RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_13 | GPIO_Pin_14 ;   // we want to configure PE8-15
+    GPIO_InitStruct.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_9 | GPIO_Pin_10;   // we want to configure PE6-14
     GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;       
     GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;    //Polled at 2Mhz (Humans aren't quite fast enough to justify more)
     GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;    //As push / pull

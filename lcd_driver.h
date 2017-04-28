@@ -77,6 +77,7 @@ void lcd_scrolling(int on, int ms);
  */
 
 void lcd_write_string(char *string, int line, int offset, int *lastlength);
+void lcd_write_center(char *string, int line, int *lastlength);
 
 /* Internal functions you don't need to use */
 void lcd_setup_GPIO(void);

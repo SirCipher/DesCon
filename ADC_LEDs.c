@@ -10,6 +10,7 @@
 #include "unit_dict.h"
 #include <string.h>
 #include "siggen.h"
+#include "freq_meter.h"
 
 // TODO: rename this file, its not ADC_LEDS, its our project (Not done as it may break keil)
 #define ADCONE (float) read_ADC1()
@@ -23,7 +24,8 @@
 #define RESISTANCE_READING reading_get_value(volts) / reading_get_value(amps)
 #define LIGHT_READING ADCTWO
 
-#define SCALE_LIMITS 128
+#define SCALE_LIMIT_LOWER 128
+#define SCALE_LIMIT_UPPER 65408
 // Change this depending on where we want scaling to start
 #define DEFAULT_STAGE 0
 
@@ -33,10 +35,14 @@ ringbuffer_t ringbuffer;
 uint8_t menuState = 0;
 uint8_t scaleState = DEFAULT_STAGE;
 
+uint8_t autoscale = 0;
+
 reading_t volts;
 reading_t amps;
 reading_t resistance;
 reading_t light;
+
+reading_t last_reading;
 
 float *signalCache;
 
@@ -61,6 +67,7 @@ char *menuItems[] = {
         "Frequency",
         "Sig Gen"
 };
+
 
 int menuCount = 12;
 
@@ -108,11 +115,41 @@ int is_continuity(int val) {
 // TODO: SCALE DOWN AND UP
 int auto_scale_hardware(int rawValue) {
     // Will limitting these be required?
+    if(rawValue > SCALE_LIMIT_UPPER){
+        return 1;
+    }
+    else if(rawValue < SCALE_LIMIT_LOWER)
+    {
+        return -1;
+    }
     return 0;
 }
 
-void transform_scale_to_hardware_pins() {
-    // scaleStates -> pins, agree with Hardware on what these need to be
+
+void setScalePins(int scale){
+    //GPIOX->ODR &= ~(1<<0);
+    //GPIOX->ODR |= 1<<0;
+}
+
+void modifyScale(reading_t reading, int delta_scale) {
+    int currentScale = reading_get_scale(reading);
+    int scaleSum = currentScale + delta_scale;
+    if(scaleSum > 3 && !~scaleSum ){ // captures limits of 4 and -1
+        reading_set_scale(reading,scaleSum);
+        setScalePins(scaleSum);
+    }
+}
+
+void setScale(reading_t reading, int new_scale) {
+    if(new_scale > 3 && !~new_scale){
+        reading_set_scale(reading,new_scale);
+        setScalePins(new_scale);
+    }
+}
+
+
+void setMux(int muxIn, int enable){
+
 }
 
 reading_t get_display_lcd_reading(uint8_t menuState) {
@@ -121,8 +158,6 @@ reading_t get_display_lcd_reading(uint8_t menuState) {
     } else if (menuState == 1) {
         return amps;
     } else if (menuState == 2) {
-        reading_set_value(resistance, RESISTANCE_READING);
-        reading_set_scale(resistance, reading_get_scale(volts) + reading_get_scale(amps));
         return resistance;
     } else if (menuState == 3) {
         return light;
@@ -187,11 +222,13 @@ void adc_reading(uint8_t mode) {
              We only scale the reading we're displaying
              this should hopefully allow for faster switching (as hopefully the scale wont change)
         */
-        while (delta_scale && 0) {
-            reading_set_scale(reading, reading_get_scale(reading) + delta_scale);
-            delta_scale = reading_need_scale(reading, VOLTAGE_OUTPUT_MAX, VOLTAGE_OUTPUT_MIN);
-            continue;
-        }
+            if(autoscale){
+                if (delta_scale) {
+                    modifyScale(reading,delta_scale);
+                    Delay(100);
+                    continue;
+                }
+            }
         if (mode < 3) {
             bt_output_value(volts, string_memory);
             bt_output_value(amps, string_memory);
@@ -330,6 +367,7 @@ int main(void) {
 	test_board();
 	
 	while (1) {
+		//freq_meter();
 		menu();
 	}
 }
