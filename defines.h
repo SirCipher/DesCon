@@ -38,6 +38,10 @@
 #define RESISTANCE_MULTIPLIER 100000/.64
 
 
+#define PIN_MUX_BIT0 4
+#define PIN_MUX_BIT1 5
+#define PIN_MUX_BIT2 7
+
 
 #define MUX_VOLTAGE 0
 #define MUX_CURRENT 1

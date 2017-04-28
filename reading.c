@@ -4,6 +4,13 @@
 #include "reading.h"
 #include "unit_dict.h"
 
+const int reading_scales[] = {
+    1,
+    10,
+    50,
+    100
+};
+
 struct reading_t {
     char unit;
     int scale;
@@ -46,9 +53,8 @@ void reading_set_reading(reading_t reading, char unit){
 }
 
 
-/* warning: probably slow. */
 float reading_get_scaled_value(reading_t reading){
-    return reading->value * pow(10,(float)reading->scale);
+    return reading->value * reading_scales[reading->scale];
 }
 
 float reading_get_normalised_value(reading_t reading){
@@ -76,37 +82,31 @@ void reading_get_message_form(reading_t reading,char *memory){
 float reading_get_val_prefix(reading_t reading, char *prefix){
     float val = reading->value;
     int scale = reading->scale;
-    while(val>= 999.0f && scale < 9){
-        scale += 3;
-        val /= 1000;
-    }
-    while(val<= 0.01f && scale > -9){
-        scale -= 3;
-        val *= 1000;
-    }
-    if(scale >=9){
+    float scaledValue = val*reading_scales[scale];
+    float magnitude = log10(scaledValue);
+    if(magnitude>=9){
         *prefix = SCALE_POS9_SH;
     }
-    else if(scale >= 6){
+    else if(magnitude>= 6){
         *prefix = SCALE_POS6_SH;
     }
-    else if(scale >= 3){
+    else if(magnitude>= 3){
         *prefix = SCALE_POS3_SH;
     }
-    else if(scale >= 0){
+    else if(magnitude>= 0){
         *prefix = ' ';
     }
-    else if(scale >= -3){
+    else if(magnitude>= -3){
         *prefix = SCALE_NEG6_SH;
     }
-    else if(scale >= 6){
+    else if(magnitude>= -6){
         *prefix = SCALE_NEG6_SH;
     }
     else {
-        *prefix = '?';
+        *prefix = ' ';
     }
 
-    return val;
+    return scaledValue;
 
 }
 
