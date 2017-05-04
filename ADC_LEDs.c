@@ -34,14 +34,12 @@
 ringbuffer_t ringbuffer;
 uint8_t menuState = 0;
 uint8_t scaleState = DEFAULT_STAGE;
-
 uint8_t autoscale = 0;
 
 reading_t volts;
 reading_t amps;
 reading_t resistance;
 reading_t light;
-
 reading_t last_reading;
 
 float *signalCache;
@@ -152,12 +150,11 @@ int auto_scale_hardware(int rawValue) {
     return 0;
 }
 
-
 void setScalePins(int scale) {
     int b0 = scale & 1;
     int b1 = (scale & 2) >> 1;
-    GPIOE->ODR &= ~(1<<3 | 1<<4);
-    GPIOE->ODR |= (b0<<3 | b1 <<4 );
+    GPIOE->ODR &= ~(1 << 3 | 1 << 4);
+    GPIOE->ODR |= (b0 << 3 | b1 << 4);
 }
 
 void modifyScale(reading_t reading, int delta_scale) {
@@ -254,16 +251,16 @@ void adc_reading(uint8_t mode) {
         }
         switch (menuState) {
             case 0:
+                bt_output_value(reading, string_memory);
             case 1:
+                bt_output_value(reading, string_memory);
             case 2:
+                bt_output_value(reading, string_memory);
             case 3:
-                bt_output_value(reading,string_memory);
-                break;
-            case 4:
-                break;
-            case 5:
+                bt_output_value(reading, string_memory);
                 break;
             case 6:
+
                 break;
             case 7:
                 break;
@@ -276,6 +273,24 @@ void adc_reading(uint8_t mode) {
         lcd_output_value(string_memory, reading, &last_write_length1, &last_write_length2);
     }
     free(string_memory);
+}
+
+int frequency() {
+
+}
+
+float time_period() {
+
+}
+
+void capacitance() {
+    float capacitance = time_period() / 1.1 * pow((double) 10, i - 4);
+    send_String(USART3, capacitance);
+}
+
+void inductance() {
+    float inductance_reading = 16500 / frequency();
+    send_String(USART3, inductance_reading);
 }
 
 int change_requested() {
@@ -313,8 +328,11 @@ void menu() {
             set_mux(menuState);
             adc_reading(menuState);
         } else {
-            if (menuState == 4) {
-                set_mux(10);
+            if (menuState == 7) {
+                capacitance();
+            }
+            if (menuState > 7 && menuState < 11) {
+                set_mux(menuState);
                 continuity();
             }
         }
@@ -336,9 +354,11 @@ void continuity() {
         if (is_continuity(ADCONE)) {
             lcd_write_string("Continuity", 0, 0, &last_write_length1);
             lcd_write_string("detected", 1, 0, &last_write_length1);
+            send_String(USART3, "Continuity detected");
             set_buzz(1);
         } else {
             lcd_clear_display();
+            send_String(USART3, "Continuity not detected");
             set_buzz(0);
         }
     }
@@ -373,8 +393,8 @@ void set_mux(uint8_t mux) {
     //GPIOA->ODR |= (1<<PIN_MUX_BIT0);
 
 //    GPIOB->ODR = 0xffff;
-     GPIOB->ODR &= ~((1 << PIN_MUX_BIT0) | (1 << PIN_MUX_BIT1) | (1 << PIN_MUX_BIT2));
-     GPIOB->ODR |= ((b0 << PIN_MUX_BIT0) | (b1 << PIN_MUX_BIT1) | (b2 << PIN_MUX_BIT2));
+    GPIOB->ODR &= ~((1 << PIN_MUX_BIT0) | (1 << PIN_MUX_BIT1) | (1 << PIN_MUX_BIT2));
+    GPIOB->ODR |= ((b0 << PIN_MUX_BIT0) | (b1 << PIN_MUX_BIT1) | (b2 << PIN_MUX_BIT2));
 //    GPIOC->ODR |= mux << 4;
 }
 
@@ -413,7 +433,6 @@ int main(void) {
     resistance = reading_new(0, 'O', 0);
 
     init_board();
-
 
     while (1) {
         //freq_meter();

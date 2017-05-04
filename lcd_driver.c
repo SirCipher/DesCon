@@ -76,13 +76,13 @@ void lcd_write_string(char *string, int line, int offset, int *lastlength) {
     *lastlength = length;
 }
 
-void lcd_write_center(char *string, int line, int *lastlength){
+void lcd_write_center(char *string, int line, int *lastlength) {
     int stringLength = strlen(string);
     int offset = 0;
-    if(stringLength < LCD_NUM_CHARS) {
+    if (stringLength < LCD_NUM_CHARS) {
         offset = (LCD_NUM_CHARS - stringLength) / 2;
     }
-    lcd_write_string(string, line, offset,lastlength);
+    lcd_write_string(string, line, offset, lastlength);
 }
 
 void lcd_write(int cmd, uint16_t byte, uint16_t time_delay) {
@@ -144,7 +144,7 @@ void lcd_scrolling(int on, int ms) {
     }
 }
 
-	void lcd_setup_timer(void) {
+void lcd_setup_timer(void) {
     /*Setup timer 6 for most of the timed interrupt work*/
     RCC->APB1ENR |= RCC_APB1ENR_TIM6EN; /*Enable clock*/
     TIM6->PSC = 10; /*Prescaler to zero for smallest time resolution*/
