@@ -27,7 +27,7 @@ void GPIOA_init__for_TIM(void) {  // GPIO configuration and init: pin 9: timer s
     GPIO_Init_port.GPIO_Pin = GPIO_Pin_7;
     GPIO_Init_port.GPIO_Mode = GPIO_Mode_AF;
     GPIO_Init_port.GPIO_Speed = GPIO_Speed_100MHz;
-    GPIO_Init_port.GPIO_PuPd = GPIO_PuPd_DOWN;   //pull down??
+    GPIO_Init_port.GPIO_PuPd = GPIO_PuPd_DOWN;
 
     GPIO_Init(GPIOC, &GPIO_Init_port);
 }
@@ -77,7 +77,7 @@ void TIM8_init_cnt(void) {
 
 }
 
-void TIM8_IRQ_handler(void) {  //timer 1 CC channel interrupt handler       //FIX IRQ???  != RESET
+void TIM8_IRQ_handler(void) {  //timer 1 CC channel interrupt handler   T
     if (TIM_GetITStatus(TIM8, TIM_IT_Update)) {
         capture_value = TIM8->CCR2;
         TIM_ClearITPendingBit(TIM8, TIM_IT_Update);

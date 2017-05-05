@@ -42,6 +42,9 @@
 #define PIN_MUX_BIT1 5
 #define PIN_MUX_BIT2 7
 
+#define PIN_SCALE_BIT0 3
+#define PIN_SCALE_BIT1 4
+
 
 #define MUX_VOLTAGE 0
 #define MUX_CURRENT 1

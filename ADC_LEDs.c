@@ -12,7 +12,7 @@
 #include "siggen.h"
 #include "freq_meter.h"
 
-// TODO: rename this file, its not ADC_LEDS, its our project (Not done as it may break keil)
+
 #define ADCONE (float) read_ADC1()
 #define ADCTWO (float) read_ADC2()
 #define RESISTANCE VOLTAGE/CURRENT
@@ -24,24 +24,37 @@
 #define RESISTANCE_READING reading_get_value(volts) / reading_get_value(amps)
 #define LIGHT_READING ADCTWO
 
+/* Raw limits to our scales */
 #define SCALE_LIMIT_LOWER 128
 #define SCALE_LIMIT_UPPER 65408
-// Change this depending on where we want scaling to start
-#define DEFAULT_STAGE 0
+
 
 #define SIGNALCACHESIZE 10000
 
+/* ringbuffer for our input */
 ringbuffer_t ringbuffer;
-uint8_t menuState = 0;
-uint8_t scaleState = DEFAULT_STAGE;
-uint8_t autoscale = 0;
 
+/* Menu State for current choice*/
+uint8_t menuState = 0;
+
+/* Boolean for turning autoscaling on and off */
+uint8_t autoscale = 1;
+
+/*******************************************************************
+ * Declare all the readings we'll be using data will be stored in
+ * different areas to allow for quicker switching as the scale
+ * will be stored (and therefore recalled) with the reading
+ *******************************************************************/
 reading_t volts;
 reading_t amps;
 reading_t resistance;
 reading_t light;
-reading_t last_reading;
 
+/******************************************************************
+ * Signal Cache (array of floats) store the generated values
+ * of the chosen waveform, frequency, and amplitude which
+ * would be looped through. Reduces repeated computing
+ ******************************************************************/
 float *signalCache;
 
 uint8_t sendSignal;
@@ -51,6 +64,11 @@ uint8_t board_is_reading = 0;
 uint8_t menu_confirm_exit = 0;
 int8_t bt_change_mode = -1;
 
+/**********************************************************
+ * Menu items are stored as an array to allow for easier
+ * modification. menuCount must be set seperately due
+ * to how arrays are passed to functions within C.
+ **********************************************************/
 char *menuItems[] = {
         "Voltage",
         "Current",
@@ -68,20 +86,14 @@ char *menuItems[] = {
         //"Inductor",
         //"Sig Gen"
 };
-
-
 int menuCount = 12;
 
-/*----------------------------------------------------------------------------
-Returns the correct units based on menuState
-*----------------------------------------------------------------------------*/
-char *get_units(uint8_t menuState, uint8_t scaleState) {
-    return "\0";
-}
 
-/*----------------------------------------------------------------------------
-Reads values from pins and stores them in reading
-*----------------------------------------------------------------------------*/
+/********************************************************************
+ * Reads the input from the hardware and scales to correct
+ * value. Stores data within the correct reading struct
+ * if required. Only records data within four modes.
+ *********************************************************************/
 void read_value(int mode) {
     switch (menuState) {
         case 0:
@@ -114,34 +126,36 @@ void read_value(int mode) {
 
             break;
     }
-//    } else if (menuState == 3) {
-//        reading_set_value(light, scale(LIGHT_READING, VOLTAGE_INPUT_MIN, VOLTAGE_INPUT_MAX,
-//                                       VOLTAGE_OUTPUT_MIN, VOLTAGE_OUTPUT_MAX));
-//    }
 }
 
+
+
+/************************************************************************
+ * Functions to help output to the LCD and bluetooth respectively in the
+ * correct format, full string for LCD & compact for bt. Pointers are
+ * passed to lcd_output_value for more efficient screen updating.
+ ***********************************************************************/
 void lcd_output_value(char *memory, reading_t reading, int *last_write_length1, int *last_write_length2) {
     reading_get_lcd_string(reading, memory);
     lcd_write_string(memory, 1, 0, last_write_length1);
-    // lcd_write_string(unit, 0, 0, last_write_length2);
 }
 
 void bt_output_value(reading_t reading, char *memory) {
-// TODO: change this to follow data pattern
-
-//	sprintf(memory, "<%.4f> %s",value,unit);
     reading_get_message_form(reading, memory);
     send_String(USART3, memory);
     printf("%s\n", memory);
 }
 
+/*********
+ *
+ *
+ */
+
 int is_continuity(int val) {
     return val > CONTINUITY_RAW_CAP;
 }
 
-// TODO: SCALE DOWN AND UP
 int auto_scale_hardware(int rawValue) {
-    // Will limitting these be required?
     if (rawValue > SCALE_LIMIT_UPPER) {
         return 1;
     } else if (rawValue < SCALE_LIMIT_LOWER) {
@@ -150,22 +164,24 @@ int auto_scale_hardware(int rawValue) {
     return 0;
 }
 
+
+/*****************************************************
+ * outputs the scale value to the to the correct pins
+ * which outputs to the board to scale the values correctly
+ * should only be called from modifyScale
+ ****************************************************/
 void setScalePins(int scale) {
     int b0 = scale & 1;
     int b1 = (scale & 2) >> 1;
-    GPIOE->ODR &= ~(1 << 3 | 1 << 4);
-    GPIOE->ODR |= (b0 << 3 | b1 << 4);
+    GPIOE->ODR &= ~(1 << PIN_SCALE_BIT0 | 1 << PIN_SCALE_BIT1 );
+    GPIOE->ODR |= (b0 << PIN_SCALE_BIT0 | b1 << PIN_SCALE_BIT1 );
 }
 
-void modifyScale(reading_t reading, int delta_scale) {
-    int currentScale = reading_get_scale(reading);
-    int scaleSum = currentScale + delta_scale;
-    if (scaleSum > 3 && !~scaleSum) { // captures limits of 4 and -1
-        reading_set_scale(reading, scaleSum);
-        setScalePins(scaleSum);
-    }
-}
 
+/*************************************************
+ * Directly sets the scale of the the hardware
+ * to the scale of the last reading (which may be 0)
+ */
 void setScale(reading_t reading, int new_scale) {
     if (new_scale > 3 && !~new_scale) {
         reading_set_scale(reading, new_scale);
@@ -173,6 +189,22 @@ void setScale(reading_t reading, int new_scale) {
     }
 }
 
+/*****************************************************
+ * Modifies the scale by delta_scale of the current reading
+ * but keeps it within the range of 0-3 the scaling is non-linear,
+ * and is handled separately by software, hardware and bt device
+ */
+void modifyScale(reading_t reading, int delta_scale) {
+    int currentScale = reading_get_scale(reading);
+    int scaleSum = currentScale + delta_scale;
+    setScale(reading,scaleSum);
+}
+
+
+/***
+ * returns the correct reading struct based on menu state
+ * returns null if no reading state is required
+ */
 reading_t get_display_lcd_reading(uint8_t menuState) {
     if (menuState == 0) {
         return volts;
@@ -186,39 +218,31 @@ reading_t get_display_lcd_reading(uint8_t menuState) {
     return NULL;
 }
 
-void outputSine() {
-    int i = 0;
-    reading_t ready_yates = reading_new(0, 'A', 0);
-    char *willy = (char *) malloc(sizeof(char) * 12);
 
-    while (menu_confirm_exit) {
-        //GPIOE->PINNAME = sine[i++];
-        reading_set_value(ready_yates, signalCache[i++]);
-        printf("%.4f\n", signalCache[i]);
-        i %= SIGNALCACHESIZE;
-    }
-    free(willy);
-}
-
-void check_string_set_mode(char ringbuffer[]) {
+/************************************
+ * changes the mode of the DMM based on the string received from BT
+ */
+void check_string_set_mode(char command[]) {
     int new_mode;
-    if (strcmp(ringbuffer, STRING_AMPS) == 0) new_mode = MODE_CURRENT;
-    else if (strcmp(ringbuffer, STRING_VOLTAGE) == 0) new_mode = MODE_VOLTAGE;
-    else if (strcmp(ringbuffer, STRING_RESISTANCE) == 0) new_mode = MODE_RESISTANCE;
-    else if (strcmp(ringbuffer, STRING_LIGHT) == 0) new_mode = MODE_LIGHT;
-    else if (strcmp(ringbuffer, STRING_CONTINUITY) == 0) new_mode = MODE_CONTINUITY;
-    else if (strcmp(ringbuffer, STRING_TRANSISTOR) == 0) new_mode = MODE_TRANSISTOR;
-    else if (strcmp(ringbuffer, STRING_DIODE) == 0) new_mode = MODE_DIODE;
-    else if (strcmp(ringbuffer, STRING_CAPACITOR) == 0) new_mode = MODE_CAPACITOR;
-    else if (strcmp(ringbuffer, STRING_INDUCTOR) == 0) new_mode = MODE_INDUCTOR;
-    else if (strcmp(ringbuffer, STRING_RMS) == 0) new_mode = MODE_RMS;
-    else if (strcmp(ringbuffer, STRING_FREQUENCY) == 0) new_mode = MODE_FREQUENCY;
-    else if (strcmp(ringbuffer, STRING_TOGGLE) == 0) {
+    if (strcmp(command, STRING_AMPS) == 0) new_mode = MODE_CURRENT;
+    else if (strcmp(command, STRING_VOLTAGE) == 0) new_mode = MODE_VOLTAGE;
+    else if (strcmp(command, STRING_RESISTANCE) == 0) new_mode = MODE_RESISTANCE;
+    else if (strcmp(command, STRING_LIGHT) == 0) new_mode = MODE_LIGHT;
+    else if (strcmp(command, STRING_CONTINUITY) == 0) new_mode = MODE_CONTINUITY;
+    else if (strcmp(command, STRING_TRANSISTOR) == 0) new_mode = MODE_TRANSISTOR;
+    else if (strcmp(command, STRING_DIODE) == 0) new_mode = MODE_DIODE;
+    else if (strcmp(command, STRING_CAPACITOR) == 0) new_mode = MODE_CAPACITOR;
+    else if (strcmp(command, STRING_INDUCTOR) == 0) new_mode = MODE_INDUCTOR;
+    else if (strcmp(command, STRING_RMS) == 0) new_mode = MODE_RMS;
+    else if (strcmp(command, STRING_FREQUENCY) == 0) new_mode = MODE_FREQUENCY;
+    else if (strcmp(command, STRING_TOGGLE) == 0) {
         menu_confirm_exit = !menu_confirm_exit;
     }
 
+    /* Ignore menu changes if the current mode is the same */
     if (menuState != new_mode || !menu_confirm_exit) {
         bt_change_mode = new_mode;
+        /* Confirm that the string was passed and accepted by the DMM */
         char *string_memory = (char *) malloc(17 * sizeof(char));
         sprintf(string_memory, "%s", menuItems[bt_change_mode]);
         send_String(USART3, string_memory);
@@ -227,9 +251,17 @@ void check_string_set_mode(char ringbuffer[]) {
 
 }
 
+/**********************************************************************************
+ * Handles the non-menu mode of the DMM, stays within this function whilst
+ * no mode change is requested
+ */
+
 void adc_reading(uint8_t mode) {
     char *string_memory = (char *) malloc(64 * sizeof(char));
-
+    /*
+     * Setting both last_write_length1 and 2 to 16 (maximum string length of LCD)
+     * forces a line clear on the next write.
+     */
     int last_write_length1 = 16, last_write_length2 = 16;
     int delta_scale = 0;
     reading_t reading;
@@ -251,16 +283,17 @@ void adc_reading(uint8_t mode) {
         }
         switch (menuState) {
             case 0:
-                bt_output_value(reading, string_memory);
             case 1:
-                bt_output_value(reading, string_memory);
             case 2:
-                bt_output_value(reading, string_memory);
             case 3:
-                bt_output_value(reading, string_memory);
+                bt_output_value(reading,string_memory);
+                lcd_output_value(string_memory, reading, &last_write_length1, &last_write_length2);
+                break;
+            case 4:
+                break;
+            case 5:
                 break;
             case 6:
-
                 break;
             case 7:
                 break;
@@ -270,8 +303,8 @@ void adc_reading(uint8_t mode) {
 
                 break;
         }
-        lcd_output_value(string_memory, reading, &last_write_length1, &last_write_length2);
     }
+
     free(string_memory);
 }
 
@@ -283,15 +316,25 @@ float time_period() {
 
 }
 
+
 void capacitance() {
-    float capacitance = time_period() / 1.1 * pow((double) 10, i - 4);
-    send_String(USART3, capacitance);
+    float capacitance = time_period() / 1.1 * pow((double) 10, -4);
+    char* str = malloc(sizeof(char) * 20);
+
+    sprintf(str,"%.4f",capacitance);
+    send_String(USART3, str);
+
+    free(str);
 }
 
 void inductance() {
     float inductance_reading = 16500 / frequency();
-    send_String(USART3, inductance_reading);
+    char* str = malloc(sizeof(char) * 20);
+    sprintf(str,"%.4f", inductance_reading);
+    send_String(USART3, str);
+    free(str);
 }
+
 
 int change_requested() {
     return menu_confirm_exit && !~bt_change_mode;
@@ -306,8 +349,9 @@ void menu() {
     }
 
     set_leds();
-
+    /* stay in menu state */
     while (!change_requested()) {
+        /* if bt_change_mode is not -1, change the mode to what it is*/
         if (~bt_change_mode) {
             menuState = bt_change_mode;
             bt_change_mode = -1;
@@ -322,6 +366,7 @@ void menu() {
     app_set_mode(menuState);
     lcd_clear_display();
 
+    /* stay in non menu state state */
     while (change_requested()) {
 
         if (menuState < 4) {
